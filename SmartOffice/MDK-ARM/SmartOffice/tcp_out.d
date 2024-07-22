@@ -35,10 +35,13 @@ smartoffice\tcp_out.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
 smartoffice\tcp_out.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 smartoffice\tcp_out.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 smartoffice\tcp_out.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+smartoffice\tcp_out.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+smartoffice\tcp_out.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 smartoffice\tcp_out.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 smartoffice\tcp_out.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/debug.h
 smartoffice\tcp_out.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/arch.h
 smartoffice\tcp_out.o: ../Middlewares/Third_Party/LwIP/system/arch/cc.h
+smartoffice\tcp_out.o: ../Middlewares/Third_Party/LwIP/system/arch/cpu.h
 smartoffice\tcp_out.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 smartoffice\tcp_out.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 smartoffice\tcp_out.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h

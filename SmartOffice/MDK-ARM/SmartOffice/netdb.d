@@ -36,10 +36,13 @@ smartoffice\netdb.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
 smartoffice\netdb.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 smartoffice\netdb.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 smartoffice\netdb.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+smartoffice\netdb.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+smartoffice\netdb.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 smartoffice\netdb.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 smartoffice\netdb.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/debug.h
 smartoffice\netdb.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/arch.h
 smartoffice\netdb.o: ../Middlewares/Third_Party/LwIP/system/arch/cc.h
+smartoffice\netdb.o: ../Middlewares/Third_Party/LwIP/system/arch/cpu.h
 smartoffice\netdb.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 smartoffice\netdb.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 smartoffice\netdb.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h

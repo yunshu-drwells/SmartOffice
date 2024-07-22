@@ -36,10 +36,13 @@ smartoffice\eui64.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
 smartoffice\eui64.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 smartoffice\eui64.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 smartoffice\eui64.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+smartoffice\eui64.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+smartoffice\eui64.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 smartoffice\eui64.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 smartoffice\eui64.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/debug.h
 smartoffice\eui64.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/arch.h
 smartoffice\eui64.o: ../Middlewares/Third_Party/LwIP/system/arch/cc.h
+smartoffice\eui64.o: ../Middlewares/Third_Party/LwIP/system/arch/cpu.h
 smartoffice\eui64.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 smartoffice\eui64.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 smartoffice\eui64.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h

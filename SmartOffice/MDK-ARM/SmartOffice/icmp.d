@@ -35,10 +35,13 @@ smartoffice\icmp.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
 smartoffice\icmp.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 smartoffice\icmp.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 smartoffice\icmp.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+smartoffice\icmp.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+smartoffice\icmp.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 smartoffice\icmp.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 smartoffice\icmp.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/debug.h
 smartoffice\icmp.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/arch.h
 smartoffice\icmp.o: ../Middlewares/Third_Party/LwIP/system/arch/cc.h
+smartoffice\icmp.o: ../Middlewares/Third_Party/LwIP/system/arch/cpu.h
 smartoffice\icmp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 smartoffice\icmp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 smartoffice\icmp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h

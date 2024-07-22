@@ -20,22 +20,24 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "lwip/opt.h"
-#include "lwip/mem.h"
-#include "lwip/memp.h"
+
 #include "lwip/timeouts.h"
 #include "netif/ethernet.h"
 #include "netif/etharp.h"
 #include "lwip/ethip6.h"
 #include "ethernetif.h"
 #include <string.h>
-
+#include "cmsis_os.h"
 /* Within 'USER CODE' section, code will be kept by default at each generation */
 /* USER CODE BEGIN 0 */
-
+#include "usart.h"
 /* USER CODE END 0 */
 
 /* Private define ------------------------------------------------------------*/
-
+/* The time to block waiting for input. */
+#define TIME_WAITING_FOR_INPUT ( portMAX_DELAY )
+/* Stack size of the interface thread */
+#define INTERFACE_THREAD_STACK_SIZE ( 350 )
 /* Network interface name */
 #define IFNAME0 's'
 #define IFNAME1 't'
@@ -69,6 +71,8 @@ __ALIGN_BEGIN uint8_t Tx_Buff[ETH_TXBUFNB][ETH_TX_BUF_SIZE] __ALIGN_END; /* Ethe
 
 /* USER CODE END 2 */
 
+/* Semaphore to signal incoming packets */
+osSemaphoreId s_xSemaphore = NULL;
 /* Global Ethernet handle */
 ETH_HandleTypeDef heth;
 
@@ -125,7 +129,7 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef* ethHandle)
     HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
     /* Peripheral interrupt init */
-    HAL_NVIC_SetPriority(ETH_IRQn, 1, 0);
+    HAL_NVIC_SetPriority(ETH_IRQn, 6, 0);
     HAL_NVIC_EnableIRQ(ETH_IRQn);
   /* USER CODE BEGIN ETH_MspInit 1 */
 
@@ -169,6 +173,16 @@ void HAL_ETH_MspDeInit(ETH_HandleTypeDef* ethHandle)
   }
 }
 
+/**
+  * @brief  Ethernet Rx Transfer completed callback
+  * @param  heth: ETH handle
+  * @retval None
+  */
+void HAL_ETH_RxCpltCallback(ETH_HandleTypeDef *heth)
+{
+  osSemaphoreRelease(s_xSemaphore);
+}
+
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
@@ -201,7 +215,7 @@ static void low_level_init(struct netif *netif)
   MACAddr[4] = 0x00;
   MACAddr[5] = 0x00;
   heth.Init.MACAddr = &MACAddr[0];
-  heth.Init.RxMode = ETH_RXPOLLING_MODE;
+  heth.Init.RxMode = ETH_RXINTERRUPT_MODE;
   heth.Init.ChecksumMode = ETH_CHECKSUM_BY_HARDWARE;
   heth.Init.MediaInterface = ETH_MEDIA_INTERFACE_RMII;
 
@@ -246,6 +260,13 @@ static void low_level_init(struct netif *netif)
     netif->flags |= NETIF_FLAG_BROADCAST;
   #endif /* LWIP_ARP */
   
+/* create a binary semaphore used for informing ethernetif of frame reception */
+  osSemaphoreDef(SEM);
+  s_xSemaphore = osSemaphoreCreate(osSemaphore(SEM), 1);
+
+/* create the task that handles the ETH_MAC */
+  osThreadDef(EthIf, ethernetif_input, osPriorityRealtime, 0, INTERFACE_THREAD_STACK_SIZE);
+  osThreadCreate (osThread(EthIf), netif);
   /* Enable MAC and DMA transmission and reception */
   HAL_ETH_Start(&heth);
 
@@ -389,7 +410,7 @@ static struct pbuf * low_level_input(struct netif *netif)
   
 
   /* get received frame */
-  if (HAL_ETH_GetReceivedFrame(&heth) != HAL_OK)
+  if (HAL_ETH_GetReceivedFrame_IT(&heth) != HAL_OK)
     return NULL;
   
   /* Obtain the size of the packet and put it into the "len" variable. */
@@ -464,25 +485,27 @@ static struct pbuf * low_level_input(struct netif *netif)
  *
  * @param netif the lwip network interface structure for this ethernetif
  */
-void ethernetif_input(struct netif *netif)
+void ethernetif_input(void const * argument)
 {
-  err_t err;
   struct pbuf *p;
-
-  /* move received packet into a new pbuf */
-  p = low_level_input(netif);
-    
-  /* no packet could be read, silently ignore this */
-  if (p == NULL) return;
-    
-  /* entry point to the LwIP stack */
-  err = netif->input(p, netif);
-    
-  if (err != ERR_OK)
+  struct netif *netif = (struct netif *) argument;
+  
+  for( ;; )
   {
-    LWIP_DEBUGF(NETIF_DEBUG, ("ethernetif_input: IP input error\n"));
-    pbuf_free(p);
-    p = NULL;    
+    if (osSemaphoreWait(s_xSemaphore, TIME_WAITING_FOR_INPUT) == osOK)
+    {
+      do
+      {   
+        p = low_level_input( netif );
+        if   (p != NULL)
+        {
+          if (netif->input( p, netif) != ERR_OK )
+          {
+            pbuf_free(p);
+          }
+        }
+      } while(p!=NULL);
+    }
   }
 }
 
@@ -586,37 +609,35 @@ u32_t sys_now(void)
 
 /**
   * @brief  This function sets the netif link status.
-  * @note   This function should be included in the main loop to poll 
-  *         for the link status update  
   * @param  netif: the network interface
   * @retval None
-  */
-uint32_t EthernetLinkTimer=0; 
-  
-void ethernetif_set_link(struct netif *netif)
+  */  
+void ethernetif_set_link(void const *argument)
 {
   uint32_t regvalue = 0;
-  /* Ethernet Link every 200ms */
-  if (HAL_GetTick() - EthernetLinkTimer >= 200)
+  struct link_str *link_arg = (struct link_str *)argument;
+  
+  for(;;)
   {
-    EthernetLinkTimer = HAL_GetTick(); 
-    
     /* Read PHY_BSR*/
     HAL_ETH_ReadPHYRegister(&heth, PHY_BSR, &regvalue);
     
     regvalue &= PHY_LINKED_STATUS;
     
     /* Check whether the netif link down and the PHY link is up */
-    if(!netif_is_link_up(netif) && (regvalue))
+    if(!netif_is_link_up(link_arg->netif) && (regvalue))
     {
       /* network cable is connected */ 
-      netif_set_link_up(netif);        
+      netif_set_link_up(link_arg->netif);        
     }
-    else if(netif_is_link_up(netif) && (!regvalue))
+    else if(netif_is_link_up(link_arg->netif) && (!regvalue))
     {
-      /* network cable is disconnected */
-      netif_set_link_down(netif);
+      /* network cable is dis-connected */
+      netif_set_link_down(link_arg->netif);
     }
+    
+    /* Suspend thread for 200 ms */
+    osDelay(200);
   }
 }
 
@@ -724,6 +745,16 @@ __weak void ethernetif_notify_conn_changed(struct netif *netif)
   /* NOTE : This is function could be implemented in user file 
             when the callback is needed,
   */
+	if(netif_is_link_up(netif)){
+		printf("netif link is up\n");
+		if(!netif_is_up(netif)){
+			netif_set_up(netif);
+			printf("netif is up\n");
+		}
+	}else{
+		printf("netif link is down\n");
+		
+	}
 
 }
 /* USER CODE END 8 */ 
