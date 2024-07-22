@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;    ../Drivers/STM32F4xx_HAL_Driver/Inc;    ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;    ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;    ../Drivers/CMSIS/Include;  ../Middlewares/Third_Party/LwIP/src/include;  ../Middlewares/Third_Party/LwIP/system;  ../Middlewares/Third_Party/LwIP/src/include/netif/ppp;  ../Middlewares/Third_Party/LwIP/src/include/lwip;  ../Middlewares/Third_Party/LwIP/src/include/lwip/apps;  ../Middlewares/Third_Party/LwIP/src/include/lwip/priv;  ../Middlewares/Third_Party/LwIP/src/include/lwip/prot;  ../Middlewares/Third_Party/LwIP/src/include/netif;  ../Middlewares/Third_Party/LwIP/system/arch; ../Middlewares/Third_Party/FreeRTOS/Source/include; ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS; ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F</IncludePath>
+              <IncludePath>../Inc;     ../Drivers/STM32F4xx_HAL_Driver/Inc;     ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;     ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;     ../Drivers/CMSIS/Include;   ../Middlewares/Third_Party/LwIP/src/include;   ../Middlewares/Third_Party/LwIP/system;   ../Middlewares/Third_Party/LwIP/src/include/netif/ppp;   ../Middlewares/Third_Party/LwIP/src/include/lwip;   ../Middlewares/Third_Party/LwIP/src/include/lwip/apps;   ../Middlewares/Third_Party/LwIP/src/include/lwip/priv;   ../Middlewares/Third_Party/LwIP/src/include/lwip/prot;   ../Middlewares/Third_Party/LwIP/src/include/netif;   ../Middlewares/Third_Party/LwIP/system/arch;  ../Middlewares/Third_Party/FreeRTOS/Source/include;  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;  ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -420,6 +420,11 @@
               <FilePath>..\Src\touch.c</FilePath>
             </File>
             <File>
+              <FileName>norflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\norflash.c</FilePath>
+            </File>
+            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/main.c</FilePath>
@@ -480,9 +485,14 @@
               <FilePath>../Src/stm32f4xx_hal_timebase_tim.c</FilePath>
             </File>
             <File>
-              <FileName>norflash.c</FileName>
+              <FileName>ds18b20.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\norflash.c</FilePath>
+              <FilePath>..\Src\ds18b20.c</FilePath>
+            </File>
+            <File>
+              <FileName>dht11.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\dht11.c</FilePath>
             </File>
           </Files>
         </Group>

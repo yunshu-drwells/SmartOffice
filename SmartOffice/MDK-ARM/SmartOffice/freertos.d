@@ -64,3 +64,5 @@ smartoffice\freertos.o: ../Inc/ft5206.h
 smartoffice\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h
 smartoffice\freertos.o: ../Inc/norflash.h
 smartoffice\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h
+smartoffice\freertos.o: ../Inc/ds18b20.h
+smartoffice\freertos.o: ../Inc/dht11.h

@@ -31,6 +31,12 @@
 #include "lcd.h"
 #include "touch.h"
 #include "norflash.h"
+
+//ds18b20
+#include "ds18b20.h"
+
+//dht11
+#include "dht11.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,6 +60,14 @@
 extern uint8_t lcd_id[12]; //main.c
 
 uint16_t id;  //norflash id
+
+//ds18b20
+int16_t temperature;
+
+//dht11
+uint8_t t = 0; 
+uint16_t humidity;
+uint16_t temperatures;
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
 osThreadId TouchHandle;
@@ -151,16 +165,48 @@ void WebServer_Task(void const * argument)
                  
   /* init code for LWIP */
   MX_LWIP_Init();
-	
+
   /* USER CODE BEGIN WebServer_Task */
 	//SPI Flash
 	norflash_init();  //初始化norflash
 	id = norflash_read_id();
 	printf("norflash id is %d\n", id);
+	
+	osDelay(10);
+	/*
+	if(!DS18B20_Init()){
+		printf(" DS18B20  is already\n");
+
+	}else{
+		printf(" Can not detect DS18B20!\n");
+	}
+	*/
+	osDelay(10);
+	if(!dht11_init()){
+		printf(" DHT11  is already\n");
+
+	}else{
+		printf(" Can not detect DHT11!\n");
+	}
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+		/*
+    temperature = DS18B20_Get_Temp();	
+		if(temperature<0){
+			printf("-");											//显示负号
+			temperature=-temperature;					//转为正数
+		}
+		printf("temperature = %d.%d\n",temperature/10,temperature%10);
+		*/
+		if (t % 10 == 0) /* 每100ms读取一次 */ { 
+			dht11_read_data(&temperatures, &humidity); /* 读取温湿度值 */
+			
+			printf("temperature: %d.%d\n", temperature>>8, (temperatures & 0xFF));/* 显示温度 */ 
+			printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* 显示湿度 */ 
+		}  
+		t++; 		
+    osDelay(1000);
   }
   /* USER CODE END WebServer_Task */
 }
