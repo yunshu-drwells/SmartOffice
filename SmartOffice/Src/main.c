@@ -21,6 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
+#include "lwip.h"
 #include "usart.h"
 #include "gpio.h"
 #include "fsmc.h"
@@ -125,12 +126,14 @@ int main(void)
   MX_FSMC_Init();
   MX_USART1_UART_Init();
   MX_I2C2_Init();
+  MX_LWIP_Init();
   /* USER CODE BEGIN 2 */
 	//lcd init
 	delay_init(168);                    // 延时初始化 
 	lcd_init();                             // 初始化LCD 
   sprintf((char *)lcd_id, "LCD ID:%04X", lcddev.id);  // 将LCD ID打印到lcd_id数组
 	
+	/*
 	//iic eeprom 24c02 test
 	printf("I2C2 EEPROM test!\n");
 	Eeprom_Write(0, W, TEXT_SIZE);
@@ -164,13 +167,16 @@ int main(void)
 		printf("This is rtp test!\n");
 		rtp_test(); // 电阻屏测试 
 	}
-
+	*/
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		//test lwip
+		MX_LWIP_Process();  //lwip进程
+		
 		//lcd test
 		/*
 		lcd_clear(colors[color_index]);  //清屏

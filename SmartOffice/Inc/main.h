@@ -68,6 +68,8 @@ void Error_Handler(void);
 #define KEY2_Pin GPIO_PIN_4
 #define KEY2_GPIO_Port GPIOE
 #define KEY2_EXTI_IRQn EXTI4_IRQn
+#define ETH_RESET_Pin GPIO_PIN_8
+#define ETH_RESET_GPIO_Port GPIOI
 #define LCD_RS_Pin GPIO_PIN_0
 #define LCD_RS_GPIO_Port GPIOG
 #define GT9XXX_RST_Pin GPIO_PIN_1
