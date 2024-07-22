@@ -28,9 +28,12 @@ smartoffice\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 smartoffice\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
 smartoffice\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h
 smartoffice\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h
+smartoffice\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
+smartoffice\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 smartoffice\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 smartoffice\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 smartoffice\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+smartoffice\main.o: ../Inc/i2c.h
 smartoffice\main.o: ../Inc/usart.h
 smartoffice\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 smartoffice\main.o: ../Inc/gpio.h
@@ -39,3 +42,9 @@ smartoffice\main.o: ../Inc/lcd.h
 smartoffice\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 smartoffice\main.o: ../Inc/delay.h
 smartoffice\main.o: ../Drivers/CMSIS/Include/core_cm4.h
+smartoffice\main.o: ../Inc/touch.h
+smartoffice\main.o: ../Inc/gt9xxx.h
+smartoffice\main.o: ../Drivers/CMSIS/Include/core_cm4.h
+smartoffice\main.o: ../Inc/ft5206.h
+smartoffice\main.o: ../Drivers/CMSIS/Include/core_cm4.h
+smartoffice\main.o: ../Inc/stm32f4xx_it.h

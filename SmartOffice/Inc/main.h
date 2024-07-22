@@ -70,6 +70,14 @@ void Error_Handler(void);
 #define KEY2_EXTI_IRQn EXTI4_IRQn
 #define LCD_RS_Pin GPIO_PIN_0
 #define LCD_RS_GPIO_Port GPIOG
+#define GT9XXX_RST_Pin GPIO_PIN_1
+#define GT9XXX_RST_GPIO_Port GPIOG
+#define IIC_SCL_Pin GPIO_PIN_6
+#define IIC_SCL_GPIO_Port GPIOH
+#define GT9XXX_INT_Pin GPIO_PIN_7
+#define GT9XXX_INT_GPIO_Port GPIOH
+#define IIC_SDA_Pin GPIO_PIN_8
+#define IIC_SDA_GPIO_Port GPIOH
 #define LCD_BL_Pin GPIO_PIN_9
 #define LCD_BL_GPIO_Port GPIOH
 #define LCD_RD_Pin GPIO_PIN_4
