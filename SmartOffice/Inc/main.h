@@ -82,6 +82,14 @@ void Error_Handler(void);
 #define IIC_SDA_GPIO_Port GPIOH
 #define LCD_BL_Pin GPIO_PIN_9
 #define LCD_BL_GPIO_Port GPIOH
+#define Spi2_cs_Pin GPIO_PIN_0
+#define Spi2_cs_GPIO_Port GPIOI
+#define Spi2_sck_Pin GPIO_PIN_1
+#define Spi2_sck_GPIO_Port GPIOI
+#define Spi2_miso_Pin GPIO_PIN_2
+#define Spi2_miso_GPIO_Port GPIOI
+#define Spi2_mosi_Pin GPIO_PIN_3
+#define Spi2_mosi_GPIO_Port GPIOI
 #define LCD_RD_Pin GPIO_PIN_4
 #define LCD_RD_GPIO_Port GPIOD
 #define CD_WR_Pin GPIO_PIN_5

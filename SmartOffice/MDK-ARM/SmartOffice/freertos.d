@@ -42,6 +42,7 @@ smartoffice\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
 smartoffice\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 smartoffice\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 smartoffice\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+smartoffice\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
 smartoffice\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 smartoffice\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 smartoffice\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
@@ -60,4 +61,6 @@ smartoffice\freertos.o: ../Inc/touch.h
 smartoffice\freertos.o: ../Inc/gt9xxx.h
 smartoffice\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h
 smartoffice\freertos.o: ../Inc/ft5206.h
+smartoffice\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h
+smartoffice\freertos.o: ../Inc/norflash.h
 smartoffice\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h

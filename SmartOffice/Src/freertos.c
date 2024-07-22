@@ -30,6 +30,7 @@
 #include "delay.h"
 #include "lcd.h"
 #include "touch.h"
+#include "norflash.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,6 +52,8 @@
 /* USER CODE BEGIN Variables */
 //lcd
 extern uint8_t lcd_id[12]; //main.c
+
+uint16_t id;  //norflash id
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
 osThreadId TouchHandle;
@@ -148,8 +151,12 @@ void WebServer_Task(void const * argument)
                  
   /* init code for LWIP */
   MX_LWIP_Init();
-
+	
   /* USER CODE BEGIN WebServer_Task */
+	//SPI Flash
+	norflash_init();  //≥ı ºªØnorflash
+	id = norflash_read_id();
+	printf("norflash id is %d\n", id);
   /* Infinite loop */
   for(;;)
   {
