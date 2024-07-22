@@ -834,11 +834,10 @@ ARM Macro Assembler    Page 13
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
 erwork --depend=smartoffice\startup_stm32f407xx.d -osmartoffice\startup_stm32f4
-07xx.o -I.\RTE\_SmartOffice -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include
- -IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.12.0\Drivers\CMSIS\Device\ST\STM32F
-4xx\Include --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA
- 523" --predefine="_RTE_ SETA 1" --predefine="STM32F407xx SETA 1" --list=startu
-p_stm32f407xx.lst startup_stm32f407xx.s
+07xx.o -I.\RTE\_SmartOffice -IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.12.0\Dri
+vers\CMSIS\Device\ST\STM32F4xx\Include -IC:\Keil_v5\ARM\CMSIS\Include --predefi
+ne="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 523" --predefine="ST
+M32F407xx SETA 1" --list=startup_stm32f407xx.lst startup_stm32f407xx.s
 
 
 
@@ -1923,4 +1922,4 @@ Symbol: __main
       At line 177 in file startup_stm32f407xx.s
 Comment: __main used once
 2 symbols
-445 symbols in table
+444 symbols in table

@@ -100,8 +100,8 @@ int main(void)
 	//lcd init
 	delay_init(168);                    // 延时初始化 
 	lcd_init();                             // 初始化LCD 
-  g_point_color = RED;
   sprintf((char *)lcd_id, "LCD ID:%04X", lcddev.id);  // 将LCD ID打印到lcd_id数组
+	
 
   /* USER CODE END 2 */
 
