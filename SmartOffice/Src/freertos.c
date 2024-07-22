@@ -68,6 +68,12 @@ int16_t temperature;
 uint8_t t = 0; 
 uint16_t humidity;
 uint16_t temperatures;
+
+# if 0
+# define ENABEL_DHT11
+# else 
+# define ENABEL_DS18B20
+# endif 
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
 osThreadId TouchHandle;
@@ -173,39 +179,43 @@ void WebServer_Task(void const * argument)
 	printf("norflash id is %d\n", id);
 	
 	osDelay(10);
-	/*
+#ifdef ENABEL_DS18B20
 	if(!DS18B20_Init()){
 		printf(" DS18B20  is already\n");
 
 	}else{
 		printf(" Can not detect DS18B20!\n");
 	}
-	*/
-	osDelay(10);
+#endif
+
+#ifdef ENABEL_DHT11
 	if(!dht11_init()){
 		printf(" DHT11  is already\n");
 
 	}else{
 		printf(" Can not detect DHT11!\n");
 	}
+#endif
   /* Infinite loop */
   for(;;)
   {
-		/*
+#ifdef ENABEL_DS18B20
     temperature = DS18B20_Get_Temp();	
 		if(temperature<0){
 			printf("-");											//显示负号
 			temperature=-temperature;					//转为正数
 		}
 		printf("temperature = %d.%d\n",temperature/10,temperature%10);
-		*/
+#endif
+#ifdef ENABEL_DHT11
 		if (t % 10 == 0) /* 每100ms读取一次 */ { 
 			dht11_read_data(&temperatures, &humidity); /* 读取温湿度值 */
 			
 			printf("temperature: %d.%d\n", temperature>>8, (temperatures & 0xFF));/* 显示温度 */ 
 			printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* 显示湿度 */ 
 		}  
-		t++; 		
+		t++;
+#endif		
     osDelay(1000);
   }
   /* USER CODE END WebServer_Task */
