@@ -51,6 +51,15 @@ smartoffice\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 smartoffice\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 smartoffice\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 smartoffice\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+smartoffice\main.o: ../Inc/fatfs.h
+smartoffice\main.o: ../Middlewares/Third_Party/FatFs/src/ff.h
+smartoffice\main.o: ../Middlewares/Third_Party/FatFs/src/integer.h
+smartoffice\main.o: ../Inc/ffconf.h
+smartoffice\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
+smartoffice\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+smartoffice\main.o: ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h
+smartoffice\main.o: ../Middlewares/Third_Party/FatFs/src/diskio.h
+smartoffice\main.o: ../Inc/user_diskio.h
 smartoffice\main.o: ../Inc/i2c.h
 smartoffice\main.o: ../Inc/lwip.h
 smartoffice\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/opt.h
@@ -59,7 +68,6 @@ smartoffice\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/debug.h
 smartoffice\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/arch.h
 smartoffice\main.o: ../Middlewares/Third_Party/LwIP/system/arch/cc.h
 smartoffice\main.o: ../Middlewares/Third_Party/LwIP/system/arch/cpu.h
-smartoffice\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 smartoffice\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 smartoffice\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
 smartoffice\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\limits.h
