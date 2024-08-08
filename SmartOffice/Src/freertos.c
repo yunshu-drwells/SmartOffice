@@ -69,16 +69,19 @@ uint8_t t = 0;
 uint16_t humidity;
 uint16_t temperatures;
 
-# if 0
+# if 1
 # define ENABEL_DHT11
 # else 
 # define ENABEL_DS18B20
 # endif 
+
+osSemaphoreId TemperatureBinarySemHandle;
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
 osThreadId TouchHandle;
 osThreadId IOTHandle;
 osThreadId GUIHandle;
+
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -117,7 +120,8 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-       
+  osSemaphoreDef(TemperatureBinarySem);
+  TemperatureBinarySemHandle = osSemaphoreCreate(osSemaphore(TemperatureBinarySem), 1);     
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -212,11 +216,16 @@ void WebServer_Task(void const * argument)
 		printf("temperature = %d.%d\n",temperature/10,temperature%10);
 #endif
 #ifdef ENABEL_DHT11
-		if (t % 10 == 0) /* 每100ms读取一次 */ { 
-			dht11_read_data(&temperatures, &humidity); /* 读取温湿度值 */
+		if (t % 10 == 0) /* 每100ms读取一次 */ {
+			//发现复位之后在dht11_read_data执行完成之前，打印了温度和湿度信息
+			//因此使用二值信号量同步
+
+			dht11_read_data(&temperatures, &humidity); /* 读取温湿度值 */			
 			
-			printf("temperature: %d.%d\n", temperature>>8, (temperatures & 0xFF));/* 显示温度 */ 
-			printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* 显示湿度 */ 
+			if(xSemaphoreTake(TemperatureBinarySemHandle, NULL) == pdPASS){  //释放信号量成功
+				printf("temperature: %d.%dC\n", (temperatures>>8), (temperatures & 0xFF));/* 显示温度 */
+				printf("humidity: %d.%d %%\n", (humidity>>8), (humidity & 0xFF)); /* 显示湿度 */
+			}
 		}  
 		t++;
 #endif		

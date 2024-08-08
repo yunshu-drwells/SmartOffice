@@ -1,6 +1,10 @@
 #include "dht11.h"
 #include "stdint.h"
 #include "delay.h"
+#include "usart.h"
+
+#include "cmsis_os.h"
+extern osSemaphoreId TemperatureBinarySemHandle;
 
 /** * @brief 初始化DHT11的IO口 DQ 同时检测DHT11的存在 
 * @param 无 
@@ -82,19 +86,21 @@ static uint8_t dht11_read_byte(void) {
 * @param humi: 湿度值(范围:5%~95%) 
 * @retval 0, 正常. * 1, 失败 
 */ 
-uint8_t dht11_read_data(uint16_t *temp, uint16_t *humi) { 
+uint8_t dht11_read_data(uint16_t *temp, uint16_t *humi) {
+	xSemaphoreTake(TemperatureBinarySemHandle, NULL);
 	uint8_t buf[5]; 
 	uint8_t i; 
 	dht11_reset(); 
 	if (dht11_check() == 0) { 
 		for (i = 0; i < 5; i++) /* 读取40位数据 */ { buf[i] = dht11_read_byte(); } 
-		if ((buf[0] + buf[1] + buf[2] + buf[3]) == buf[4]) { 
+		if ((buf[0] + buf[1] + buf[2] + buf[3]) == buf[4]) {
 			*humi = buf[0];
 			*humi = (*humi<<8)+buf[1]; 
-			*temp = buf[2];
-			*temp = (*temp<<8)+buf[3]; 
-		} 
-	} 
-	else { return 1;	} 
+			*temp = buf[2];  //高位
+			*temp = (*temp<<8)+buf[3];  //低位
+		}
+	}
+	else { return 1;	}
+	xSemaphoreGive(TemperatureBinarySemHandle);
 	return 0; 
 }
