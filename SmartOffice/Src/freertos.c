@@ -37,6 +37,11 @@
 
 //dht11
 #include "dht11.h"
+
+//#include "fonts.h" //加载中文字库
+//#include "text.h"  //显示中文
+
+//#include "malloc.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -76,6 +81,8 @@ uint16_t temperatures;
 # endif 
 
 osSemaphoreId TemperatureBinarySemHandle;
+
+//osSemaphoreId LCDBinarySemHandle;
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
 osThreadId TouchHandle;
@@ -121,7 +128,10 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
   osSemaphoreDef(TemperatureBinarySem);
-  TemperatureBinarySemHandle = osSemaphoreCreate(osSemaphore(TemperatureBinarySem), 1);     
+  TemperatureBinarySemHandle = osSemaphoreCreate(osSemaphore(TemperatureBinarySem), 1);
+	
+	//osSemaphoreDef(LCDBinarySem);
+	//LCDBinarySemHandle = osSemaphoreCreate(osSemaphore(LCDBinarySem), 1);
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -226,6 +236,7 @@ void WebServer_Task(void const * argument)
 				printf("temperature: %d.%dC\n", (temperatures>>8), (temperatures & 0xFF));/* 显示温度 */
 				printf("humidity: %d.%d %%\n", (humidity>>8), (humidity & 0xFF)); /* 显示湿度 */
 			}
+			xSemaphoreGive(TemperatureBinarySemHandle);
 		}  
 		t++;
 #endif		
@@ -245,16 +256,24 @@ void Touch_Task(void const * argument)
 {
   /* USER CODE BEGIN Touch_Task */
 	//lcd init
+	//xSemaphoreTake(LCDBinarySemHandle, NULL);
 	delay_init(168);                    // 延时初始化 
 	lcd_init();                             // 初始化LCD 
   sprintf((char *)lcd_id, "LCD ID:%04X", lcddev.id);  // 将LCD ID打印到lcd_id数组
-  
+	/*
+	my_mem_init(SRAMIN);                // 初始化内部SRAM内存池
+	my_mem_init(SRAMCCM);               // 初始化内部SRAMCCM内存池 
+	while (fonts_init()){};  //加载字库
+	*/
+  //xSemaphoreGive(LCDBinarySemHandle);
+
 	//screen touch init
 	tp_dev.init();                      // 触摸屏初始化
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+
+    osDelay(100);
   }
   /* USER CODE END Touch_Task */
 }
@@ -290,7 +309,12 @@ void GUI_Task(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+		/*
+		//显示中文测试
+		lcd_clear(WHITE);               // 清屏
+		text_show_string(30, 30, 200, 16, "正点原子STM32开发板", 16, 0, RED);
+		*/
+    osDelay(100);
   }
   /* USER CODE END GUI_Task */
 }
