@@ -84,6 +84,8 @@ void emwin_test_touch(void);
 #define LED0_GPIO_Port GPIOF
 #define LED1_Pin GPIO_PIN_10
 #define LED1_GPIO_Port GPIOF
+#define Fan_Pin GPIO_PIN_0
+#define Fan_GPIO_Port GPIOC
 #define GT9XXX_SCL_Pin GPIO_PIN_0
 #define GT9XXX_SCL_GPIO_Port GPIOB
 #define GT9XXX_INT_Pin GPIO_PIN_1

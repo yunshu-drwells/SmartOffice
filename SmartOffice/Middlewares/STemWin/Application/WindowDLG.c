@@ -23,6 +23,10 @@
 
 #include "DIALOG.h"
 #include "include_dlg.h"
+#include "lcd.h"  //lcd_set_backlight_by_pwm
+#include "FreeRTOS.h"
+#include "task.h"
+#include "usart.h"
 
 /*********************************************************************
 *
@@ -59,6 +63,8 @@ extern GUI_CONST_STORAGE GUI_BITMAP bmAlarm;
 extern GUI_CONST_STORAGE GUI_BITMAP bmTurnOff;
 extern GUI_CONST_STORAGE GUI_BITMAP bmblue;
 extern GUI_CONST_STORAGE GUI_FONT GUI_Fontfont;
+
+static int status = 1;
 // USER END
 
 /*********************************************************************
@@ -105,6 +111,52 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 */
 
 // USER START (Optionally insert additional static code)
+static void DisableButtons(void) {
+    // 动态禁用按钮
+    WM_DisableWindow(ID_BUTTON_0);
+		WM_DisableWindow(ID_BUTTON_1);
+		WM_DisableWindow(ID_BUTTON_2);
+		WM_DisableWindow(ID_BUTTON_3);
+		WM_DisableWindow(ID_BUTTON_4);
+		WM_DisableWindow(ID_BUTTON_5);
+		WM_DisableWindow(ID_BUTTON_6);
+		//WM_DisableWindow(ID_BUTTON_7);
+}
+
+static void EnableButtons(void) {
+    // 动态启用按钮
+    WM_EnableWindow(ID_BUTTON_0);
+		WM_EnableWindow(ID_BUTTON_1);
+		WM_EnableWindow(ID_BUTTON_2);
+		WM_EnableWindow(ID_BUTTON_3);
+		WM_EnableWindow(ID_BUTTON_4);
+		WM_EnableWindow(ID_BUTTON_5);
+		WM_EnableWindow(ID_BUTTON_6);
+		WM_EnableWindow(ID_BUTTON_7);
+}
+TaskHandle_t xUpdateTaskHandle;
+static void UpdateTextTask(void *pvParameters) {
+    WM_MESSAGE * pMsg = (WM_MESSAGE *)pvParameters;
+    while (1) {
+				//检测屏幕任意位置有没有被触摸
+			  if(WM_TOUCH == pMsg->MsgId){
+						printf("WM_NOTIFY_PARENT\n");
+						//被触摸就开启背光到最亮，并退出循环
+					  //backlight on
+						lcd_set_backlight_by_pwm(0xFF); // 设置占空比为255，开启背光最亮
+						//让所有按钮可以触发
+						//EnableButtons();
+						break;
+				}
+        // 延时200ms
+        vTaskDelay(pdMS_TO_TICKS(200));
+    }
+		printf("vTaskDelete\n");
+		//开启背光之后就销毁任务
+		vTaskDelete(xUpdateTaskHandle);
+		xUpdateTaskHandle = NULL;
+}
+
 // USER END
 
 /*********************************************************************
@@ -222,6 +274,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
 	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmSpotlightOn);
 	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmblue);
+	//BUTTON_SetFocusable(hItem, 0);
 	//
 	// Initialization of 'Button_Temperature'
 	//
@@ -386,6 +439,26 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
+				status = !status;
+        if(status){
+            //backlight on
+						lcd_set_backlight_by_pwm(0xFF); // 设置占空比为255，开启背光最亮
+						//让所有按钮可以触发
+						//EnableButtons();
+						//如果不是按屏幕任意位置开启的背光，而是按息屏按钮位置，同样也需要销毁任务
+						if (xUpdateTaskHandle != NULL) {
+							vTaskDelete(xUpdateTaskHandle);
+							xUpdateTaskHandle = NULL;
+						}
+        }else{
+						//backlight off	
+						lcd_set_backlight_by_pwm(0x00); // 设置占空比为0，关闭背光
+						//让所有按钮不可用被触发
+						//DisableButtons();
+            //开启监测屏幕被触摸就开启背光的任务
+						// 创建更新任务，传递Text控件句柄
+						xTaskCreate(UpdateTextTask, "UpdateTextTask", 256, (void*)pMsg, tskIDLE_PRIORITY + 1, &xUpdateTaskHandle);
+        }
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)

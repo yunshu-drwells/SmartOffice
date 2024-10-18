@@ -209,8 +209,8 @@ void Touch_Task(void const * argument)
 			//printf("temperature: %d.%d\n", temperature>>8, (temperature & 0xFF));/* ÏÔÊ¾ÎÂ¶È */ 
 			//printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* ÏÔÊ¾Êª¶È */ 
 		}
-		if(t % 10 == 0) /* æ¯200msè¯»å–ä¸€æ¬¡ */{ 
-				adcx = lsens_get_val();                                 /* è·å–ADCå€¼ */
+		if(t % 10 == 0) /* æ¯?200msè¯»å–ä¸?æ¬? */{ 
+				adcx = lsens_get_val();                                 /* è·å–ADCå€? */
 				//printf("bright:%d\n", adcx);
 		}
 		t++; 

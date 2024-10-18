@@ -145,11 +145,11 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         if(status){
             BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmFanOn);
             //fan on
-						//HAL_GPIO_WritePin(Fan_GPIO_Port, Fan_Pin, GPIO_PIN_SET);
+						HAL_GPIO_WritePin(Fan_GPIO_Port, Fan_Pin, GPIO_PIN_SET);
         }else{
             BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmFanOff);
             //fan off
-						//HAL_GPIO_WritePin(Fan_GPIO_Port, Fan_Pin, GPIO_PIN_RESET);
+						HAL_GPIO_WritePin(Fan_GPIO_Port, Fan_Pin, GPIO_PIN_RESET);
         }
         // USER END
         break;
