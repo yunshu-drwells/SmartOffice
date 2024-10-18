@@ -39,7 +39,14 @@
 #define ID_BUTTON_5    (GUI_ID_USER + 0x07)
 #define ID_BUTTON_6    (GUI_ID_USER + 0x08)
 #define ID_BUTTON_7    (GUI_ID_USER + 0x09)
-
+#define ID_TEXT_0  (GUI_ID_USER + 0x0a)
+#define ID_TEXT_1  (GUI_ID_USER + 0x0b)
+#define ID_TEXT_2  (GUI_ID_USER + 0x0c)
+#define ID_TEXT_3  (GUI_ID_USER + 0x0d)
+#define ID_TEXT_4  (GUI_ID_USER + 0x0e)
+#define ID_TEXT_5  (GUI_ID_USER + 0x0f)
+#define ID_TEXT_6  (GUI_ID_USER + 0x10)
+#define ID_TEXT_7  (GUI_ID_USER + 0x11)
 
 // USER START (Optionally insert additional defines)
 extern GUI_CONST_STORAGE GUI_BITMAP bmLightingMasterOn;
@@ -79,6 +86,14 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { BUTTON_CreateIndirect, "", ID_BUTTON_6, 420, 270, 150, 150, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "", ID_BUTTON_7, 610, 270, 150, 150, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
+      { TEXT_CreateIndirect, "Text", ID_TEXT_0, 40, 210, 150, 32, 0, 0x64, 0 },
+      { TEXT_CreateIndirect, "Text", ID_TEXT_1, 230, 210, 150, 32, 0, 0x64, 0 },
+      { TEXT_CreateIndirect, "Text", ID_TEXT_2, 420, 210, 150, 32, 0, 0x64, 0 },
+      { TEXT_CreateIndirect, "Text", ID_TEXT_3, 610, 210, 150, 32, 0, 0x64, 0 },
+      { TEXT_CreateIndirect, "Text", ID_TEXT_4, 40, 420, 150, 32, 0, 0x64, 0 },
+      { TEXT_CreateIndirect, "Text", ID_TEXT_5, 230, 420, 150, 32, 0, 0x64, 0 },
+      { TEXT_CreateIndirect, "Text", ID_TEXT_6, 420, 420, 150, 32, 0, 0x64, 0 },
+      { TEXT_CreateIndirect, "Text", ID_TEXT_7, 610, 420, 150, 32, 0, 0x64, 0 },
   // USER END
 };
 
@@ -111,6 +126,89 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = pMsg->hWin;
     WINDOW_SetBkColor(hItem, GUI_MAKE_COLOR(0x00973F04));
     // USER START (Optionally insert additional code for further widget initialization)
+	//
+    // Initialization of 'Text0'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
+    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    //TEXT_SetText(hItem, "LightingMaster");
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "主灯");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+    //WM_InvalidateWindow(hItem);  // 强制刷新窗口
+    //
+    // Initialization of 'Text1'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
+    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    //TEXT_SetText(hItem, "SpotLight");
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "射灯");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+    //
+    // Initialization of 'Text2'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
+    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    //TEXT_SetText(hItem, "temp");
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "温度");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+    //
+    // Initialization of 'Text3'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_3);
+    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    //TEXT_SetText(hItem, "humidity");
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "湿度");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+            //
+    // Initialization of 'Text4'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
+    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    //TEXT_SetText(hItem, "brightness");
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "亮度");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+    //
+    // Initialization of 'Text5'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_5);
+    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    //TEXT_SetText(hItem, "Fan");
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "风扇");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+            //
+    // Initialization of 'Text6'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_6);
+    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    //TEXT_SetText(hItem, "Alarm");
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "警报");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+    //
+    // Initialization of 'Text7'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_7);
+    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    //TEXT_SetText(hItem, "TurnOff");
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "息屏");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+		
+		
     // ���ݿռ�ID,��ȡ�ռ���
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
     //

@@ -23,6 +23,8 @@
 
 #include "DIALOG.h"
 #include "include_dlg.h"
+#include "main.h"  //LED_Groups LED_pins
+#include "gpio.h"  //HAL_GPIO_WritePin
 /*********************************************************************
 *
 *       Defines
@@ -41,6 +43,7 @@ extern GUI_CONST_STORAGE GUI_BITMAP bmLightingMasterOff;
 extern GUI_CONST_STORAGE GUI_BITMAP bmMainPage;
 extern GUI_CONST_STORAGE GUI_BITMAP bmMainPagePressed;
 extern GUI_CONST_STORAGE GUI_FONT GUI_Fontfont;
+static int status = 0;
 // USER END
 
 /*********************************************************************
@@ -104,15 +107,20 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     TEXT_SetText(hItem, "主灯");
     TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    WM_InvalidateWindow(hItem);  // 强制刷新窗口
+    //WM_InvalidateWindow(hItem);  // 强制刷新窗口
     // USER START (Optionally insert additional code for further widget initialization)
         // 根据空间ID,获取空间句柄
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
     //
 	// Initialization of 'Button_LightingMaster'
 	//
-	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmLightingMasterOff);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmLightingMasterOn);
+	//BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmLightingMasterOff);
+	//BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmLightingMasterOn);
+    if(status){
+        BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmLightingMasterOn);
+    }else{
+        BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmLightingMasterOff);
+    }
 
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
     //
@@ -134,6 +142,16 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
+				status = !status;
+        if(status){
+            BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOn);
+            //light up
+						HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
+        }else{
+            BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOff);
+            //light off
+						HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
+        }
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)

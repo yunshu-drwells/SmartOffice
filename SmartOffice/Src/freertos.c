@@ -181,7 +181,7 @@ void Touch_Task(void const * argument)
 	lcd_init();                             /* åˆå§‹åŒ–LCD */
   g_point_color = RED;
   sprintf((char *)lcd_id, "LCD ID:%04X", lcddev.id);  /* å°†LCD IDæ‰“å°åˆ°lcd_idæ•°ç»„ */
-	HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);  //LED1äº?
+	//HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);  //LED1äº?
 	lcd_set_backlight_by_pwm(0xFF); // è®¾ç½®å ç©ºæ¯”ä¸º255ï¼Œå¼€å¯èƒŒå…‰æœ€äº?
 	lcd_clear(colors[color_index]);  //æ¸…å±
 	
@@ -206,12 +206,12 @@ void Touch_Task(void const * argument)
 		if (t % 5 == 0) /* Ã¿100ms¶ÁÈ¡Ò»´Î */ { 
 			dht11_read_data(&temperature, &humidity); /* ¶ÁÈ¡ÎÂÊª¶ÈÖµ */
 			
-			printf("temperature: %d.%d\n", temperature>>8, (temperature & 0xFF));/* ÏÔÊ¾ÎÂ¶È */ 
-			printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* ÏÔÊ¾Êª¶È */ 
+			//printf("temperature: %d.%d\n", temperature>>8, (temperature & 0xFF));/* ÏÔÊ¾ÎÂ¶È */ 
+			//printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* ÏÔÊ¾Êª¶È */ 
 		}
 		if(t % 10 == 0) /* æ¯200msè¯»å–ä¸€æ¬¡ */{ 
 				adcx = lsens_get_val();                                 /* è·å–ADCå€¼ */
-				printf("bright:%d\n", adcx);
+				//printf("bright:%d\n", adcx);
 		}
 		t++; 
 		osDelay(10);

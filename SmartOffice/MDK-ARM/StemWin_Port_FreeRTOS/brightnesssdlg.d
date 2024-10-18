@@ -46,3 +46,14 @@ stemwin_port_freertos\brightnesssdlg.o: ..\Middlewares\STemWin\inc\TEXT.h
 stemwin_port_freertos\brightnesssdlg.o: ..\Middlewares\STemWin\inc\TREEVIEW.h
 stemwin_port_freertos\brightnesssdlg.o: ..\Middlewares\STemWin\inc\KNOB.h
 stemwin_port_freertos\brightnesssdlg.o: ..\Middlewares\STemWin\Application\include_dlg.h
+stemwin_port_freertos\brightnesssdlg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+stemwin_port_freertos\brightnesssdlg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+stemwin_port_freertos\brightnesssdlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+stemwin_port_freertos\brightnesssdlg.o: ../Inc/FreeRTOSConfig.h
+stemwin_port_freertos\brightnesssdlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+stemwin_port_freertos\brightnesssdlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+stemwin_port_freertos\brightnesssdlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+stemwin_port_freertos\brightnesssdlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+stemwin_port_freertos\brightnesssdlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+stemwin_port_freertos\brightnesssdlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+stemwin_port_freertos\brightnesssdlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h

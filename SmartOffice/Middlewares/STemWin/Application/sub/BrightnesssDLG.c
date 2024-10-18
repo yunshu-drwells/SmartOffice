@@ -23,6 +23,11 @@
 
 #include "DIALOG.h"
 #include "include_dlg.h"
+#include "stdint.h"  //uint16_t sprintf
+#include "stdio.h"  //sprintf
+
+#include "FreeRTOS.h"
+#include "task.h"
 
 /*********************************************************************
 *
@@ -42,6 +47,10 @@
 extern GUI_CONST_STORAGE GUI_BITMAP bmBrightnesss;
 extern GUI_CONST_STORAGE GUI_BITMAP bmMainPage;
 extern GUI_CONST_STORAGE GUI_BITMAP bmMainPagePressed;
+extern GUI_CONST_STORAGE GUI_FONT GUI_Fontfont;
+
+extern uint16_t adcx;  //freertos.c
+static uint8_t str[4] = {0};
 // USER END
 
 /*********************************************************************
@@ -106,6 +115,27 @@ static const void * _GetImageById(U32 Id, U32 * pSize) {
 }
 
 // USER START (Optionally insert additional static code)
+static TaskHandle_t xUpdateTaskHandle;
+static void UpdateTextTask(void *pvParameters) {
+    WM_HWIN hItem = (WM_HWIN)pvParameters;
+    while (1) {
+        // æ ¼å¼åŒ–å­—ç¬¦ä¸²å¹¶è®¾ç½®æ–‡æœ¬
+        sprintf((char*)str, "%02d%%", adcx);
+        TEXT_SetText(hItem, (char*)str);
+
+        // å¼ºåˆ¶åˆ·æ–°æ§ä»¶
+        WM_InvalidateWindow(hItem);
+
+        // å»¶æ—¶200ms
+        vTaskDelay(pdMS_TO_TICKS(200));
+    }
+}
+static void DeleteUpdateTask(void) {
+    if (xUpdateTaskHandle != NULL) {
+        vTaskDelete(xUpdateTaskHandle);
+        xUpdateTaskHandle = NULL;
+    }
+}
 // USER END
 
 /*********************************************************************
@@ -132,9 +162,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'Text'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
-    TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    TEXT_SetText(hItem, "Brightnesss");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    //TEXT_SetText(hItem, "Brightnesss");
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
+    TEXT_SetText(hItem, "äº®åº¦");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     //
     // Initialization of 'Image'
     //
@@ -145,8 +178,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'Text'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
-    TEXT_SetText(hItem, "Text");
+    //TEXT_SetText(hItem, "Text");
     TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+		
+		sprintf((char*)str, "%2d%%", adcx);
+    TEXT_SetText(hItem, (char*)str);
+		// åˆ›å»ºæ›´æ–°ä»»åŠ¡ï¼Œä¼ é€’Textæ§ä»¶å¥æŸ„
+    xTaskCreate(UpdateTextTask, "UpdateTextTask", 256, (void*)hItem, tskIDLE_PRIORITY + 1, &xUpdateTaskHandle);
+		
     // USER START (Optionally insert additional code for further widget initialization)
     // ¸ù¾İ¿Õ¼äID,»ñÈ¡¿Õ¼ä¾ä±ú
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_IMAGE_0);
@@ -178,6 +217,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         //·µ»ØÖ÷Ò³
         GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
         CreateWindowMain(); // ´´½¨WindowMain½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
+				//é”€æ¯ä»»åŠ¡
+				DeleteUpdateTask();
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)

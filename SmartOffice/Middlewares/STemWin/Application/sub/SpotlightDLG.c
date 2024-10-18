@@ -23,6 +23,8 @@
 
 #include "DIALOG.h"
 #include "include_dlg.h"
+#include "main.h"  //LED_Groups LED_pins
+#include "gpio.h"  //HAL_GPIO_WritePin
 /*********************************************************************
 *
 *       Defines
@@ -40,6 +42,8 @@ extern GUI_CONST_STORAGE GUI_BITMAP bmSpotlightOn;
 extern GUI_CONST_STORAGE GUI_BITMAP bmSpotlightOff;
 extern GUI_CONST_STORAGE GUI_BITMAP bmMainPage;
 extern GUI_CONST_STORAGE GUI_BITMAP bmMainPagePressed;
+extern GUI_CONST_STORAGE GUI_FONT GUI_Fontfont;
+static int status = 0;
 // USER END
 
 /*********************************************************************
@@ -97,17 +101,25 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'Text'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
-    TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    TEXT_SetText(hItem, "Spotlight");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    //TEXT_SetText(hItem, "Spotlight");
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "射灯");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     // USER START (Optionally insert additional code for further widget initialization)
     // 根据空间ID,获取空间句柄
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
     //
 	// Initialization of 'Button_Spotlight'
 	//
-	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmSpotlightOff);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmSpotlightOn);
+	//BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmSpotlightOff);
+	//BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmSpotlightOn);
+	if(status){
+			BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmSpotlightOn);
+	}else{
+			BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmSpotlightOff);
+	}
 
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
     //
@@ -129,6 +141,16 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
+				status = !status;
+        if(status){
+            BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmSpotlightOn);
+            //light up
+						HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
+        }else{
+            BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmSpotlightOff);
+            //light off
+						HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+        }
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
