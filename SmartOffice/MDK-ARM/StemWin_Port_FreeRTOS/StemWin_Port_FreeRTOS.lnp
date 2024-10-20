@@ -149,8 +149,8 @@
 "stemwin_port_freertos\fandlg.o"
 "stemwin_port_freertos\humiditydlg.o"
 "stemwin_port_freertos\lightingmasterdlg.o"
-"stemwin_port_freertos\spotlightdlg.o"
 "stemwin_port_freertos\temperaturedlg.o"
+"stemwin_port_freertos\spotlightdlg.o"
 "stemwin_port_freertos\windowdlg.o"
 "stemwin_port_freertos\font.o"
 "stemwin_port_freertos\alarm.o"
@@ -169,6 +169,7 @@
 "stemwin_port_freertos\spotlightoff.o"
 "stemwin_port_freertos\spotlighton.o"
 "stemwin_port_freertos\maintask.o"
+"stemwin_port_freertos\turnoffdlg.o"
 --library_type=microlib --nodebug --strict --scatter "StemWin_Port_FreeRTOS\StemWin_Port_FreeRTOS.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

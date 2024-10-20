@@ -22,20 +22,37 @@
 // USER END
 
 #include "DIALOG.h"
-
+#include "include_dlg.h"
+#include "lcd.h"  //lcd_set_backlight_by_pwm、lcd_get_backlight_by_pwm
+#include "stdio.h"  //sprintf
 /*********************************************************************
 *
 *       Defines
 *
 **********************************************************************
 */
-#define ID_WINDOW_0  (GUI_ID_USER + 0x00)
-#define ID_TEXT_0  (GUI_ID_USER + 0x01)
-#define ID_BUTTON_0  (GUI_ID_USER + 0x03)
-#define ID_BUTTON_1  (GUI_ID_USER + 0x05)
-
+#define ID_WINDOW_0     (GUI_ID_USER + 0x00)
+#define ID_SLIDER_0     (GUI_ID_USER + 0x01)
+#define ID_BUTTON_0     (GUI_ID_USER + 0x02)
+#define ID_TEXT_0     (GUI_ID_USER + 0x03)
+#define ID_TEXT_1     (GUI_ID_USER + 0x04)
+#define ID_TEXT_2     (GUI_ID_USER + 0x5)
+#define ID_TEXT_3     (GUI_ID_USER + 0x6)
+#define ID_BUTTON_1     (GUI_ID_USER + 7)
+#define ID_TEXT_4     (GUI_ID_USER + 8)
 
 // USER START (Optionally insert additional defines)
+extern GUI_CONST_STORAGE GUI_BITMAP bmTurnOff;
+extern GUI_CONST_STORAGE GUI_BITMAP bmMainPage;
+extern GUI_CONST_STORAGE GUI_BITMAP bmMainPagePressed;
+extern GUI_CONST_STORAGE GUI_FONT GUI_Fontfont;
+
+static int status = 1;
+static uint8_t cur_brightness = 255;  //保存当前背光值
+static uint8_t last_brightness = 255;  //保存上一次背光值
+
+static uint16_t cur_slider = 0;  //保存当前滑块值
+static uint8_t str[4] = {0};
 // USER END
 
 /*********************************************************************
@@ -54,10 +71,15 @@
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { WINDOW_CreateIndirect, "TurnOff", ID_WINDOW_0, 0, 0, 800, 480, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_0, 0, 0, 800, 32, 0, 0x64, 0 },
+  { SLIDER_CreateIndirect, "Slider", ID_SLIDER_0, 50, 100, 700, 40, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "", ID_BUTTON_0, 500, 200, 150, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "", ID_BUTTON_1, 150, 200, 150, 150, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "L", ID_TEXT_0, 20, 105, 80, 32, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "H", ID_TEXT_1, 760, 105, 80, 32, 0, 0x64, 0 },
   // USER START (Optionally insert additional widgets)
+  { TEXT_CreateIndirect, "Text", ID_TEXT_2, 0, 0, 800, 32, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_3, 0, 42, 800, 32, 0, 0x64, 0 },
+  { BUTTON_CreateIndirect, "", ID_BUTTON_1, 150, 200, 150, 150, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_4, 150, 320, 150, 32, 0, 0x64, 0 },
   // USER END
 };
 
@@ -69,6 +91,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 */
 
 // USER START (Optionally insert additional static code)
+
 // USER END
 
 /*********************************************************************
@@ -84,25 +107,106 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
+    //printf("WM_INIT_DIALOG\n");
     //
     // Initialization of 'TurnOff'
     //
     hItem = pMsg->hWin;
     WINDOW_SetBkColor(hItem, GUI_MAKE_COLOR(0x00973F04));
     //
-    // Initialization of 'Text'
+    // Initialization of 'L'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
+    TEXT_SetText(hItem, "L");
     TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    TEXT_SetText(hItem, "TurnOff");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    //
+    // Initialization of 'H'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
+    TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    TEXT_SetText(hItem, "H");
     // USER START (Optionally insert additional code for further widget initialization)
+    // 根据空间ID,获取空间句柄
+        hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
+    //
+        // Initialization of 'Button_LightingMaster'
+        //
+    BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmMainPage);
+    BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmMainPagePressed);
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "亮度");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_3);
+    TEXT_SetFont(hItem, GUI_FONT_32_ASCII);  // 设置字体
+    TEXT_SetText(hItem, "255");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
+    BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmTurnOff);
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
+    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);  // 设置字体
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "息屏");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_0);
+    SLIDER_SetFocusColor(hItem, 0x00043F97);
+    SLIDER_SetNumTicks(hItem, 100);
+    SLIDER_SetRange(hItem, 1, 100); //[1:100] -> [5:255] -> [0:250]+5
+    SLIDER_SetValue(hItem, 100);
     // USER END
     break;
   case WM_NOTIFY_PARENT:
+    //printf("WM_NOTIFY_PARENT\n");
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
     switch(Id) {
+    case ID_SLIDER_0: // Notifications sent by 'Slider'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+                if(0 == cur_brightness)      {
+                    //backlight on
+                    //printf("backlight on\n");
+                    lcd_set_backlight_by_pwm(last_brightness);
+                    cur_brightness = last_brightness;
+                    status = !status;
+                }
+        // USER END
+        break;
+      case WM_NOTIFICATION_VALUE_CHANGED:
+        // USER START (Optionally insert code for reacting on notification message)
+                hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_0);
+                if(0 != cur_brightness)      {
+                    cur_slider = SLIDER_GetValue(hItem);
+                    
+                    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_3);
+                    sprintf((char*)str, "%3d", cur_slider);
+                    TEXT_SetText(hItem, (char*)str);
+                
+                    cur_slider = cur_slider*2.5+5;
+                    cur_brightness = last_brightness = cur_slider;
+                    //printf("current backlight:%d\n", cur_slider);
+                    lcd_set_backlight_by_pwm(cur_slider); // 设置占空比为滑块值*25
+                }else{
+                    SLIDER_SetValue(hItem, last_brightness);
+                }
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
     case ID_BUTTON_0: // Notifications sent by ''
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
@@ -111,6 +215,17 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
+                if(0 != cur_brightness)      {
+                    //返回主页
+                    GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
+                    CreateWindowMain(); // 创建WindowMain界面，调用其它界面的Create方法
+                }else{
+                     //backlight on
+                    //printf("backlight on\n");
+                    lcd_set_backlight_by_pwm(last_brightness);
+                    cur_brightness = last_brightness;
+                    status = !status;
+                }
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -125,17 +240,40 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
+            status = !status;
+        if(status){
+            //backlight on
+                        //printf("backlight on\n");
+                        lcd_set_backlight_by_pwm(last_brightness);
+                        cur_brightness = last_brightness;
+        }else{
+                        //backlight off
+                        cur_brightness = 0;
+                        last_brightness = lcd_get_backlight_by_pwm();
+                        lcd_set_backlight_by_pwm(0);
+                        //printf("backlight off\n");
+        }
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
       // USER END
       }
-      break;
+      break;      
     // USER START (Optionally insert additional code for further Ids)
     // USER END
     }
     break;
   // USER START (Optionally insert additional message handling)
+    case WM_TOUCH:
+            //printf("case WM_TOUCH\n");
+            if(0 == cur_brightness)      {
+                //backlight on
+                //printf("backlight on\n");
+                lcd_set_backlight_by_pwm(last_brightness);
+                cur_brightness = last_brightness;
+                status = !status;
+            }
+            break;
   // USER END
   default:
     WM_DefaultProc(pMsg);
