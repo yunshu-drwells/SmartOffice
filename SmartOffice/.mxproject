@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=C:/Users/Administrator/Desktop/SmartOffice/Inc
+HeaderPath=C:/Users/Administrator/Desktop/New folder/SmartOffice/Inc
 HeaderFiles=gpio.h;usart.h;stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;FreeRTOSConfig.h;fsmc.h;i2c.h;lwip.h;lwipopts.h;ethernetif.h;crc.h;spi.h;adc.h;
-SourcePath=C:/Users/Administrator/Desktop/SmartOffice/Src
+SourcePath=C:/Users/Administrator/Desktop/New folder/SmartOffice/Src
 SourceFiles=gpio.c;usart.c;stm32f4xx_it.c;stm32f4xx_hal_msp.c;main.c;freertos.c;stm32f4xx_hal_timebase_tim.c;fsmc.c;i2c.c;lwip.c;ethernetif.c;crc.c;spi.c;adc.c;
 
 [PreviousLibFiles]

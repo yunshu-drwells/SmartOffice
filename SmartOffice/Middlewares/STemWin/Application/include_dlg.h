@@ -13,5 +13,5 @@ extern WM_HWIN CreateHumidity(void);
 extern WM_HWIN CreateBrightnesss(void);
 extern WM_HWIN CreateFan(void);
 extern WM_HWIN CreateAlarm(void);
-
+extern WM_HWIN CreateTurnOff(void);
 #endif
