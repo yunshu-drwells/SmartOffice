@@ -1,0 +1,10 @@
+smartclassrom\subledopen.o: ..\Middlewares\Third_Party\STemWin\Application\image\sub\SubLedOpen.c
+smartclassrom\subledopen.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+smartclassrom\subledopen.o: ../Middlewares/Third_Party/STemWin/inc/GUI.h
+smartclassrom\subledopen.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+smartclassrom\subledopen.o: ../Middlewares/Third_Party/STemWin/inc/GUI_ConfDefaults.h
+smartclassrom\subledopen.o: ../Middlewares/Third_Party/STemWin/config/GUIConf.h
+smartclassrom\subledopen.o: ../Middlewares/Third_Party/STemWin/inc/GUI_Type.h
+smartclassrom\subledopen.o: ../Middlewares/Third_Party/STemWin/inc/LCD.h
+smartclassrom\subledopen.o: ../Middlewares/Third_Party/STemWin/inc/Global.h
+smartclassrom\subledopen.o: ../Middlewares/Third_Party/STemWin/inc/GUI_Version.h

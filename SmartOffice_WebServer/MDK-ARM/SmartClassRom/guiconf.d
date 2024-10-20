@@ -1,0 +1,9 @@
+smartclassrom\guiconf.o: ..\Middlewares\Third_Party\STemWin\Config\GUIConf.c
+smartclassrom\guiconf.o: ../Middlewares/Third_Party/STemWin/inc/GUI.h
+smartclassrom\guiconf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+smartclassrom\guiconf.o: ../Middlewares/Third_Party/STemWin/inc/GUI_ConfDefaults.h
+smartclassrom\guiconf.o: ../Middlewares/Third_Party/STemWin/config/GUIConf.h
+smartclassrom\guiconf.o: ../Middlewares/Third_Party/STemWin/inc/GUI_Type.h
+smartclassrom\guiconf.o: ../Middlewares/Third_Party/STemWin/inc/LCD.h
+smartclassrom\guiconf.o: ../Middlewares/Third_Party/STemWin/inc/Global.h
+smartclassrom\guiconf.o: ../Middlewares/Third_Party/STemWin/inc/GUI_Version.h

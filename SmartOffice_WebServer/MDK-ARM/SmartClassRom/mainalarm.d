@@ -1,0 +1,10 @@
+smartclassrom\mainalarm.o: ..\Middlewares\Third_Party\STemWin\Application\image\main\MainAlarm.c
+smartclassrom\mainalarm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+smartclassrom\mainalarm.o: ../Middlewares/Third_Party/STemWin/inc/GUI.h
+smartclassrom\mainalarm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+smartclassrom\mainalarm.o: ../Middlewares/Third_Party/STemWin/inc/GUI_ConfDefaults.h
+smartclassrom\mainalarm.o: ../Middlewares/Third_Party/STemWin/config/GUIConf.h
+smartclassrom\mainalarm.o: ../Middlewares/Third_Party/STemWin/inc/GUI_Type.h
+smartclassrom\mainalarm.o: ../Middlewares/Third_Party/STemWin/inc/LCD.h
+smartclassrom\mainalarm.o: ../Middlewares/Third_Party/STemWin/inc/Global.h
+smartclassrom\mainalarm.o: ../Middlewares/Third_Party/STemWin/inc/GUI_Version.h

@@ -1,0 +1,15 @@
+smartclassrom\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/timers.c
+smartclassrom\timers.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+smartclassrom\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+smartclassrom\timers.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+smartclassrom\timers.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+smartclassrom\timers.o: ../Inc/FreeRTOSConfig.h
+smartclassrom\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+smartclassrom\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+smartclassrom\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+smartclassrom\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+smartclassrom\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+smartclassrom\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+smartclassrom\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+smartclassrom\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
+smartclassrom\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h

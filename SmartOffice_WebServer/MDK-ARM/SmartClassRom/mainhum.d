@@ -1,0 +1,10 @@
+smartclassrom\mainhum.o: ..\Middlewares\Third_Party\STemWin\Application\image\main\MainHum.c
+smartclassrom\mainhum.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+smartclassrom\mainhum.o: ../Middlewares/Third_Party/STemWin/inc/GUI.h
+smartclassrom\mainhum.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+smartclassrom\mainhum.o: ../Middlewares/Third_Party/STemWin/inc/GUI_ConfDefaults.h
+smartclassrom\mainhum.o: ../Middlewares/Third_Party/STemWin/config/GUIConf.h
+smartclassrom\mainhum.o: ../Middlewares/Third_Party/STemWin/inc/GUI_Type.h
+smartclassrom\mainhum.o: ../Middlewares/Third_Party/STemWin/inc/LCD.h
+smartclassrom\mainhum.o: ../Middlewares/Third_Party/STemWin/inc/Global.h
+smartclassrom\mainhum.o: ../Middlewares/Third_Party/STemWin/inc/GUI_Version.h

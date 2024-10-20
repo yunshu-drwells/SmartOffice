@@ -1,0 +1,15 @@
+smartclassrom\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/queue.c
+smartclassrom\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+smartclassrom\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+smartclassrom\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+smartclassrom\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+smartclassrom\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+smartclassrom\queue.o: ../Inc/FreeRTOSConfig.h
+smartclassrom\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+smartclassrom\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+smartclassrom\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+smartclassrom\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+smartclassrom\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+smartclassrom\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+smartclassrom\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+smartclassrom\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h

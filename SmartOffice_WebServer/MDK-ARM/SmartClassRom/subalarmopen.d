@@ -1,0 +1,10 @@
+smartclassrom\subalarmopen.o: ..\Middlewares\Third_Party\STemWin\Application\image\sub\SubAlarmOpen.c
+smartclassrom\subalarmopen.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+smartclassrom\subalarmopen.o: ../Middlewares/Third_Party/STemWin/inc/GUI.h
+smartclassrom\subalarmopen.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+smartclassrom\subalarmopen.o: ../Middlewares/Third_Party/STemWin/inc/GUI_ConfDefaults.h
+smartclassrom\subalarmopen.o: ../Middlewares/Third_Party/STemWin/config/GUIConf.h
+smartclassrom\subalarmopen.o: ../Middlewares/Third_Party/STemWin/inc/GUI_Type.h
+smartclassrom\subalarmopen.o: ../Middlewares/Third_Party/STemWin/inc/LCD.h
+smartclassrom\subalarmopen.o: ../Middlewares/Third_Party/STemWin/inc/Global.h
+smartclassrom\subalarmopen.o: ../Middlewares/Third_Party/STemWin/inc/GUI_Version.h
