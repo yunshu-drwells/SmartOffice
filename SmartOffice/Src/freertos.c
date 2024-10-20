@@ -38,6 +38,11 @@
 #include "lsens.h"  //lsens_init
 
 #include "GUI.h"  //GUI_TOUCH_Exec
+
+#include "diskio.h"
+
+#include "fatfs.h"  //SDFatFS、USERFatFS
+//#include "mymalloc.h"  //mymalloc
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -69,6 +74,10 @@ uint16_t temperature;
 uint16_t humidity;
 
 uint16_t adcx;
+
+unsigned long recv = 0;
+
+//TaskHandle_t xMountDisksTaskHandle;
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
 osThreadId TouchHandle;
@@ -77,7 +86,71 @@ osThreadId GUIHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-extern void MainTask(void);   
+extern void MainTask(void); 
+
+void init_disks(){
+	while(disk_initialize(0)){  //返回0，表示SD初始化成�?
+		//printf("SD Card Error!\n");
+		delay_ms(500);
+		//printf("Please Check!\n");
+		delay_ms(500);
+	}
+	//printf("SD Card init OK!\n");
+	disk_ioctl(0, 1, (void*)&recv);
+	//printf("SD sector count: %d\n", (int)recv);
+		while(disk_initialize(1)){  //返回0，表示Norflash初始化成�?
+			//printf("Noflash Error!\n");
+			delay_ms(500);
+			//printf("Please Check!\n");
+			delay_ms(500);
+	}
+	//printf("Noflash init OK!\n");
+	disk_ioctl(1, 1, (void*)&recv);
+	//printf("noflash sector count: %d\n", (int)recv);
+}
+
+//void fmout_disks(void *pvParameters){
+void fmout_disks( ){
+	//uint8_t work_buff[512] = {0};  //在外扩SRAM中开辟
+	uint8_t * work_buff = (uint8_t *)mymalloc(2, 512);
+	uint8_t res = 0;
+	res = f_mount(&SDFatFS, "0:", 0);        // 挂载SD�? 
+	//printf("f_mount sd res:%u\n", res);
+	if(FR_OK == res){
+		//printf("SD Disk Mount Successed!\n");     /* FLASH格式化成�? */	
+	}
+	if (res == 0X0D) {               /* SD磁盘,FAT文件系统错误,重新格式化SD */
+			//printf("sd fs error!\n");
+			//printf("SD Disk Formatting...\n");         /* 格式化SD */
+			res = f_mkfs("0:", 0, 0, work_buff, _MAX_SS);                                            /* 格式化SD,0:,盘符;0,使用默认格式化参�? */
+
+			if (res == 0){
+					f_setlabel((const TCHAR *)"0:ALIENTEK_SD");                                    /* 设置SD磁盘的名字为：ALIENTEK_SD */
+					//printf("SD Disk Format Finish\n");     /* 格式化完�? */
+			}	else	{
+					//printf("SD Disk Format Error\n");     /* 格式化失�? */
+			}
+	}
+	
+	res = f_mount(&USERFatFS, "1:", 0);  /* 挂载FLASH */
+	//printf("f_mount flash res:%u\n", res);
+	if(FR_OK == res){
+		//printf("Flash Disk Mount Successed!\n");     /* FLASH格式化成�? */
+	}
+	if (res == 0X0D) {                /* FLASH磁盘,FAT文件系统错误,重新格式化FLASH */
+			//printf("flash fs error!\n");
+			//printf("Flash Disk Formatting...\n");         /* 格式化FLASH */
+			res = f_mkfs("1:", 0, 0, work_buff, _MAX_SS);                                            /* 格式化FLASH,1:,盘符;0,使用默认格式化参�? */
+
+			if (res == 0)	{
+					f_setlabel((const TCHAR *)"1:ALIENTEK_FLASH");                                    /* 设置Flash磁盘的名字为：ALIENTEK_FLASH */
+					//printf("Flash Disk Format Finish\n");     /* 格式化完�? */
+			}	else {
+					//printf("Flash Disk Format Error \n");     /* 格式化失�? */
+			}
+	}
+	myfree(2, work_buff);
+}
 /* USER CODE END FunctionPrototypes */
 
 void WebServer_Task(void const * argument);
@@ -86,6 +159,7 @@ void IOT_Task(void const * argument);
 void GUI_Task(void const * argument);
 
 extern void MX_LWIP_Init(void);
+extern void MX_FATFS_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /**
@@ -120,15 +194,15 @@ void MX_FREERTOS_Init(void) {
   WebServerHandle = osThreadCreate(osThread(WebServer), NULL);
 
   /* definition and creation of Touch */
-  osThreadDef(Touch, Touch_Task, osPriorityAboveNormal, 0, 256);
+  osThreadDef(Touch, Touch_Task, osPriorityAboveNormal, 0, 128);
   TouchHandle = osThreadCreate(osThread(Touch), NULL);
 
   /* definition and creation of IOT */
-  osThreadDef(IOT, IOT_Task, osPriorityNormal, 0, 256);
+  osThreadDef(IOT, IOT_Task, osPriorityNormal, 0, 128);
   IOTHandle = osThreadCreate(osThread(IOT), NULL);
 
   /* definition and creation of GUI */
-  osThreadDef(GUI, GUI_Task, osPriorityBelowNormal, 0, 2048);
+  osThreadDef(GUI, GUI_Task, osPriorityBelowNormal, 0, 512);
   GUIHandle = osThreadCreate(osThread(GUI), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -151,13 +225,27 @@ void WebServer_Task(void const * argument)
   /* init code for LWIP */
   MX_LWIP_Init();
 
+  /* init code for FATFS */
+  MX_FATFS_Init();
+
   /* USER CODE BEGIN WebServer_Task */
 	taskENTER_CRITICAL();           /* 进入临界�? */
+	/*
 	//SPI Flash
 	norflash_init();  //初始化norflash
 	id = norflash_read_id();
 	printf("norflash id is %d\n", id);
+	*/
+	
+	//初始化SD卡和norflas
+	init_disks();
+	
+	//挂载SD卡和norflash
+	//xTaskCreate(fmout_disks, "fmout_disks", 128, NULL, tskIDLE_PRIORITY + 1, &xMountDisksTaskHandle);
+	fmout_disks();
 	taskEXIT_CRITICAL();            /* �?出临界区 */
+	//vTaskDelete(xMountDisksTaskHandle);
+    //xMountDisksTaskHandle = NULL;
   /* Infinite loop */
   for(;;)
   {
@@ -188,12 +276,12 @@ void Touch_Task(void const * argument)
 	//screen touch init
 	uint8_t res = tp_dev.init();                      // 触摸屏初始化
 	if(!res){
-		printf("LCD Touch init Successful!\n");
+		//printf("LCD Touch init Successful!\n");
 	}
 	
 	while (dht11_init())    /* DHT11��ʼ�� */
 	{
-			printf("DHT11 Error !\n");
+			//printf("DHT11 Error !\n");
 			delay_ms(200);
 	}
 	lsens_init();                           /* 初始化光敏传感器 */
