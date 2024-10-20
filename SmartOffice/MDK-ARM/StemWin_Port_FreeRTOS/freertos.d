@@ -46,8 +46,6 @@ stemwin_port_freertos\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_
 stemwin_port_freertos\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 stemwin_port_freertos\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 stemwin_port_freertos\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
-stemwin_port_freertos\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h
-stemwin_port_freertos\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h
 stemwin_port_freertos\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
 stemwin_port_freertos\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 stemwin_port_freertos\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
@@ -79,13 +77,3 @@ stemwin_port_freertos\freertos.o: ..\Middlewares\STemWin\inc\LCD.h
 stemwin_port_freertos\freertos.o: ..\Middlewares\STemWin\inc\GUI_ConfDefaults.h
 stemwin_port_freertos\freertos.o: ..\Middlewares\STemWin\inc\Global.h
 stemwin_port_freertos\freertos.o: ..\Middlewares\STemWin\inc\GUI_Version.h
-stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/FatFs/src/diskio.h
-stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/FatFs/src/integer.h
-stemwin_port_freertos\freertos.o: ../Inc/fatfs.h
-stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/FatFs/src/ff.h
-stemwin_port_freertos\freertos.o: ../Inc/ffconf.h
-stemwin_port_freertos\freertos.o: ../Inc/bsp_driver_sd.h
-stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
-stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h
-stemwin_port_freertos\freertos.o: ../Inc/sd_diskio.h
-stemwin_port_freertos\freertos.o: ../Inc/user_diskio.h

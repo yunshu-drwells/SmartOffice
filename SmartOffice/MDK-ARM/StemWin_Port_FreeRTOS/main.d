@@ -37,8 +37,6 @@ stemwin_port_freertos\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
 stemwin_port_freertos\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 stemwin_port_freertos\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 stemwin_port_freertos\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
-stemwin_port_freertos\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h
-stemwin_port_freertos\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h
 stemwin_port_freertos\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
 stemwin_port_freertos\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 stemwin_port_freertos\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
@@ -59,18 +57,6 @@ stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 stemwin_port_freertos\main.o: ../Inc/adc.h
 stemwin_port_freertos\main.o: ../Inc/crc.h
-stemwin_port_freertos\main.o: ../Inc/dma.h
-stemwin_port_freertos\main.o: ../Inc/fatfs.h
-stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FatFs/src/ff.h
-stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FatFs/src/integer.h
-stemwin_port_freertos\main.o: ../Inc/ffconf.h
-stemwin_port_freertos\main.o: ../Inc/bsp_driver_sd.h
-stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
-stemwin_port_freertos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h
-stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FatFs/src/diskio.h
-stemwin_port_freertos\main.o: ../Inc/sd_diskio.h
-stemwin_port_freertos\main.o: ../Inc/user_diskio.h
 stemwin_port_freertos\main.o: ../Inc/i2c.h
 stemwin_port_freertos\main.o: ../Inc/lwip.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/opt.h
@@ -79,6 +65,7 @@ stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/d
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/arch.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/system/arch/cc.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/system/arch/cpu.h
+stemwin_port_freertos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 stemwin_port_freertos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 stemwin_port_freertos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
 stemwin_port_freertos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\limits.h
@@ -115,7 +102,6 @@ stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_R
 stemwin_port_freertos\main.o: ../Inc/ethernetif.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/tcpip.h
-stemwin_port_freertos\main.o: ../Inc/sdio.h
 stemwin_port_freertos\main.o: ../Inc/spi.h
 stemwin_port_freertos\main.o: ../Inc/usart.h
 stemwin_port_freertos\main.o: ../Inc/gpio.h

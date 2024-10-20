@@ -23,11 +23,8 @@
 #include "cmsis_os.h"
 #include "adc.h"
 #include "crc.h"
-#include "dma.h"
-#include "fatfs.h"
 #include "i2c.h"
 #include "lwip.h"
-#include "sdio.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -128,14 +125,12 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
   MX_USART1_UART_Init();
   MX_FSMC_Init();
   MX_I2C1_Init();
   MX_CRC_Init();
   MX_SPI1_Init();
   MX_ADC3_Init();
-  MX_SDIO_SD_Init();
   /* USER CODE BEGIN 2 */
 		// 调用配置堆区域的函数
 	configureHeapRegions();  //FreeRTOS定义heap5的堆区地址范围
@@ -201,7 +196,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLM = 8;
   RCC_OscInitStruct.PLL.PLLN = 336;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 7;
+  RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -222,7 +217,6 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-/*
 void emwin_test_touch(void){
 	GUI_PID_STATE State;
 	GUI_Init();
@@ -255,7 +249,6 @@ void emwin_test_touch(void){
 		}
 	}
 }
-*/
 /* USER CODE END 4 */
 
 /**
