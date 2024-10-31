@@ -106,10 +106,10 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
 
 /* USER CODE BEGIN 1 */
 /**
- * @brief       SPI2速度设置函数
- *   @note      SPI2时钟选择来自APB1, 即PCLK1, 为36Mhz
+ * @brief       SPI1速度设置函数
+ *   @note      SPI1时钟选择来自APB1, 即PCLK1, 为36Mhz
  *              SPI速度 = PCLK1 / 2^(speed + 1)
- * @param       speed   : SPI2时钟分频系数
+ * @param       speed   : SPI1时钟分频系数
                         取值为SPI_BAUDRATEPRESCALER_2~SPI_BAUDRATEPRESCALER_2 256
  * @retval      无
  */
@@ -123,7 +123,7 @@ void spi1_set_speed(uint8_t speed)
 }
 
 /**
- * @brief       SPI2读写一个字节数据
+ * @brief       SPI1读写一个字节数据
  * @param       txdata  : 要发送的数据(1字节)
  * @retval      接收到的数据(1字节)
  */

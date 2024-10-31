@@ -217,8 +217,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         //·µ»ØÖ÷Ò³
         GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
         CreateWindowMain(); // ´´½¨WindowMain½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
-				//é”€æ¯ä»»åŠ¡
-				DeleteUpdateTask();
+		//é”€æ¯ä»»åŠ¡
+		DeleteUpdateTask();
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)

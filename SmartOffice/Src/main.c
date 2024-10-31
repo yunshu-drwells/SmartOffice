@@ -23,8 +23,11 @@
 #include "cmsis_os.h"
 #include "adc.h"
 #include "crc.h"
+#include "dma.h"
+#include "fatfs.h"
 #include "i2c.h"
 #include "lwip.h"
+#include "sdio.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -44,6 +47,9 @@
 #include "lwipopts.h"  //lwipopts.h
 
 #include "GUI.h"  //GUI_PID_STATE
+#include <string.h>
+#include "fonts.h"
+#include "icon.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -75,13 +81,21 @@ void configureHeapRegions(void)
     vPortDefineHeapRegions(xHeapRegions);  // 定义堆区域
 }
 
-uint8_t paddr[20] = {0};                  /* 存放内存EXSRAM使用率 */
+//uint8_t paddr[20] = {0};                  /* 存放内存EXSRAM使用率 */
+uint8_t* paddr;
 uint16_t memused = 0;                     /* 内存使用百分比 */
 
-uint8_t lcd_id[12];
-uint16_t colors[12] = {WHITE, BLACK, BLUE, RED, MAGENTA, GREEN, CYAN, YELLOW, BRRED, GRAY, LGRAY, BROWN};uint8_t color_index = 0;
+//uint8_t lcd_id[12];
+uint8_t* lcd_id;
+
+//uint16_t colors[12] = {WHITE, BLACK, BLUE, RED, MAGENTA, GREEN, CYAN, YELLOW, BRRED, GRAY, LGRAY, BROWN};uint8_t color_index = 0;
 uint8_t cur_brightness;
-uint8_t* str[23];
+//uint8_t* str[23];
+FATFS* SDFatFS; /* File system object for SD logical drive */
+FATFS* USERFatFS; /* File system object for USER logical drive */
+
+_font_info* ftinfo;
+_icon_info* iconftinfo;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -125,12 +139,14 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART1_UART_Init();
   MX_FSMC_Init();
   MX_I2C1_Init();
   MX_CRC_Init();
   MX_SPI1_Init();
   MX_ADC3_Init();
+  MX_SDIO_SD_Init();
   /* USER CODE BEGIN 2 */
 		// 调用配置堆区域的函数
 	configureHeapRegions();  //FreeRTOS定义heap5的堆区地址范围
@@ -140,6 +156,9 @@ int main(void)
 	//my_mem_init(SRAMIN);                /* 初始化内部SRAM内存池 */
 	my_mem_init(SRAMEX);                /* 初始化外部SRAM内存池 */
 	my_mem_init(SRAMCCM);               /* 初始化内部CCM内存池 */
+	
+	paddr = (uint8_t *)mymalloc(0, 20);
+	memset(paddr, 0, 20);	
 	
 	//因为将外扩SRAM的头部40KB给FreeRTOS使用，所以要将这部分在内存管理表中对应的表项赋值为非零，表示已经被占用了，防止影响FreeRTOS的堆区
 	my_mem_occupy(SRAMEX, 40*1024);
@@ -153,6 +172,21 @@ int main(void)
 	memused = my_mem_perused(SRAMEX);
 	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
 	printf("SRAMEX   USED: %s\n", (char *)paddr);
+	
+	lcd_id = (uint8_t *)mymalloc(2, 12);
+	memset(lcd_id, 0, 12);
+	
+	SDFatFS = (FATFS *)mymalloc(2, sizeof(FATFS));
+	memset(SDFatFS, 0, sizeof(FATFS));
+	
+	USERFatFS = (FATFS *)mymalloc(2, sizeof(FATFS));
+	memset(USERFatFS, 0, sizeof(FATFS));
+	
+	ftinfo = (_font_info *)mymalloc(2, sizeof(_font_info));
+	memset(ftinfo, 0, sizeof(_font_info));
+	
+	iconftinfo = (_icon_info *)mymalloc(2, sizeof(_icon_info));
+	memset(iconftinfo, 0, sizeof(_icon_info));	
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
@@ -196,7 +230,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLM = 8;
   RCC_OscInitStruct.PLL.PLLN = 336;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 4;
+  RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -217,6 +251,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+/*
 void emwin_test_touch(void){
 	GUI_PID_STATE State;
 	GUI_Init();
@@ -249,6 +284,7 @@ void emwin_test_touch(void){
 		}
 	}
 }
+*/
 /* USER CODE END 4 */
 
 /**

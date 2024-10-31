@@ -38,6 +38,15 @@
 #include "lsens.h"  //lsens_init
 
 #include "GUI.h"  //GUI_TOUCH_Exec
+
+#include "diskio.h"
+
+#include "fatfs.h"  //SDFatFS、USERFatFS
+#include "fonts.h"  //fonts_update_font
+#include "mymalloc.h"  //mymalloc
+#include "icon.h"
+
+#include "icon_read.h"  //read_icons
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,8 +68,8 @@
 /* USER CODE BEGIN Variables */
 //lcd
 extern uint8_t lcd_id[12]; //main.c
-extern uint16_t colors[];  //main.c
-extern uint8_t color_index;  //main.c
+//extern uint16_t colors[];  //main.c
+//extern uint8_t color_index;  //main.c
 
 uint16_t id;  //norflash id
 
@@ -69,6 +78,21 @@ uint16_t temperature;
 uint16_t humidity;
 
 uint16_t adcx;
+
+unsigned long recv = 0;
+
+//TaskHandle_t xMountDisksTaskHandle;
+// ������ֵ�ź������ 
+SemaphoreHandle_t xBinarySemaphoreCheckFontsAndIconBin;
+//�����ֿ����
+extern uint8_t fonts_update_res;
+
+// ������ֵ�ź������ 
+SemaphoreHandle_t xBinarySemaphoreFont;
+
+// 创建用于ICON同步的二值信号量句柄
+SemaphoreHandle_t xBinarySemaphoreICON;
+//osSemaphoreCreate(osSemaphore(xBinarySemaphoreFont), 1);  //�����ֵ�ź���
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
 osThreadId TouchHandle;
@@ -77,7 +101,71 @@ osThreadId GUIHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-extern void MainTask(void);   
+extern void MainTask(void); 
+
+void init_disks(){
+	while(disk_initialize(0)){  //返回0，表示SD初始化成�?
+		//printf("SD Card Error!\n");
+		delay_ms(500);
+		//printf("Please Check!\n");
+		delay_ms(500);
+	}
+	//printf("SD Card init OK!\n");
+	disk_ioctl(0, 1, (void*)&recv);
+	//printf("SD sector count: %d\n", (int)recv);
+		while(disk_initialize(1)){  //返回0，表示Norflash初始化成�?
+			//printf("Noflash Error!\n");
+			delay_ms(500);
+			//printf("Please Check!\n");
+			delay_ms(500);
+	}
+	//printf("Noflash init OK!\n");
+	disk_ioctl(1, 1, (void*)&recv);
+	//printf("noflash sector count: %d\n", (int)recv);
+}
+
+//void fmout_disks(void *pvParameters){
+void fmout_disks( ){
+	//uint8_t work_buff[512] = {0};  //在外扩SRAM中开�?
+	uint8_t * work_buff = (uint8_t *)mymalloc(2, 512);
+	uint8_t res = 0;
+	res = f_mount(SDFatFS, "0:", 0);        // 挂载SD�? 
+	printf("f_mount sd res:%u\n", res);
+	if(FR_OK == res){
+		//printf("SD Disk Mount Successed!\n");     /* FLASH格式化成�? */	
+	}
+	if (res == 0X0D) {               /* SD磁盘,FAT文件系统错误,重新格式化SD */
+			//printf("sd fs error!\n");
+			//printf("SD Disk Formatting...\n");         /* 格式化SD */
+			res = f_mkfs("0:", 0, 0, work_buff, _MAX_SS);                                            /* 格式化SD,0:,盘符;0,使用默认格式化参�? */
+
+			if (res == 0){
+					f_setlabel((const TCHAR *)"0:ALIENTEK_SD");                                    /* 设置SD磁盘的名字为：ALIENTEK_SD */
+					//printf("SD Disk Format Finish\n");     /* 格式化完�? */
+			}	else	{
+					//printf("SD Disk Format Error\n");     /* 格式化失�? */
+			}
+	}
+	
+	res = f_mount(USERFatFS, "1:", 0);  /* 挂载FLASH */
+	printf("f_mount flash res:%u\n", res);
+	if(FR_OK == res){
+		//printf("Flash Disk Mount Successed!\n");     /* FLASH格式化成�? */
+	}
+	if (res == 0X0D) {                /* FLASH磁盘,FAT文件系统错误,重新格式化FLASH */
+			//printf("flash fs error!\n");
+			//printf("Flash Disk Formatting...\n");         /* 格式化FLASH */
+			res = f_mkfs("1:", 0, 0, work_buff, _MAX_SS);                                            /* 格式化FLASH,1:,盘符;0,使用默认格式化参�? */
+
+			if (res == 0)	{
+					f_setlabel((const TCHAR *)"1:ALIENTEK_FLASH");                                    /* 设置Flash磁盘的名字为：ALIENTEK_FLASH */
+					//printf("Flash Disk Format Finish\n");     /* 格式化完�? */
+			}	else {
+					//printf("Flash Disk Format Error \n");     /* 格式化失�? */
+			}
+	}
+	myfree(2, work_buff);
+}
 /* USER CODE END FunctionPrototypes */
 
 void WebServer_Task(void const * argument);
@@ -86,6 +174,7 @@ void IOT_Task(void const * argument);
 void GUI_Task(void const * argument);
 
 extern void MX_LWIP_Init(void);
+extern void MX_FATFS_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /**
@@ -120,15 +209,15 @@ void MX_FREERTOS_Init(void) {
   WebServerHandle = osThreadCreate(osThread(WebServer), NULL);
 
   /* definition and creation of Touch */
-  osThreadDef(Touch, Touch_Task, osPriorityAboveNormal, 0, 256);
+  osThreadDef(Touch, Touch_Task, osPriorityAboveNormal, 0, 128);
   TouchHandle = osThreadCreate(osThread(Touch), NULL);
 
   /* definition and creation of IOT */
-  osThreadDef(IOT, IOT_Task, osPriorityNormal, 0, 256);
+  osThreadDef(IOT, IOT_Task, osPriorityNormal, 0, 128);
   IOTHandle = osThreadCreate(osThread(IOT), NULL);
 
   /* definition and creation of GUI */
-  osThreadDef(GUI, GUI_Task, osPriorityBelowNormal, 0, 2048);
+  osThreadDef(GUI, GUI_Task, osPriorityBelowNormal, 0, 512);
   GUIHandle = osThreadCreate(osThread(GUI), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -145,19 +234,44 @@ void MX_FREERTOS_Init(void) {
   */
 /* USER CODE END Header_WebServer_Task */
 void WebServer_Task(void const * argument)
-{
-    
-                 
+{   
   /* init code for LWIP */
   MX_LWIP_Init();
 
+  /* init code for FATFS */
+  MX_FATFS_Init();
+
   /* USER CODE BEGIN WebServer_Task */
-	taskENTER_CRITICAL();           /* 进入临界�? */
-	//SPI Flash
-	norflash_init();  //初始化norflash
-	id = norflash_read_id();
-	printf("norflash id is %d\n", id);
-	taskEXIT_CRITICAL();            /* �?出临界区 */
+	taskENTER_CRITICAL();           /* 进入临界段 */
+	
+	// 创建二值信号量 
+	xBinarySemaphoreFont = xSemaphoreCreateBinary();
+	
+	//初始化norflash和SD卡
+	init_disks();
+
+	//挂载norflash和SD卡
+	fmout_disks();
+
+	delay_init(168);                    // 初始化自定义延时函数
+	lcd_init();                             // 初始化LCD
+	sprintf((char *)lcd_id, "LCD ID:%04X", lcddev.id);
+	
+	while (dht11_init())    /* DHT11初始化*/
+	{
+			printf("DHT11 Error !\n");
+			delay_ms(200);
+	}
+	printf("DHT11 init successed!\n");
+	lsens_init();                           /* 初始化光敏传感器 */
+	printf("lsens init down!\n");
+	
+	// 释放信号量，通知任务2可以执行了 
+	xSemaphoreGive(xBinarySemaphoreFont);
+
+	taskEXIT_CRITICAL();            /* 出临界段 */
+	//vTaskDelete(xMountDisksTaskHandle);
+    //xMountDisksTaskHandle = NULL;
   /* Infinite loop */
   for(;;)
   {
@@ -165,6 +279,7 @@ void WebServer_Task(void const * argument)
   }
   /* USER CODE END WebServer_Task */
 }
+
 
 /* USER CODE BEGIN Header_Touch_Task */
 /**
@@ -176,48 +291,63 @@ void WebServer_Task(void const * argument)
 void Touch_Task(void const * argument)
 {
   /* USER CODE BEGIN Touch_Task */
-	taskENTER_CRITICAL();           /* 进入临界�? */
-	delay_init(168);                        /* 延时初始�? */
-	lcd_init();                             /* 初始化LCD */
-  g_point_color = RED;
-  sprintf((char *)lcd_id, "LCD ID:%04X", lcddev.id);  /* 将LCD ID打印到lcd_id数组 */
-	//HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);  //LED1�?
-	lcd_set_backlight_by_pwm(0xFF); // 设置占空比为255，开启背光最�?
-	lcd_clear(colors[color_index]);  //清屏
-	
-	//screen touch init
-	uint8_t res = tp_dev.init();                      // 触摸屏初始化
-	if(!res){
-		printf("LCD Touch init Successful!\n");
+	// 等待任务1完成 
+	if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
+		taskENTER_CRITICAL();           /* 进入临界段 */
+
+		if(fonts_init()){  //��ʼ���ֿ�
+			printf("Init font failed!\n");
+		}else{
+			printf("Init font successed!\n");
+		}
+
+		if(icons_init()){  //��ʼ��ͼ��
+			printf("Init icons failed!\n");
+		}else{
+			printf("Init icons successed!\n");
+		}
+		
+		// 创建二值信号量 
+		xBinarySemaphoreICON = xSemaphoreCreateBinary();
+		//将图库加载到外扩SRAM中
+		read_icons();
+		//初始化位图结构体信息
+		InitDynamicImage();
+
+
+		lcd_set_backlight_by_pwm(0xFF); // 设置占空比为255，开启背光最亮
+		lcd_clear(WHITE);  //清屏
+		
+		//screen touch init
+		uint8_t res = tp_dev.init();                      // 触摸屏初始化
+		if(!res){
+			printf("LCD Touch init Successful!\n");
+		}
+		
+		// 释放信号量，通知任务GUI_Task可以执行了 
+		xSemaphoreGive(xBinarySemaphoreICON); 	
+		//emwin_test_touch();  //emWin坐标获取
+
+		taskEXIT_CRITICAL();            /* 出临界区 */
 	}
-	
-	while (dht11_init())    /* DHT11��ʼ�� */
-	{
-			printf("DHT11 Error !\n");
-			delay_ms(200);
-	}
-	lsens_init();                           /* 初始化光敏传感器 */
-	
-	//emwin_test_touch();  //emWin坐标获取
-	taskEXIT_CRITICAL();            /* �?出临界区 */
   /* Infinite loop */
   for(;;)
   {
-		if (t % 5 == 0) /* ÿ100ms��ȡһ�� */ { 
-			dht11_read_data(&temperature, &humidity); /* ��ȡ��ʪ��ֵ */
+		if (t % 5 == 0) /* 每200ms读取一次 */ { 
+			dht11_read_data(&temperature, &humidity); /* 读取温湿度值 */
 			
-			//printf("temperature: %d.%d\n", temperature>>8, (temperature & 0xFF));/* ��ʾ�¶� */ 
-			//printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* ��ʾʪ�� */ 
+			//printf("temperature: %d.%d\n", temperature>>8, (temperature & 0xFF));/* 显示温度 */ 
+			//printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* 显示湿度 */ 
 		}
-		if(t % 10 == 0) /* �?200ms读取�?�? */{ 
-				adcx = lsens_get_val();                                 /* 获取ADC�? */
+		if(t % 10 == 0) /* 每400ms读取一次 */{ 
+				adcx = lsens_get_val();                                 /* 获取亮度 */
 				//printf("bright:%d\n", adcx);
 		}
 		t++; 
-		osDelay(10);
+		//osDelay(10);
 		//触摸屏需要轮询检测，否则emWin没有办法触发事件
 		GUI_TOUCH_Exec();
-    osDelay(20);
+		osDelay(40);
   }
   /* USER CODE END Touch_Task */
 }
@@ -250,7 +380,19 @@ void IOT_Task(void const * argument)
 void GUI_Task(void const * argument)
 {
   /* USER CODE BEGIN GUI_Task */
-	MainTask();
+	/*
+	taskENTER_CRITICAL();           // 进入临界�? 
+	
+	// �ȴ�����1��� 
+	if (xSemaphoreTake(xBinarySemaphoreCheckFontsAndIconBin, portMAX_DELAY) == pdTRUE) { 
+		// ִ������2�Ĳ��� // ...
+		MainTask();
+	}
+	taskEXIT_CRITICAL();            // �?出临界区
+	*/
+	if (xSemaphoreTake(xBinarySemaphoreICON, portMAX_DELAY) == pdTRUE) {
+		MainTask();
+	}
   /* Infinite loop */
 	/*
   for(;;)

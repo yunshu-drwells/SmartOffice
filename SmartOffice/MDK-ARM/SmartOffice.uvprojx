@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;       ../Drivers/STM32F4xx_HAL_Driver/Inc;       ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;       ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;       ../Drivers/CMSIS/Include;       ../Middlewares/Third_Party/FreeRTOS/Source/include;       ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;       ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;       ../Middlewares/Third_Party/LwIP/src/include;       ../Middlewares/Third_Party/LwIP/system;       ../Middlewares/Third_Party/LwIP/src/include/netif/ppp;       ../Middlewares/Third_Party/LwIP/src/include/lwip;       ../Middlewares/Third_Party/LwIP/src/include/lwip/apps;       ../Middlewares/Third_Party/LwIP/src/include/lwip/priv;       ../Middlewares/Third_Party/LwIP/src/include/lwip/prot;       ../Middlewares/Third_Party/LwIP/src/include/netif;       ../Middlewares/Third_Party/LwIP/system/arch;       ..\Middlewares\STemWin\Config;       ..\Middlewares\STemWin\inc;       ..\Middlewares\STemWin\Application</IncludePath>
+              <IncludePath>../Inc;                 ../Drivers/STM32F4xx_HAL_Driver/Inc;                 ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                 ../Drivers/CMSIS/Include;                 ../Middlewares/Third_Party/FreeRTOS/Source/include;                 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;                 ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;                 ../Middlewares/Third_Party/LwIP/src/include;                 ../Middlewares/Third_Party/LwIP/system;                 ../Middlewares/Third_Party/LwIP/src/include/netif/ppp;                 ../Middlewares/Third_Party/LwIP/src/include/lwip;                 ../Middlewares/Third_Party/LwIP/src/include/lwip/apps;                 ../Middlewares/Third_Party/LwIP/src/include/lwip/priv;                 ../Middlewares/Third_Party/LwIP/src/include/lwip/prot;                 ../Middlewares/Third_Party/LwIP/src/include/netif;                 ../Middlewares/Third_Party/LwIP/system/arch;                 ..\Middlewares\STemWin\Config;                 ..\Middlewares\STemWin\inc;                 ..\Middlewares\STemWin\Application;          ../Middlewares/Third_Party/FatFs/src</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -450,6 +450,11 @@
               <FilePath>..\Src\lsens.c</FilePath>
             </File>
             <File>
+              <FileName>fonts.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\fonts.c</FilePath>
+            </File>
+            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/main.c</FilePath>
@@ -468,6 +473,31 @@
               <FileName>crc.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/crc.c</FilePath>
+            </File>
+            <File>
+              <FileName>dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_driver_sd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/bsp_driver_sd.c</FilePath>
+            </File>
+            <File>
+              <FileName>sd_diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/sd_diskio.c</FilePath>
+            </File>
+            <File>
+              <FileName>fatfs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/fatfs.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/user_diskio.c</FilePath>
             </File>
             <File>
               <FileName>freertos.c</FileName>
@@ -495,6 +525,11 @@
               <FilePath>../Src/ethernetif.c</FilePath>
             </File>
             <File>
+              <FileName>sdio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/sdio.c</FilePath>
+            </File>
+            <File>
               <FileName>spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/spi.c</FilePath>
@@ -518,6 +553,11 @@
               <FileName>stm32f4xx_hal_timebase_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/stm32f4xx_hal_timebase_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>icon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\icon.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -563,6 +603,16 @@
               <FileName>stm32f4xx_hal_i2c_ex.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_ll_sdmmc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_sd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hal_spi.c</FileName>
@@ -1135,6 +1185,21 @@
               <FilePath>..\Src\GUI_X_Touch_Analog.c</FilePath>
             </File>
             <File>
+              <FileName>WindowDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\STemWin\Application\WindowDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\STemWin\Application\font\font.c</FilePath>
+            </File>
+            <File>
+              <FileName>mainTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\STemWin\Application\mainTask.c</FilePath>
+            </File>
+            <File>
               <FileName>AlarmDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Middlewares\STemWin\Application\sub\AlarmDLG.c</FilePath>
@@ -1160,109 +1225,49 @@
               <FilePath>..\Middlewares\STemWin\Application\sub\LightingMasterDLG.c</FilePath>
             </File>
             <File>
-              <FileName>TemperatureDLG.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\sub\TemperatureDLG.c</FilePath>
-            </File>
-            <File>
               <FileName>SpotlightDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Middlewares\STemWin\Application\sub\SpotlightDLG.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG.c</FileName>
+              <FileName>TemperatureDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\WindowDLG.c</FilePath>
-            </File>
-            <File>
-              <FileName>font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\font\font.c</FilePath>
-            </File>
-            <File>
-              <FileName>Alarm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\main\Alarm.c</FilePath>
-            </File>
-            <File>
-              <FileName>blue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\main\blue.c</FilePath>
-            </File>
-            <File>
-              <FileName>Brightnesss.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\main\Brightnesss.c</FilePath>
-            </File>
-            <File>
-              <FileName>Humidity.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\main\Humidity.c</FilePath>
-            </File>
-            <File>
-              <FileName>Temperature.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\main\Temperature.c</FilePath>
-            </File>
-            <File>
-              <FileName>TurnOff.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\main\TurnOff.c</FilePath>
-            </File>
-            <File>
-              <FileName>AlarmOff.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\sub\AlarmOff.c</FilePath>
-            </File>
-            <File>
-              <FileName>FanOff.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\sub\FanOff.c</FilePath>
-            </File>
-            <File>
-              <FileName>FanOn.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\sub\FanOn.c</FilePath>
-            </File>
-            <File>
-              <FileName>LightingMasterOff.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\sub\LightingMasterOff.c</FilePath>
-            </File>
-            <File>
-              <FileName>LightingMasterOn.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\sub\LightingMasterOn.c</FilePath>
-            </File>
-            <File>
-              <FileName>MainPage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\sub\MainPage.c</FilePath>
-            </File>
-            <File>
-              <FileName>MainPagePressed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\sub\MainPagePressed.c</FilePath>
-            </File>
-            <File>
-              <FileName>SpotlightOff.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\sub\SpotlightOff.c</FilePath>
-            </File>
-            <File>
-              <FileName>SpotlightOn.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\img\sub\SpotlightOn.c</FilePath>
-            </File>
-            <File>
-              <FileName>mainTask.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\mainTask.c</FilePath>
+              <FilePath>..\Middlewares\STemWin\Application\sub\TemperatureDLG.c</FilePath>
             </File>
             <File>
               <FileName>TurnOffDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Middlewares\STemWin\Application\sub\TurnOffDLG.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/FatFs</GroupName>
+          <Files>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FatFs/src/diskio.c</FilePath>
+            </File>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FatFs/src/ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>ff_gen_drv.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FatFs/src/ff_gen_drv.c</FilePath>
+            </File>
+            <File>
+              <FileName>syscall.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FatFs/src/option/syscall.c</FilePath>
+            </File>
+            <File>
+              <FileName>cc936.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FatFs/src/option/cc936.c</FilePath>
             </File>
           </Files>
         </Group>
