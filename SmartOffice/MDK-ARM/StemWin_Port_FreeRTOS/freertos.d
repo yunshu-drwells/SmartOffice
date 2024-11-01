@@ -86,12 +86,12 @@ stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/FatFs/src/ff.h
 stemwin_port_freertos\freertos.o: ../Inc/ffconf.h
 stemwin_port_freertos\freertos.o: ../Inc/bsp_driver_sd.h
 stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
+stemwin_port_freertos\freertos.o: ../Inc/mymalloc.h
+stemwin_port_freertos\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h
 stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h
 stemwin_port_freertos\freertos.o: ../Inc/sd_diskio.h
 stemwin_port_freertos\freertos.o: ../Inc/user_diskio.h
 stemwin_port_freertos\freertos.o: ../Inc/fonts.h
-stemwin_port_freertos\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h
-stemwin_port_freertos\freertos.o: ../Inc/mymalloc.h
 stemwin_port_freertos\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h
 stemwin_port_freertos\freertos.o: ../Inc/icon.h
 stemwin_port_freertos\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h

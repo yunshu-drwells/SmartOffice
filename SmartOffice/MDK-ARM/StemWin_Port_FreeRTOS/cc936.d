@@ -61,7 +61,8 @@ stemwin_port_freertos\cc936.o: ../Middlewares/Third_Party/FreeRTOS/Source/includ
 stemwin_port_freertos\cc936.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 stemwin_port_freertos\cc936.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 stemwin_port_freertos\cc936.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
-stemwin_port_freertos\cc936.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+stemwin_port_freertos\cc936.o: ../Inc/mymalloc.h
+stemwin_port_freertos\cc936.o: ../Drivers/CMSIS/Include/core_cm4.h
 stemwin_port_freertos\cc936.o: ../Inc/fonts.h
 stemwin_port_freertos\cc936.o: ../Drivers/CMSIS/Include/core_cm4.h
 stemwin_port_freertos\cc936.o: ../Inc/norflash.h

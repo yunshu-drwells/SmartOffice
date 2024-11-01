@@ -72,4 +72,7 @@ void *mymalloc(uint8_t memx, uint32_t size);                /* 内存分配(外部调用
 void *myrealloc(uint8_t memx, void *ptr, uint32_t size);    /* 重新分配内存(外部调用) */
 void my_mem_occupy(uint8_t memx, uint32_t size);
 void my_mem_occupy_from(uint8_t memx, uint32_t start, uint32_t size);
+
+void* wrapper_function_mymalloc(uint32_t size);
+void wrapper_function_myfree(void *ptr);
 #endif

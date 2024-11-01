@@ -66,7 +66,8 @@ stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FatFs/src/integer.h
 stemwin_port_freertos\main.o: ../Inc/ffconf.h
 stemwin_port_freertos\main.o: ../Inc/bsp_driver_sd.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
-stemwin_port_freertos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+stemwin_port_freertos\main.o: ../Inc/mymalloc.h
+stemwin_port_freertos\main.o: ../Drivers/CMSIS/Include/core_cm4.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/FatFs/src/diskio.h
 stemwin_port_freertos\main.o: ../Inc/sd_diskio.h
@@ -79,6 +80,7 @@ stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/d
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/arch.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/system/arch/cc.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/system/arch/cpu.h
+stemwin_port_freertos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 stemwin_port_freertos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 stemwin_port_freertos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
 stemwin_port_freertos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\limits.h
@@ -121,8 +123,6 @@ stemwin_port_freertos\main.o: ../Inc/usart.h
 stemwin_port_freertos\main.o: ../Inc/gpio.h
 stemwin_port_freertos\main.o: ../Inc/fsmc.h
 stemwin_port_freertos\main.o: ../Inc/sram.h
-stemwin_port_freertos\main.o: ../Inc/mymalloc.h
-stemwin_port_freertos\main.o: ../Drivers/CMSIS/Include/core_cm4.h
 stemwin_port_freertos\main.o: ../Inc/delay.h
 stemwin_port_freertos\main.o: ../Drivers/CMSIS/Include/core_cm4.h
 stemwin_port_freertos\main.o: ../Inc/lcd.h

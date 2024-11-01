@@ -307,6 +307,24 @@ void Touch_Task(void const * argument)
 			printf("Init icons successed!\n");
 		}
 		
+		//����NORFlash���ļ�
+		FIL *fftemp;
+		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  /* ؖƤŚզ */
+		uint8_t res = f_open(fftemp, "1:AlarmOn.bin", FA_READ);
+		printf("NORFlash f_open return :%d\n", res);
+
+		res = f_open(fftemp, "1:/img.jpg", FA_READ);
+		printf("NORFlash f_open return :%d\n", res);
+		
+		//����SD���ļ�
+		/*
+		res = f_open(fftemp, "0:AlarmOn.bin", FA_READ);
+		printf("SD f_open return :%d\n", res);
+		
+		res = f_open(fftemp, "0:/img.jpg", FA_READ);
+		printf("SD f_open return :%d\n", res);
+		*/
+				
 		// 创建二值信号量 
 		xBinarySemaphoreICON = xSemaphoreCreateBinary();
 		//将图库加载到外扩SRAM中
@@ -319,7 +337,7 @@ void Touch_Task(void const * argument)
 		lcd_clear(WHITE);  //清屏
 		
 		//screen touch init
-		uint8_t res = tp_dev.init();                      // 触摸屏初始化
+		res = tp_dev.init();                      // 触摸屏初始化
 		if(!res){
 			printf("LCD Touch init Successful!\n");
 		}

@@ -262,10 +262,17 @@
 /  included somewhere in the scope of ff.h. */
 
 /* define the ff_malloc ff_free macros as standard malloc free */
+/*
 #if !defined(ff_malloc) && !defined(ff_free)
 #include <stdlib.h>
 #define ff_malloc  malloc
 #define ff_free  free
 #endif
+*/
+
+#include "mymalloc.h"
+
+#define ff_malloc  wrapper_function_mymalloc
+#define ff_free  wrapper_function_myfree
 
 #endif /* _FFCONF */

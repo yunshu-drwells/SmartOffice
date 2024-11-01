@@ -62,7 +62,8 @@ stemwin_port_freertos\fatfs.o: ../Middlewares/Third_Party/FreeRTOS/Source/includ
 stemwin_port_freertos\fatfs.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 stemwin_port_freertos\fatfs.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 stemwin_port_freertos\fatfs.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
-stemwin_port_freertos\fatfs.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+stemwin_port_freertos\fatfs.o: ../Inc/mymalloc.h
+stemwin_port_freertos\fatfs.o: ../Drivers/CMSIS/Include/core_cm4.h
 stemwin_port_freertos\fatfs.o: ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h
 stemwin_port_freertos\fatfs.o: ../Middlewares/Third_Party/FatFs/src/diskio.h
 stemwin_port_freertos\fatfs.o: ../Inc/sd_diskio.h

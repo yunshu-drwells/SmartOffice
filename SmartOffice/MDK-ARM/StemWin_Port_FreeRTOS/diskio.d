@@ -63,4 +63,5 @@ stemwin_port_freertos\diskio.o: ../Middlewares/Third_Party/FreeRTOS/Source/inclu
 stemwin_port_freertos\diskio.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 stemwin_port_freertos\diskio.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 stemwin_port_freertos\diskio.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
-stemwin_port_freertos\diskio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+stemwin_port_freertos\diskio.o: ../Inc/mymalloc.h
+stemwin_port_freertos\diskio.o: ../Drivers/CMSIS/Include/core_cm4.h

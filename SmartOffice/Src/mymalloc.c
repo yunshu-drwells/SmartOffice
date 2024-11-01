@@ -281,3 +281,18 @@ void my_mem_occupy_from(uint8_t memx, uint32_t start, uint32_t size)
 		mallco_dev.memmap[memx][i] = nmemb;
 	}
 }
+
+//因为mymalloc和myfree函数有两个参数，因此要将ff_malloc和ff_free重定向，则需要使用包装函数
+// 定义一个函数指针指向包装函数
+// 定义包装函数，只带一个参数 
+void* wrapper_function_mymalloc(uint32_t size) { 
+	return mymalloc(2, size); // 固定第一个参数为2 
+}
+
+//void* (*func_mymalloc_ptr)(uint32_t) = wrapper_function_mymalloc;
+
+void wrapper_function_myfree(void *ptr) { 
+	myfree(2, ptr); // 固定第一个参数为2 
+}
+
+//void (*func_myfree_ptr)(void *) = wrapper_function_myfree;
