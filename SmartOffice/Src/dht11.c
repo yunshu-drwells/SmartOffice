@@ -23,8 +23,8 @@ static void dht11_reset(void)
  */
 uint8_t dht11_check(void)
 {
-    uint8_t retry = 0;
-    uint8_t rval = 0;
+    volatile uint8_t retry = 0;
+    volatile uint8_t rval = 0;
 
     while (DHT11_DQ_IN && retry < 100)  /* DHT11会拉低40~80us */
     {
@@ -47,7 +47,6 @@ uint8_t dht11_check(void)
         }
         if (retry >= 100) rval = 1;
     }
-    
     return rval;
 }
 
@@ -137,6 +136,7 @@ uint8_t dht11_read_data(uint16_t *temp, uint16_t *humi)
  */
 uint8_t dht11_init(void)
 {
+	__disable_irq();  // 禁用所有中断
     GPIO_InitTypeDef gpio_init_struct;
 
     DHT11_DQ_GPIO_CLK_ENABLE();     /* 开启DQ引脚时钟 */
@@ -149,5 +149,7 @@ uint8_t dht11_init(void)
     /* DHT11_DQ引脚模式设置,开漏输出,上拉, 这样就不用再设置IO方向了, 开漏输出的时候(=1), 也可以读取外部信号的高低电平 */
 
     dht11_reset();
-    return dht11_check();
+    volatile uint8_t rval = dht11_check();
+    __enable_irq();   // 重新启用中断
+	return rval;
 }

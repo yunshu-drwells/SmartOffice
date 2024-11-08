@@ -42,3 +42,5 @@ stemwin_port_freertos\system_stm32f4xx.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/st
 stemwin_port_freertos\system_stm32f4xx.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 stemwin_port_freertos\system_stm32f4xx.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 stemwin_port_freertos\system_stm32f4xx.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+stemwin_port_freertos\system_stm32f4xx.o: ../Inc/fsmc.h
+stemwin_port_freertos\system_stm32f4xx.o: ../Inc/main.h

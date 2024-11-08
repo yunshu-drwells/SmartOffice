@@ -72,7 +72,7 @@
 /* USER CODE BEGIN PV */
 // 定义堆区域数组
 HeapRegion_t xHeapRegions[] = {
-    { ( uint8_t * ) 0x68000000, 0xa000 },  // 定义从0x68000000开始的40K字节内存块
+    { ( uint8_t * ) 0x68020000, 0xa000 },  // 定义从0x68000000开始的40K字节内存块
     { NULL, 0 }                            // 终止数组
 };
 

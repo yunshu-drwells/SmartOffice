@@ -113,7 +113,7 @@
 #define CHECKSUM_CHECK_ICMP6 0
 /*-----------------------------------------------------------------------------*/
 /* USER CODE BEGIN 1 */
-#define exram_heap 0x68000000+0xa000
+#define exram_heap 0x68020000+0xa000
 #define LWIP_RAM_HEAP_POINTER exram_heap
 /* USER CODE END 1 */
 

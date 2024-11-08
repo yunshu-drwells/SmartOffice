@@ -30,27 +30,16 @@
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Stack_Size		EQU     0x200
+Stack_Size		EQU     0x2000
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
-__initial_sp
+__initial_sp	EQU     0x20002000
 
 
 ; <h> Heap Configuration
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
-
-; 定义外部SRAM的起始地址和大小
-; 外部SRAM配置
-External_SRAM_Base EQU  0x68000000
-External_SRAM_Size EQU  0x100000            ; 1MB外部SRAM大小
-
-; 定义外部SRAM区域
-                AREA    EXTERNAL_RAM, NOINIT, READWRITE, ALIGN=3
-__external_sram_base
-External_SRAM_Mem  SPACE External_SRAM_Size
-__external_sram_limit
 
 
 Heap_Size      EQU     0x400

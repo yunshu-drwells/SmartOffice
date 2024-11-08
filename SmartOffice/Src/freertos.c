@@ -257,7 +257,7 @@ void WebServer_Task(void const * argument)
 	lcd_init();                             // 初始化LCD
 	sprintf((char *)lcd_id, "LCD ID:%04X", lcddev.id);
 	
-	while (dht11_init())    /* DHT11初始化*/
+	while (dht11_init())    /* DHT11初始化* */
 	{
 			printf("DHT11 Error !\n");
 			delay_ms(200);
