@@ -47,6 +47,10 @@
 #include "icon.h"
 
 #include "icon_read.h"  //read_icons
+
+#include "esp8266.h"
+#include <string.h>
+#include "esp8266_web.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -92,7 +96,14 @@ SemaphoreHandle_t xBinarySemaphoreFont;
 
 // 创建二值信号量句柄
 SemaphoreHandle_t xBinarySemaphoreICON;
-//osSemaphoreCreate(osSemaphore(xBinarySemaphoreFont), 1);  //定义二值信号量
+
+//esp8266 uart3
+uint8_t uart3_rx_buffer[RX_BUFFER_SIZE];
+volatile uint16_t uart3_rx_index = 0;
+uint8_t Uart3FramFinishFlag = 0;
+
+// 创建互斥信号量句柄 
+SemaphoreHandle_t xMutexEsp8266;
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
 osThreadId TouchHandle;
@@ -270,6 +281,20 @@ void WebServer_Task(void const * argument)
 	
 	// 释放信号量，通知任务2可以执行了 
 	xSemaphoreGive(xBinarySemaphoreFont);
+	
+	//创建互斥信号量
+	xMutexEsp8266 = xSemaphoreCreateMutex();
+	
+	//使能esp8266并开启中断接收
+	ESP8266_Enable();  //CH使能
+	ESP8266_Reset();  //复位引脚拉高
+	 
+	//启用串口1和串口3中断接收
+	/*
+	printf("usart1 ok\n");
+	HAL_UART_Receive_IT(&huart1, uart1_rx_buffer, RX_BUFFER_SIZE);
+	HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, RX_BUFFER_SIZE);
+	*/
 
 	taskEXIT_CRITICAL();            /* 出临界段 */
 	//vTaskDelete(xMountDisksTaskHandle);
@@ -346,7 +371,7 @@ void Touch_Task(void const * argument)
 		// 释放信号量，通知任务GUI_Task可以执行了 
 		xSemaphoreGive(xBinarySemaphoreICON); 	
 		//emwin_test_touch();  //emWin坐标获取
-
+		
 		taskEXIT_CRITICAL();            /* 出临界区 */
 	}
   /* Infinite loop */
@@ -381,10 +406,17 @@ void Touch_Task(void const * argument)
 void IOT_Task(void const * argument)
 {
   /* USER CODE BEGIN IOT_Task */
+  //使用互斥信号量保护esp8266的初始化及配置过程
+  if (xSemaphoreTake(xMutexEsp8266, portMAX_DELAY) == pdTRUE) {
+	//ESP8266_Connect_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);  //对ESP8266进行配置并连接到指定wifi
+	ESP8266_Connect_Wifi("Yunshu_Drwells", "yzy@0203yzy@0203");    //对ESP8266进行配置
+	xSemaphoreGive(xMutexEsp8266);
+  }
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	osDelay(10);
+	ESP8266_CheckRecvData(); // 处理网络请求 (可以成功收到)
   }
   /* USER CODE END IOT_Task */
 }
@@ -409,6 +441,7 @@ void GUI_Task(void const * argument)
 	}
 	taskEXIT_CRITICAL();            // 退出临界段
 	*/
+	printf("GUI_Task\n");
 	if (xSemaphoreTake(xBinarySemaphoreICON, portMAX_DELAY) == pdTRUE) {
 		MainTask();
 	}

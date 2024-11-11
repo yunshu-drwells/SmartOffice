@@ -98,3 +98,5 @@ stemwin_port_freertos\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h
 stemwin_port_freertos\freertos.o: ../Inc/icon_read.h
 stemwin_port_freertos\freertos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 stemwin_port_freertos\freertos.o: ../Inc/usart.h
+stemwin_port_freertos\freertos.o: ../Inc/esp8266.h
+stemwin_port_freertos\freertos.o: ../Inc/esp8266_web.h

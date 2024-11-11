@@ -14,6 +14,8 @@
 "stemwin_port_freertos\lsens.o"
 "stemwin_port_freertos\fonts.o"
 "stemwin_port_freertos\icon.o"
+"stemwin_port_freertos\esp8266.o"
+"stemwin_port_freertos\esp8266_web.o"
 "stemwin_port_freertos\main.o"
 "stemwin_port_freertos\gpio.o"
 "stemwin_port_freertos\adc.o"

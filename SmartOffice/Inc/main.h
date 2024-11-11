@@ -181,7 +181,14 @@ void emwin_test_touch(void);
 #define UB_Pin GPIO_PIN_1
 #define UB_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
+#define RX_BUFFER_SIZE 256  // Define the size of your receive buffer
+#define MAX_IP_LENGTH 16
 
+#define macUser_ESP8266_ApSsid "DUOBAO"        //要连接的热点名称（只支持2.4G网络）
+#define macUser_ESP8266_ApPwd  "yunshu666"  //要连接的热点密钥
+
+#define macUser_ESP8266_TcpServer_IP   "192.168.3.3" //要连接的服务器的IP
+#define macUser_ESP8266_TcpServer_Port 8000        //要连接的服务器的端口
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
