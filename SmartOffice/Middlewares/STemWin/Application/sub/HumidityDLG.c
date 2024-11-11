@@ -119,14 +119,14 @@ static TaskHandle_t xUpdateTaskHandle;
 static void UpdateTextTask(void *pvParameters) {
     WM_HWIN hItem = (WM_HWIN)pvParameters;
     while (1) {
-        // æ ¼å¼åŒ–å­—ç¬¦ä¸²å¹¶è®¾ç½®æ–‡æœ¬
-				sprintf((char*)str, "%02d.%02d", humidity>>8, (humidity & 0xFF));
-				TEXT_SetText(hItem, (char*)str);
+        // ¸ñÊ½»¯×Ö·û´®²¢ÉèÖÃÎÄ±¾
+		sprintf((char*)str, "%02d.%02d", humidity>>8, (humidity & 0xFF));
+		TEXT_SetText(hItem, (char*)str);
 
-        // å¼ºåˆ¶åˆ·æ–°æ§ä»¶
+        // Ç¿ÖÆË¢ĞÂ¿Ø¼ş
         WM_InvalidateWindow(hItem);
 
-        // å»¶æ—¶200ms
+        // ÑÓÊ±200ms
         vTaskDelay(pdMS_TO_TICKS(200));
     }
 }
@@ -164,9 +164,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "Humidity");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
-    TEXT_SetText(hItem, "æ¹¿åº¦");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // ÉèÖÃ×ÖÌå
+    TEXT_SetText(hItem, "Êª¶È");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // ÉèÖÃÎÄ±¾¶ÔÆë·½Ê½£¨¿ÉÑ¡£©
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     //
     // Initialization of 'Image'
@@ -181,12 +181,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //TEXT_SetText(hItem, "Text");
     TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
 		
-		sprintf((char*)str, "%02d.%02d", humidity>>8, (humidity & 0xFF));
+	sprintf((char*)str, "%02d.%02d", humidity>>8, (humidity & 0xFF));
     TEXT_SetText(hItem, (char*)str);
-		// åˆ›å»ºæ›´æ–°ä»»åŠ¡ï¼Œä¼ é€’Textæ§ä»¶å¥æŸ„
+	// ´´½¨¸üĞÂÈÎÎñ£¬´«µİText¿Ø¼ş¾ä±ú
     xTaskCreate(UpdateTextTask, "UpdateTextTask", 256, (void*)hItem, tskIDLE_PRIORITY + 1, &xUpdateTaskHandle);
     // USER START (Optionally insert additional code for further widget initialization)
-            // ¸ù¾İ¿Õ¼äID,»ñÈ¡¿Õ¼ä¾ä±ú
+	// ¸ù¾İ¿Õ¼äID,»ñÈ¡¿Õ¼ä¾ä±ú
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_IMAGE_0);
     //
 	// Initialization of 'Image_Humidity'
@@ -216,9 +216,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         //·µ»ØÖ÷Ò³
         GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
         CreateWindowMain(); // ´´½¨WindowMain½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
-      	//é”€æ¯ä»»åŠ¡
-				DeleteUpdateTask();  
-				// USER END
+      	//Ïú»ÙÈÎÎñ
+		DeleteUpdateTask();  
+		// USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
       // USER END

@@ -41,7 +41,7 @@
 
 #include "diskio.h"
 
-#include "fatfs.h"  //SDFatFSã€USERFatFS
+#include "fatfs.h"  //SDFatFS¡¢USERFatFS
 #include "fonts.h"  //fonts_update_font
 #include "mymalloc.h"  //mymalloc
 #include "icon.h"
@@ -90,7 +90,7 @@ extern uint8_t fonts_update_res;
 // ´´½¨¶şÖµĞÅºÅÁ¿¾ä±ú 
 SemaphoreHandle_t xBinarySemaphoreFont;
 
-// åˆ›å»ºç”¨äºICONåŒæ­¥çš„äºŒå€¼ä¿¡å·é‡å¥æŸ„
+// ´´½¨¶şÖµĞÅºÅÁ¿¾ä±ú
 SemaphoreHandle_t xBinarySemaphoreICON;
 //osSemaphoreCreate(osSemaphore(xBinarySemaphoreFont), 1);  //¶¨Òå¶şÖµĞÅºÅÁ¿
 /* USER CODE END Variables */
@@ -104,7 +104,7 @@ osThreadId GUIHandle;
 extern void MainTask(void); 
 
 void init_disks(){
-	while(disk_initialize(0)){  //è¿”å›0ï¼Œè¡¨ç¤ºSDåˆå§‹åŒ–æˆåŠ?
+	while(disk_initialize(0)){  //SD¿¨³õÊ¼»¯
 		//printf("SD Card Error!\n");
 		delay_ms(500);
 		//printf("Please Check!\n");
@@ -113,7 +113,7 @@ void init_disks(){
 	//printf("SD Card init OK!\n");
 	disk_ioctl(0, 1, (void*)&recv);
 	//printf("SD sector count: %d\n", (int)recv);
-		while(disk_initialize(1)){  //è¿”å›0ï¼Œè¡¨ç¤ºNorflashåˆå§‹åŒ–æˆåŠ?
+	while(disk_initialize(1)){  //NORFlash³õÊ¼»¯
 			//printf("Noflash Error!\n");
 			delay_ms(500);
 			//printf("Please Check!\n");
@@ -126,42 +126,42 @@ void init_disks(){
 
 //void fmout_disks(void *pvParameters){
 void fmout_disks( ){
-	//uint8_t work_buff[512] = {0};  //åœ¨å¤–æ‰©SRAMä¸­å¼€è¾?
+	//uint8_t work_buff[512] = {0};  //»º³åÇø
 	uint8_t * work_buff = (uint8_t *)mymalloc(2, 512);
 	uint8_t res = 0;
-	res = f_mount(SDFatFS, "0:", 0);        // æŒ‚è½½SDå? 
+	res = f_mount(SDFatFS, "0:", 0);        // ¹ÒÔØSD¿¨
 	printf("f_mount sd res:%u\n", res);
 	if(FR_OK == res){
-		//printf("SD Disk Mount Successed!\n");     /* FLASHæ ¼å¼åŒ–æˆåŠ? */	
+		//printf("SD Disk Mount Successed!\n");     //SD¿¨³É¹¦¹ÒÔØ
 	}
-	if (res == 0X0D) {               /* SDç£ç›˜,FATæ–‡ä»¶ç³»ç»Ÿé”™è¯¯,é‡æ–°æ ¼å¼åŒ–SD */
+	if (res == 0X0D) {               // SD¿¨¹ÒÔØÊ§°Ü ÎÄ¼şÏµÍ³´íÎó
 			//printf("sd fs error!\n");
-			//printf("SD Disk Formatting...\n");         /* æ ¼å¼åŒ–SD */
-			res = f_mkfs("0:", 0, 0, work_buff, _MAX_SS);                                            /* æ ¼å¼åŒ–SD,0:,ç›˜ç¬¦;0,ä½¿ç”¨é»˜è®¤æ ¼å¼åŒ–å‚æ•? */
+			//printf("SD Disk Formatting...\n");
+			res = f_mkfs("0:", 0, 0, work_buff, _MAX_SS);                                            /* ¸ñÊ½»¯SD,0:,ÅÌ·û;0,Ê¹ÓÃÄ¬ÈÏ¸ñÊ½»¯²ÎÊı */
 
 			if (res == 0){
-					f_setlabel((const TCHAR *)"0:ALIENTEK_SD");                                    /* è®¾ç½®SDç£ç›˜çš„åå­—ä¸ºï¼šALIENTEK_SD */
-					//printf("SD Disk Format Finish\n");     /* æ ¼å¼åŒ–å®Œæˆ? */
+					f_setlabel((const TCHAR *)"0:ALIENTEK_SD");                                    /* ÉèÖÃSD´ÅÅÌµÄÃû×ÖÎª£ºALIENTEK_SD */
+					//printf("SD Disk Format Finish\n");     // ¸ñÊ½»¯³É¹¦
 			}	else	{
-					//printf("SD Disk Format Error\n");     /* æ ¼å¼åŒ–å¤±è´? */
+					//printf("SD Disk Format Error\n");     // ¸ñÊ½»¯Ê§°Ü
 			}
 	}
 	
-	res = f_mount(USERFatFS, "1:", 0);  /* æŒ‚è½½FLASH */
+	res = f_mount(USERFatFS, "1:", 0);  // ¹ÒÔØNORFlash
 	printf("f_mount flash res:%u\n", res);
 	if(FR_OK == res){
-		//printf("Flash Disk Mount Successed!\n");     /* FLASHæ ¼å¼åŒ–æˆåŠ? */
+		//printf("Flash Disk Mount Successed!\n");     // ¹ÒÔØNORFlash³É¹¦
 	}
-	if (res == 0X0D) {                /* FLASHç£ç›˜,FATæ–‡ä»¶ç³»ç»Ÿé”™è¯¯,é‡æ–°æ ¼å¼åŒ–FLASH */
+	if (res == 0X0D) {                // NORFlashÎÄ¼şÏµÍ³Ëğ»µ
 			//printf("flash fs error!\n");
-			//printf("Flash Disk Formatting...\n");         /* æ ¼å¼åŒ–FLASH */
-			res = f_mkfs("1:", 0, 0, work_buff, _MAX_SS);                                            /* æ ¼å¼åŒ–FLASH,1:,ç›˜ç¬¦;0,ä½¿ç”¨é»˜è®¤æ ¼å¼åŒ–å‚æ•? */
+			//printf("Flash Disk Formatting...\n");
+			res = f_mkfs("1:", 0, 0, work_buff, _MAX_SS);                                            /* ¸ñÊ½»¯FLASH,1:,ÅÌ·û;1,Ê¹ÓÃÄ¬ÈÏ¸ñÊ½»¯²ÎÊı */
 
 			if (res == 0)	{
-					f_setlabel((const TCHAR *)"1:ALIENTEK_FLASH");                                    /* è®¾ç½®Flashç£ç›˜çš„åå­—ä¸ºï¼šALIENTEK_FLASH */
-					//printf("Flash Disk Format Finish\n");     /* æ ¼å¼åŒ–å®Œæˆ? */
+					f_setlabel((const TCHAR *)"1:ALIENTEK_FLASH");                                    /* ÉèÖÃFlash´ÅÅÌµÄÃû×ÖÎª£ºALIENTEK_FLASH */
+					//printf("Flash Disk Format Finish\n");     /* ¸ñÊ½»¯Íê³É */
 			}	else {
-					//printf("Flash Disk Format Error \n");     /* æ ¼å¼åŒ–å¤±è´? */
+					//printf("Flash Disk Format Error \n");     /* ¸ñÊ½»¯Ê§°Ü */
 			}
 	}
 	myfree(2, work_buff);
@@ -242,34 +242,34 @@ void WebServer_Task(void const * argument)
   MX_FATFS_Init();
 
   /* USER CODE BEGIN WebServer_Task */
-	taskENTER_CRITICAL();           /* è¿›å…¥ä¸´ç•Œæ®µ */
+	taskENTER_CRITICAL();           /* ½øÈëÁÙ½ç¶Î */
 	
-	// åˆ›å»ºäºŒå€¼ä¿¡å·é‡ 
+	// ´´½¨¶şÖµĞÅºÅÁ¿ 
 	xBinarySemaphoreFont = xSemaphoreCreateBinary();
 	
-	//åˆå§‹åŒ–norflashå’ŒSDå¡
+	//³õÊ¼»¯norflashºÍSD¿¨
 	init_disks();
 
-	//æŒ‚è½½norflashå’ŒSDå¡
+	//¹ÒÔØnorflashºÍSD¿¨
 	fmout_disks();
 
-	delay_init(168);                    // åˆå§‹åŒ–è‡ªå®šä¹‰å»¶æ—¶å‡½æ•°
-	lcd_init();                             // åˆå§‹åŒ–LCD
+	delay_init(168);                    // ³õÊ¼»¯×Ô¶¨ÒåÑÓÊ±º¯Êı
+	lcd_init();                             // ³õÊ¼»¯LCD
 	sprintf((char *)lcd_id, "LCD ID:%04X", lcddev.id);
 	
-	while (dht11_init())    /* DHT11åˆå§‹åŒ–* */
+	while (dht11_init())    /* DHT11³õÊ¼»¯* */
 	{
 			printf("DHT11 Error !\n");
 			delay_ms(200);
 	}
 	printf("DHT11 init successed!\n");
-	lsens_init();                           /* åˆå§‹åŒ–å…‰æ•ä¼ æ„Ÿå™¨ */
+	lsens_init();                           /* ³õÊ¼»¯¹âÃô´«¸ĞÆ÷ */
 	printf("lsens init down!\n");
 	
-	// é‡Šæ”¾ä¿¡å·é‡ï¼Œé€šçŸ¥ä»»åŠ¡2å¯ä»¥æ‰§è¡Œäº† 
+	// ÊÍ·ÅĞÅºÅÁ¿£¬Í¨ÖªÈÎÎñ2¿ÉÒÔÖ´ĞĞÁË 
 	xSemaphoreGive(xBinarySemaphoreFont);
 
-	taskEXIT_CRITICAL();            /* å‡ºä¸´ç•Œæ®µ */
+	taskEXIT_CRITICAL();            /* ³öÁÙ½ç¶Î */
 	//vTaskDelete(xMountDisksTaskHandle);
     //xMountDisksTaskHandle = NULL;
   /* Infinite loop */
@@ -291,9 +291,9 @@ void WebServer_Task(void const * argument)
 void Touch_Task(void const * argument)
 {
   /* USER CODE BEGIN Touch_Task */
-	// ç­‰å¾…ä»»åŠ¡1å®Œæˆ 
+	// µÈ´ıÈÎÎñ1Íê³É 
 	if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
-		taskENTER_CRITICAL();           /* è¿›å…¥ä¸´ç•Œæ®µ */
+		taskENTER_CRITICAL();           /* ½øÈëÁÙ½ç¶Î */
 
 		if(fonts_init()){  //³õÊ¼»¯×Ö¿â
 			printf("Init font failed!\n");
@@ -309,7 +309,7 @@ void Touch_Task(void const * argument)
 		
 		//²âÊÔNORFlash´ò¿ªÎÄ¼ş
 		FIL *fftemp;
-		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  /* Ø–Æ¤ÅšÕ¦ */
+		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // ¸øÎÄ¼şÃèÊö·û¿ª±Ù¿Õ¼ä
 		uint8_t res = f_open(fftemp, "1:AlarmOn.bin", FA_READ);
 		printf("NORFlash f_open return :%d\n", res);
 
@@ -325,45 +325,45 @@ void Touch_Task(void const * argument)
 		printf("SD f_open return :%d\n", res);
 		*/
 				
-		// åˆ›å»ºäºŒå€¼ä¿¡å·é‡ 
+		// ´´½¨¶şÖµĞÅºÅÁ¿ 
 		xBinarySemaphoreICON = xSemaphoreCreateBinary();
-		//å°†å›¾åº“åŠ è½½åˆ°å¤–æ‰©SRAMä¸­
+		//½«Í¼¿â¼ÓÔØµ½ÍâÀ©SRAMÖĞ
 		read_icons();
-		//åˆå§‹åŒ–ä½å›¾ç»“æ„ä½“ä¿¡æ¯
+		//³õÊ¼»¯Î»Í¼½á¹¹ÌåĞÅÏ¢
 		InitDynamicImage();
 
 
-		lcd_set_backlight_by_pwm(0xFF); // è®¾ç½®å ç©ºæ¯”ä¸º255ï¼Œå¼€å¯èƒŒå…‰æœ€äº®
-		lcd_clear(WHITE);  //æ¸…å±
+		lcd_set_backlight_by_pwm(0xFF); // ÉèÖÃÕ¼¿Õ±ÈÎª255£¬¿ªÆô±³¹â×îÁÁ
+		lcd_clear(WHITE);  //ÇåÆÁ
 		
 		//screen touch init
-		res = tp_dev.init();                      // è§¦æ‘¸å±åˆå§‹åŒ–
+		res = tp_dev.init();                      // ´¥ÃşÆÁ³õÊ¼»¯
 		if(!res){
 			printf("LCD Touch init Successful!\n");
 		}
 		
-		// é‡Šæ”¾ä¿¡å·é‡ï¼Œé€šçŸ¥ä»»åŠ¡GUI_Taskå¯ä»¥æ‰§è¡Œäº† 
+		// ÊÍ·ÅĞÅºÅÁ¿£¬Í¨ÖªÈÎÎñGUI_Task¿ÉÒÔÖ´ĞĞÁË 
 		xSemaphoreGive(xBinarySemaphoreICON); 	
-		//emwin_test_touch();  //emWinåæ ‡è·å–
+		//emwin_test_touch();  //emWin×ø±ê»ñÈ¡
 
-		taskEXIT_CRITICAL();            /* å‡ºä¸´ç•ŒåŒº */
+		taskEXIT_CRITICAL();            /* ³öÁÙ½çÇø */
 	}
   /* Infinite loop */
   for(;;)
   {
-		if (t % 5 == 0) /* æ¯200msè¯»å–ä¸€æ¬¡ */ { 
-			dht11_read_data(&temperature, &humidity); /* è¯»å–æ¸©æ¹¿åº¦å€¼ */
+		if (t % 5 == 0) /* Ã¿200ms¶ÁÈ¡Ò»´Î */ { 
+			dht11_read_data(&temperature, &humidity); /* ¶ÁÈ¡ÎÂÊª¶ÈÖµ */
 			
-			//printf("temperature: %d.%d\n", temperature>>8, (temperature & 0xFF));/* æ˜¾ç¤ºæ¸©åº¦ */ 
-			//printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* æ˜¾ç¤ºæ¹¿åº¦ */ 
+			//printf("temperature: %d.%d\n", temperature>>8, (temperature & 0xFF));/* ÏÔÊ¾ÎÂ¶È */ 
+			//printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* ÏÔÊ¾Êª¶È */ 
 		}
-		if(t % 10 == 0) /* æ¯400msè¯»å–ä¸€æ¬¡ */{ 
-				adcx = lsens_get_val();                                 /* è·å–äº®åº¦ */
+		if(t % 10 == 0) /* Ã¿400ms¶ÁÈ¡Ò»´Î */{ 
+				adcx = lsens_get_val();                                 /* »ñÈ¡ÁÁ¶È */
 				//printf("bright:%d\n", adcx);
 		}
 		t++; 
 		//osDelay(10);
-		//è§¦æ‘¸å±éœ€è¦è½®è¯¢æ£€æµ‹ï¼Œå¦åˆ™emWinæ²¡æœ‰åŠæ³•è§¦å‘äº‹ä»¶
+		//´¥ÃşÆÁĞèÒªÂÖÑ¯¼ì²â£¬·ñÔòemWinÃ»ÓĞ°ì·¨´¥·¢ÊÂ¼ş
 		GUI_TOUCH_Exec();
 		osDelay(40);
   }
@@ -399,14 +399,14 @@ void GUI_Task(void const * argument)
 {
   /* USER CODE BEGIN GUI_Task */
 	/*
-	taskENTER_CRITICAL();           // è¿›å…¥ä¸´ç•ŒåŒ? 
+	taskENTER_CRITICAL();           // ½øÈëÁÙ½ç¶Î
 	
 	// µÈ´ıÈÎÎñ1Íê³É 
 	if (xSemaphoreTake(xBinarySemaphoreCheckFontsAndIconBin, portMAX_DELAY) == pdTRUE) { 
 		// Ö´ĞĞÈÎÎñ2µÄ²Ù×÷ // ...
 		MainTask();
 	}
-	taskEXIT_CRITICAL();            // é€?å‡ºä¸´ç•ŒåŒº
+	taskEXIT_CRITICAL();            // ÍË³öÁÙ½ç¶Î
 	*/
 	if (xSemaphoreTake(xBinarySemaphoreICON, portMAX_DELAY) == pdTRUE) {
 		MainTask();

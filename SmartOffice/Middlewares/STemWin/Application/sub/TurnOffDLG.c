@@ -243,15 +243,15 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             status = !status;
         if(status){
             //backlight on
-                        //printf("backlight on\n");
-                        lcd_set_backlight_by_pwm(last_brightness);
-                        cur_brightness = last_brightness;
+			//printf("backlight on\n");
+			lcd_set_backlight_by_pwm(last_brightness);
+			cur_brightness = last_brightness;
         }else{
-                        //backlight off
-                        cur_brightness = 0;
-                        last_brightness = lcd_get_backlight_by_pwm();
-                        lcd_set_backlight_by_pwm(0);
-                        //printf("backlight off\n");
+			//backlight off
+			cur_brightness = 0;
+			last_brightness = lcd_get_backlight_by_pwm();
+			lcd_set_backlight_by_pwm(0);
+			//printf("backlight off\n");
         }
         // USER END
         break;

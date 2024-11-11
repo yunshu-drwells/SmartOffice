@@ -119,14 +119,14 @@ static TaskHandle_t xUpdateTaskHandle;
 static void UpdateTextTask(void *pvParameters) {
     WM_HWIN hItem = (WM_HWIN)pvParameters;
     while (1) {
-        // æ ¼å¼åŒ–å­—ç¬¦ä¸²å¹¶è®¾ç½®æ–‡æœ¬
+        // ¸ñÊ½»¯×Ö·û´®²¢ÉèÖÃÎÄ±¾
         sprintf((char*)str, "%02d%%", adcx);
         TEXT_SetText(hItem, (char*)str);
 
-        // å¼ºåˆ¶åˆ·æ–°æ§ä»¶
+        // Ç¿ÖÆË¢ĞÂ¿Ø¼ş
         WM_InvalidateWindow(hItem);
 
-        // å»¶æ—¶200ms
+        // ÑÓÊ±200ms
         vTaskDelay(pdMS_TO_TICKS(200));
     }
 }
@@ -164,9 +164,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "Brightnesss");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
-    TEXT_SetText(hItem, "äº®åº¦");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // ÉèÖÃ×ÖÌå
+    TEXT_SetText(hItem, "ÁÁ¶È");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // ÉèÖÃÎÄ±¾¶ÔÆë·½Ê½£¨¿ÉÑ¡£©
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     //
     // Initialization of 'Image'
@@ -183,7 +183,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		
 		sprintf((char*)str, "%2d%%", adcx);
     TEXT_SetText(hItem, (char*)str);
-		// åˆ›å»ºæ›´æ–°ä»»åŠ¡ï¼Œä¼ é€’Textæ§ä»¶å¥æŸ„
+	// ´´½¨¸üĞÂÈÎÎñ£¬´«µİText¿Ø¼ş¾ä±ú
     xTaskCreate(UpdateTextTask, "UpdateTextTask", 256, (void*)hItem, tskIDLE_PRIORITY + 1, &xUpdateTaskHandle);
 		
     // USER START (Optionally insert additional code for further widget initialization)
@@ -217,8 +217,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         //·µ»ØÖ÷Ò³
         GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
         CreateWindowMain(); // ´´½¨WindowMain½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
-				//é”€æ¯ä»»åŠ¡
-				DeleteUpdateTask();
+		//Ïú»ÙÈÎÎñ
+		DeleteUpdateTask();
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)

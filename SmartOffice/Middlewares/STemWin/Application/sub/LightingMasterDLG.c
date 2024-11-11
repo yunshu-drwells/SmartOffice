@@ -103,13 +103,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "LightingMaster");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // 璁剧疆瀛椾綋
-    TEXT_SetText(hItem, "涓荤伅");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 璁剧疆鏂囨湰瀵归綈鏂瑰紡锛堝彲閫夛級
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "主灯");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    //WM_InvalidateWindow(hItem);  // 寮哄埗鍒锋柊绐楀彛
+    //WM_InvalidateWindow(hItem);  // 强制刷新窗口
     // USER START (Optionally insert additional code for further widget initialization)
-        // 鏍规嵁绌洪棿ID,鑾峰彇绌洪棿鍙ユ焺
+	// 根据空间ID,获取空间句柄
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
     //
 	// Initialization of 'Button_LightingMaster'
@@ -146,11 +146,11 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         if(status){
             BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOn);
             //light up
-						HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
         }else{
             BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOff);
             //light off
-						HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
         }
         // USER END
         break;
