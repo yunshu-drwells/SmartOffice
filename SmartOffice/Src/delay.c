@@ -1,16 +1,19 @@
 #include "delay.h"
 
-
 static uint32_t g_fac_us = 0;       /* us延时倍乘数 */
 
-/* 如果SYS_SUPPORT_OS定义了,说明要支持OS了(不限于UCOS) */
+/* 如果定义了SYS_SUPPORT_OS 1,说明要支持OS了(不限于UCOS) */
 #if SYS_SUPPORT_OS
+// 定义g_fac_ms变量, 表示ms延时的倍乘数, 代表每个节拍的ms数, (仅在使能os的时候,需要用到) 
+static uint16_t g_fac_ms = 0;
+#endif
 
-/* 添加公共头文件 ( ucos需要用到) */
+#if defined (UCOSII)
+// 支持UCOSII
+// 添加公共头文件 ( ucos需要用到) 
 #include "os.h"
 
-/* 定义g_fac_ms变量, 表示ms延时的倍乘数, 代表每个节拍的ms数, (仅在使能os的时候,需要用到) */
-static uint16_t g_fac_ms = 0;
+
 
 /*
  *  当delay_us/delay_ms需要支持OS的时候需要三个与OS相关的宏定义和函数来支持
@@ -26,11 +29,9 @@ static uint16_t g_fac_ms = 0;
  *  本例程仅作UCOSII的支持,其他OS,请自行参考着移植
  */
 
-/* 支持UCOSII */
-#define delay_osrunning     OSRunning           /* OS是否运行标记,0,不运行;1,在运行 */
-#define delay_ostickspersec OS_TICKS_PER_SEC    /* OS时钟节拍,即每秒调度次数 */
-#define delay_osintnesting  OSIntNesting        /* 中断嵌套级别,即中断嵌套次数 */
-
+#define delay_osrunning     OSRunning           // OS是否运行标记,0,不运行;1,在运行 
+#define delay_ostickspersec OS_TICKS_PER_SEC    // OS时钟节拍,即每秒调度次数 
+#define delay_osintnesting  OSIntNesting        // 中断嵌套级别,即中断嵌套次数 
 
 /**
  * @brief     us级延时时,关闭任务调度(防止打断us级延迟)
@@ -39,8 +40,9 @@ static uint16_t g_fac_ms = 0;
  */
 void delay_osschedlock(void)
 {
-    OSSchedLock();                      /* UCOSII的方式,禁止调度，防止打断us延时 */
+    OSSchedLock();                      // UCOSII的方式,禁止调度，防止打断us延时 
 }
+
 
 /**
  * @brief     us级延时时,恢复任务调度
@@ -49,7 +51,7 @@ void delay_osschedlock(void)
  */
 void delay_osschedunlock(void)
 {
-    OSSchedUnlock();                    /* UCOSII的方式,恢复调度 */
+    OSSchedUnlock();                    // UCOSII的方式,恢复调度 
 }
 
 /**
@@ -59,7 +61,7 @@ void delay_osschedunlock(void)
  */
 void delay_ostimedly(uint32_t ticks)
 {
-    OSTimeDly(ticks);                               /* UCOSII延时 */
+    OSTimeDly(ticks);                               // UCOSII延时
 }
 
 /**
@@ -77,7 +79,43 @@ void SysTick_Handler(void)
     }
     HAL_IncTick();
 }
-#endif
+#elif defined (FreeRTOS)
+// 支持FreeRTOS
+/* 添加公共头文件 (FreeRTOS需要用到) */
+#include "FreeRTOS.h"
+#include "task.h"
+
+
+/* 支持FreeRTOS */
+#define delay_osrunning     (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
+#define delay_ostickspersec configTICK_RATE_HZ
+#define delay_osintnesting  (UBaseType_t)0  // FreeRTOS不直接提供中断嵌套计数，这里简化处理
+
+/* FreeRTOS相关函数 */
+#define delay_osschedlock()   vTaskSuspendAll()
+#define delay_osschedunlock() xTaskResumeAll()
+#define delay_ostimedly(x)    vTaskDelay(x)
+
+/**
+ * @brief     systick中断服务函数，用于FreeRTOS的时钟节拍
+ * @param     None
+ * @retval    None
+ */
+/*
+void SysTick_Handler(void)
+{
+    // 使用FreeRTOS时，在中断中进行时钟节拍处理 
+    if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
+    {
+        xPortSysTickHandler();
+    }
+
+    // 调用HAL库的时钟节拍处理函数 
+    HAL_IncTick();
+}
+*/
+#endif  //FreeRTOS
+
 
 /**
  * @brief     初始化延迟函数

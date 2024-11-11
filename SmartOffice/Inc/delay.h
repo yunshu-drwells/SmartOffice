@@ -5,6 +5,8 @@
 #include "core_cm4.h"
 #include "stm32f4xx_hal.h"
 
+#define FreeRTOS
+//#define SYS_SUPPORT_OS 1
 
 void delay_init(uint16_t sysclk);           /* 初始化延迟函数 */
 void delay_ms(uint16_t nms);                /* 延时nms */

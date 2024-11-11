@@ -136,7 +136,7 @@ uint8_t dht11_read_data(uint16_t *temp, uint16_t *humi)
  */
 uint8_t dht11_init(void)
 {
-	__disable_irq();  // 禁用所有中断
+	//__disable_irq();  // 禁用所有中断
     GPIO_InitTypeDef gpio_init_struct;
 
     DHT11_DQ_GPIO_CLK_ENABLE();     /* 开启DQ引脚时钟 */
@@ -150,6 +150,6 @@ uint8_t dht11_init(void)
 
     dht11_reset();
     volatile uint8_t rval = dht11_check();
-    __enable_irq();   // 重新启用中断
+    //__enable_irq();   // 重新启用中断
 	return rval;
 }
