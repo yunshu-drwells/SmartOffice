@@ -3,7 +3,7 @@
 /* CP936 (Simplified Chinese GBK)                                         */
 /*------------------------------------------------------------------------*/
 
-#include "ff.h"
+#include "../ff.h"
 #include "fonts.h"  //ftinfo
 #include "norflash.h"  //norflash_read
 
@@ -14,7 +14,7 @@
 /*
 static
 const WCHAR uni2oem[] = {
-//  Unicode - OEM,  Unicode - OEM,  Unicode - OEM,  Unicode - OEM 
+//  Unicode - OEM,  Unicode - OEM,  Unicode - OEM,  Unicode - OEM
 	0x00A4, 0xA1E8, 0x00A7, 0xA1EC, 0x00A8, 0xA1A7, 0x00B0, 0xA1E3,
 	0x00B1, 0xA1C0, 0x00B7, 0xA1A4, 0x00D7, 0xA1C1, 0x00E0, 0xA8A4,
 	0x00E1, 0xA8A2, 0x00E8, 0xA8A8, 0x00E9, 0xA8A6, 0x00EA, 0xA8BA,
@@ -5468,7 +5468,7 @@ const WCHAR uni2oem[] = {
 
 static
 const WCHAR oem2uni[] = {
-//	OEM - Unicode,  OEM - Unicode,  OEM - Unicode,  OEM - Unicode 
+//	OEM - Unicode,  OEM - Unicode,  OEM - Unicode,  OEM - Unicode
 	0x0080, 0x20AC, 0x8140, 0x4E02, 0x8141, 0x4E04, 0x8142, 0x4E05,
 	0x8143, 0x4E06, 0x8144, 0x4E0F, 0x8145, 0x4E12, 0x8146, 0x4E17,
 	0x8147, 0x4E1F, 0x8148, 0x4E20, 0x8149, 0x4E21, 0x814A, 0x4E23,
@@ -10921,6 +10921,7 @@ const WCHAR oem2uni[] = {
 };
 */
 
+
 WCHAR ff_convert (	/* Converted code, 0 means conversion error */
 	WCHAR	chr,	/* Character code to be converted */
 	UINT	dir		/* 0: Unicode to OEM code, 1: OEM code to Unicode */
@@ -10997,7 +10998,6 @@ WCHAR ff_convert (	/* Converted code, 0 means conversion error */
 
 	return c;
 }
-
 
 WCHAR ff_wtoupper (	/* Returns upper converted character */
 	WCHAR chr		/* Unicode character to be upper converted (BMP only) */

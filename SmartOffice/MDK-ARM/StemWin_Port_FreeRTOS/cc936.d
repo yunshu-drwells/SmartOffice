@@ -1,6 +1,6 @@
 stemwin_port_freertos\cc936.o: ../Middlewares/Third_Party/FatFs/src/option/cc936.c
-stemwin_port_freertos\cc936.o: ../Middlewares/Third_Party/FatFs/src/ff.h
-stemwin_port_freertos\cc936.o: ../Middlewares/Third_Party/FatFs/src/integer.h
+stemwin_port_freertos\cc936.o: ../Middlewares/Third_Party/FatFs/src/option/../ff.h
+stemwin_port_freertos\cc936.o: ../Middlewares/Third_Party/FatFs/src/option/../integer.h
 stemwin_port_freertos\cc936.o: ../Inc/ffconf.h
 stemwin_port_freertos\cc936.o: ../Inc/main.h
 stemwin_port_freertos\cc936.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h

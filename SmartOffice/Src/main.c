@@ -147,6 +147,7 @@ int main(void)
   MX_SPI1_Init();
   MX_ADC3_Init();
   MX_SDIO_SD_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 		// 调用配置堆区域的函数
 	configureHeapRegions();  //FreeRTOS定义heap5的堆区地址范围
