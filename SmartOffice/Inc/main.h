@@ -181,7 +181,11 @@ void emwin_test_touch(void);
 #define UB_Pin GPIO_PIN_1
 #define UB_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
-#define RX_BUFFER_SIZE 256  // Define the size of your receive buffer
+//#define RX_BUFFER_SIZE 256  // Define the size of your receive buffer
+#define MAX_RX_BUFFER_SIZE 10240  // Define the max size of your receive buffer
+#define BUFFER_WINDOW 4096  //Define the increase size of buffer
+extern uint8_t* uart3_rx_buffer;
+
 #define MAX_IP_LENGTH 16
 
 #define macUser_ESP8266_ApSsid "DUOBAO"        //要连接的热点名称（只支持2.4G网络）
@@ -189,6 +193,10 @@ void emwin_test_touch(void);
 
 #define macUser_ESP8266_TcpServer_IP   "192.168.3.3" //要连接的服务器的IP
 #define macUser_ESP8266_TcpServer_Port 8000        //要连接的服务器的端口
+
+extern char FAN_ip_address[];  //风扇模块ip地址
+extern char MasterLight_ip_address[];  //主灯模块ip地址
+extern char SpotLight_ip_address[];  //射灯模块ip地址
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

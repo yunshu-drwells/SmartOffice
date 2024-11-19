@@ -25,7 +25,9 @@
 #include "task.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "main.h"  //RX_BUFFER_SIZE
+#include "main.h"  //RX_BUFFER_SIZE uart3_rx_buffer;
+#include "mymalloc.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -191,7 +193,12 @@ void USART3_IRQHandler(void)
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);
   /* USER CODE BEGIN USART3_IRQn 1 */
-
+  //内存分配操作的执行时间不确定，可能导致中断处理时间过长。在实时系统中，这可能会干扰其他关键任务的执行。
+	/*
+  if(BUFFER_WINDOW <= uart3_rx_index+1){
+	 uart3_rx_buffer = myrealloc(2, uart3_rx_buffer, ((uart3_rx_index+1)/BUFFER_WINDOW)*BUFFER_WINDOW*sizeof(uint8_t));
+  }
+  */
   /* USER CODE END USART3_IRQn 1 */
 }
 

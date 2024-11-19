@@ -1,14 +1,19 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 
-// 定义枚举类型
-typedef enum {
-    TCP,
-    UDP
-} enumTCP;
+
 
 // 定义Single_ID_0，假设它是一个常量
 #define Single_ID_0 0
 
+extern char ip_address[];
+
+void ESP8266_SendCmd(const char* str);
+uint8_t ESP8266_WaitResponseForCIPSTART(const char* expected_response, uint32_t timeout);
 void ESP8266_Connect_Wifi(const char* ssid, const char* password);
+void test(void);
+void ESP8266_Enable_SERVER(void);
+void ESP8266_Enable_Client(void);
 void ESP8266_CheckRecvData(void);
+

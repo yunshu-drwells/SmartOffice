@@ -96,6 +96,11 @@ FATFS* USERFatFS; /* File system object for USER logical drive */
 
 _font_info* ftinfo;
 _icon_info* iconftinfo;
+uint8_t* uart3_rx_buffer;
+
+char FAN_ip_address[MAX_IP_LENGTH] = {0};  //风扇模块ip地址
+char MasterLight_ip_address[MAX_IP_LENGTH] = {0};  //主灯模块ip地址
+char SpotLight_ip_address[MAX_IP_LENGTH] = {0};  //射灯模块ip地址
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -149,7 +154,7 @@ int main(void)
   MX_SDIO_SD_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-		// 调用配置堆区域的函数
+	// 调用配置堆区域的函数
 	configureHeapRegions();  //FreeRTOS定义heap5的堆区地址范围
 	
 	sram_init();                        /* 外扩SRAM初始化 */
@@ -187,7 +192,10 @@ int main(void)
 	memset(ftinfo, 0, sizeof(_font_info));
 	
 	iconftinfo = (_icon_info *)mymalloc(2, sizeof(_icon_info));
-	memset(iconftinfo, 0, sizeof(_icon_info));	
+	memset(iconftinfo, 0, sizeof(_icon_info));
+	
+	uart3_rx_buffer = (uint8_t *)mymalloc(2, BUFFER_WINDOW*sizeof(uint8_t));
+	memset(uart3_rx_buffer, 0, BUFFER_WINDOW*sizeof(uint8_t));
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

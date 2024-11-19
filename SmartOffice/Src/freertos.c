@@ -98,7 +98,7 @@ SemaphoreHandle_t xBinarySemaphoreFont;
 SemaphoreHandle_t xBinarySemaphoreICON;
 
 //esp8266 uart3
-uint8_t uart3_rx_buffer[RX_BUFFER_SIZE];
+//uint8_t uart3_rx_buffer[RX_BUFFER_SIZE];
 volatile uint16_t uart3_rx_index = 0;
 uint8_t Uart3FramFinishFlag = 0;
 
@@ -136,7 +136,7 @@ void init_disks(){
 }
 
 //void fmout_disks(void *pvParameters){
-void fmout_disks( ){
+void fmout_disks(uint8_t opt){
 	//uint8_t work_buff[512] = {0};  //缓冲区
 	uint8_t * work_buff = (uint8_t *)mymalloc(2, 512);
 	uint8_t res = 0;
@@ -158,7 +158,7 @@ void fmout_disks( ){
 			}
 	}
 	
-	res = f_mount(USERFatFS, "1:", 0);  // 挂载NORFlash
+	res = f_mount(USERFatFS, "1:", opt);  // 挂载NORFlash
 	printf("f_mount flash res:%u\n", res);
 	if(FR_OK == res){
 		//printf("Flash Disk Mount Successed!\n");     // 挂载NORFlash成功
@@ -264,7 +264,7 @@ void WebServer_Task(void const * argument)
 	init_disks();
 
 	//挂载norflash和SD卡
-	fmout_disks();
+	fmout_disks(1);
 
 	delay_init(168);                    // 初始化自定义延时函数
 	lcd_init();                             // 初始化LCD
@@ -293,8 +293,10 @@ void WebServer_Task(void const * argument)
 	/*
 	printf("usart1 ok\n");
 	HAL_UART_Receive_IT(&huart1, uart1_rx_buffer, RX_BUFFER_SIZE);
-	HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, RX_BUFFER_SIZE);
 	*/
+	//HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, RX_BUFFER_SIZE);
+	HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, MAX_RX_BUFFER_SIZE);
+	
 
 	taskEXIT_CRITICAL();            /* 出临界段 */
 	//vTaskDelete(xMountDisksTaskHandle);
@@ -408,8 +410,11 @@ void IOT_Task(void const * argument)
   /* USER CODE BEGIN IOT_Task */
   //使用互斥信号量保护esp8266的初始化及配置过程
   if (xSemaphoreTake(xMutexEsp8266, portMAX_DELAY) == pdTRUE) {
-	//ESP8266_Connect_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);  //对ESP8266进行配置并连接到指定wifi
-	ESP8266_Connect_Wifi("Yunshu_Drwells", "yzy@0203yzy@0203");    //对ESP8266进行配置
+	//ESP8266_Connect_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);
+	ESP8266_Connect_Wifi("Yunshu_Drwells", "yzy@0203yzy@0203");    //对ESP8266进行配置并连接到指定wifi
+	//ESP8266_Connect_Wifi("DUOBAO", "yunshu666");
+	//搜索所有的物联网子设备并获取它们的ip地址
+	test();
 	xSemaphoreGive(xMutexEsp8266);
   }
   /* Infinite loop */

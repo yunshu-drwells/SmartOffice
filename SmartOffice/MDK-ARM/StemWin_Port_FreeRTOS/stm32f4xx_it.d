@@ -53,3 +53,6 @@ stemwin_port_freertos\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source
 stemwin_port_freertos\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
 stemwin_port_freertos\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 stemwin_port_freertos\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+stemwin_port_freertos\stm32f4xx_it.o: ../Inc/mymalloc.h
+stemwin_port_freertos\stm32f4xx_it.o: ../Drivers/CMSIS/Include/core_cm4.h
+stemwin_port_freertos\stm32f4xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
