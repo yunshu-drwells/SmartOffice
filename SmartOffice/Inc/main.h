@@ -182,9 +182,12 @@ void emwin_test_touch(void);
 #define UB_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
 //#define RX_BUFFER_SIZE 256  // Define the size of your receive buffer
-#define MAX_RX_BUFFER_SIZE 10240  // Define the max size of your receive buffer
+#define MAX_RX_BUFFER_SIZE 1024  // Define the max size of your receive buffer
 #define BUFFER_WINDOW 4096  //Define the increase size of buffer
 extern uint8_t* uart3_rx_buffer;
+extern uint8_t* uart3_rx_data;
+extern uint16_t rx_index;
+extern uint8_t dataReadyFlag;
 
 #define MAX_IP_LENGTH 16
 

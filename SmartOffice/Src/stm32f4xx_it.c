@@ -25,9 +25,10 @@
 #include "task.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "main.h"  //RX_BUFFER_SIZE uart3_rx_buffer;
+#include "main.h"  //RX_BUFFER_SIZE uart3_rx_buffer uart3_rx_data dataReadyFlag
 #include "mymalloc.h"
-#include <string.h>
+#include <string.h>  //memcpy
+#include "usart3_dma.h"  //ProcessReceivedData
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,6 +67,8 @@ extern ETH_HandleTypeDef heth;
 extern DMA_HandleTypeDef hdma_sdio_rx;
 extern DMA_HandleTypeDef hdma_sdio_tx;
 extern SD_HandleTypeDef hsd;
+extern DMA_HandleTypeDef hdma_usart3_rx;
+extern DMA_HandleTypeDef hdma_usart3_tx;
 extern UART_HandleTypeDef huart3;
 extern TIM_HandleTypeDef htim1;
 
@@ -170,6 +173,34 @@ void DebugMon_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles DMA1 stream1 global interrupt.
+  */
+void DMA1_Stream1_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream1_IRQn 0 */
+
+  /* USER CODE END DMA1_Stream1_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart3_rx);
+  /* USER CODE BEGIN DMA1_Stream1_IRQn 1 */
+
+  /* USER CODE END DMA1_Stream1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 stream3 global interrupt.
+  */
+void DMA1_Stream3_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream3_IRQn 0 */
+
+  /* USER CODE END DMA1_Stream3_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart3_tx);
+  /* USER CODE BEGIN DMA1_Stream3_IRQn 1 */
+
+  /* USER CODE END DMA1_Stream3_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM1 update interrupt and TIM10 global interrupt.
   */
 void TIM1_UP_TIM10_IRQHandler(void)
@@ -189,16 +220,47 @@ void TIM1_UP_TIM10_IRQHandler(void)
 void USART3_IRQHandler(void)
 {
   /* USER CODE BEGIN USART3_IRQn 0 */
-  uart3_rx_index++;
+  //uart3_rx_index++;
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);
   /* USER CODE BEGIN USART3_IRQn 1 */
-  //内存分配操作的执行时间不确定，可能导致中断处理时间过长。在实时系统中，这可能会干扰其他关键任务的执行。
-	/*
-  if(BUFFER_WINDOW <= uart3_rx_index+1){
-	 uart3_rx_buffer = myrealloc(2, uart3_rx_buffer, ((uart3_rx_index+1)/BUFFER_WINDOW)*BUFFER_WINDOW*sizeof(uint8_t));
-  }
-  */
+	if(__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET)
+	{
+		__HAL_UART_CLEAR_IDLEFLAG(&huart3);
+		
+		// 停止DMA传输
+		HAL_UART_DMAStop(&huart3);
+
+		// 计算接收到的数据长度
+		rx_index = BUFFER_WINDOW - __HAL_DMA_GET_COUNTER(huart3.hdmarx);
+		//printf("uart3_rx_buffer: %s, rx_index: %d\n", uart3_rx_buffer, rx_index);
+
+		// 复制接收到的数据
+		memcpy(uart3_rx_data, uart3_rx_buffer, rx_index);
+		//strcpy((char*)rx_data, (char*)rx_buffer);
+		//strncpy((char*)rx_data, (char*)rx_buffer, rx_index);
+		//printf("rx_data: %s, rx_index: %d", rx_data, strlen((char*)rx_data));
+		uart3_rx_data[rx_index] = '\0';
+		dataReadyFlag = 1;
+		
+
+		// 释放信号量，以通知任务处理数据 
+		//xSemaphoreGive(xBinarySemaphoreData);
+		
+		// 将数据发送到队列 (每次 USART3_IRQHandler 执行完后，将数据发送到队列，通知任务处理数据。)
+		/*
+        if (xQueueSendToBack(xQueueData, &uart3_rx_data, 0) != pdPASS)
+        {
+            // 队列发送失败，处理错误
+            while (1) {}
+        }
+		*/
+		
+		//判断是不是web请求并处理网络请求数据
+	
+		// 重新启动DMA接收
+		HAL_UART_Receive_DMA(&huart3, uart3_rx_buffer, BUFFER_WINDOW);
+	}
   /* USER CODE END USART3_IRQn 1 */
 }
 

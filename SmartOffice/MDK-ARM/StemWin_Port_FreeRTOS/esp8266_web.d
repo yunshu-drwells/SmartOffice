@@ -50,6 +50,8 @@ stemwin_port_freertos\esp8266_web.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4
 stemwin_port_freertos\esp8266_web.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 stemwin_port_freertos\esp8266_web.o: ../Inc/delay.h
 stemwin_port_freertos\esp8266_web.o: ../Drivers/CMSIS/Include/core_cm4.h
+stemwin_port_freertos\esp8266_web.o: ../Inc/usart3_dma.h
+stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 stemwin_port_freertos\esp8266_web.o: ../Inc/FreeRTOSConfig.h
 stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
@@ -59,7 +61,10 @@ stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/
 stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
 stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
-stemwin_port_freertos\esp8266_web.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
+stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
+stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
+stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 stemwin_port_freertos\esp8266_web.o: ../Inc/esp8266_fan.h
 stemwin_port_freertos\esp8266_web.o: ../Inc/esp8266_http_client.h
 stemwin_port_freertos\esp8266_web.o: ../Inc/esp8266_web.h

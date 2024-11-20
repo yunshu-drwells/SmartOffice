@@ -21,20 +21,25 @@ Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V2.0.18.0
 Dialog DLL:      TCM.DLL V1.27.0.0
  
 <h2>Project:</h2>
-C:\Users\Administrator\Desktop\SmartOffice\MDK-ARM\SmartOffice.uvprojx
-Project File Date:  11/11/2024
+C:\Users\Administrator\Desktop\New folder\SmartOffice\MDK-ARM\SmartOffice.uvprojx
+Project File Date:  11/19/2024
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 4 (build 422)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'SmartOffice'
+compiling stm32f4xx_it.c...
 compiling esp8266_web.c...
-..\Src\esp8266_web.c(129): warning:  #177-D: function "extractHTTPBody"  was declared but never referenced
+../Inc/esp8266_http_client.h(12): warning:  #177-D: variable "http_request"  was declared but never referenced
+      char http_request[200];
+..\Src\esp8266_web.c(402): warning:  #177-D: function "extractHTTPBody"  was declared but never referenced
   static void extractHTTPBody(char* response, char* extracted_ip) {
-..\Src\esp8266_web.c: 1 warning, 0 errors
+..\Src\esp8266_web.c: 2 warnings, 0 errors
+compiling usart3_dma.c...
+compiling freertos.c...
 linking...
-Program Size: Code=182564 RO-data=23128 RW-data=1256 ZI-data=1111820  
+Program Size: Code=74112 RO-data=1192 RW-data=572 ZI-data=1110124  
 FromELF: creating hex file...
-"StemWin_Port_FreeRTOS\StemWin_Port_FreeRTOS.axf" - 0 Error(s), 1 Warning(s).
+"StemWin_Port_FreeRTOS\StemWin_Port_FreeRTOS.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   .\RTE\_SmartOffice
