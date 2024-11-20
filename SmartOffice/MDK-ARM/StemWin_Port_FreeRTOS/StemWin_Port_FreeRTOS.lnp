@@ -36,7 +36,6 @@
 "stemwin_port_freertos\stm32f4xx_it.o"
 "stemwin_port_freertos\stm32f4xx_hal_msp.o"
 "stemwin_port_freertos\stm32f4xx_hal_timebase_tim.o"
-"stemwin_port_freertos\usart3_dma.o"
 "stemwin_port_freertos\stm32f4xx_hal_eth.o"
 "stemwin_port_freertos\stm32f4xx_hal_adc.o"
 "stemwin_port_freertos\stm32f4xx_hal_adc_ex.o"

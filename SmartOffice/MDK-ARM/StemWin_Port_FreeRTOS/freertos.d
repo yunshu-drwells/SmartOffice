@@ -100,5 +100,3 @@ stemwin_port_freertos\freertos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 stemwin_port_freertos\freertos.o: ../Inc/usart.h
 stemwin_port_freertos\freertos.o: ../Inc/esp8266.h
 stemwin_port_freertos\freertos.o: ../Inc/esp8266_web.h
-stemwin_port_freertos\freertos.o: ../Inc/usart3_dma.h
-stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h

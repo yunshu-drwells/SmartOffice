@@ -97,9 +97,6 @@ FATFS* USERFatFS; /* File system object for USER logical drive */
 _font_info* ftinfo;
 _icon_info* iconftinfo;
 uint8_t* uart3_rx_buffer;
-uint8_t* uart3_rx_data;
-uint16_t rx_index = 0;
-uint8_t dataReadyFlag = 0;
 
 char FAN_ip_address[MAX_IP_LENGTH] = {0};  //风扇模块ip地址
 char MasterLight_ip_address[MAX_IP_LENGTH] = {0};  //主灯模块ip地址
@@ -199,9 +196,6 @@ int main(void)
 	
 	uart3_rx_buffer = (uint8_t *)mymalloc(2, BUFFER_WINDOW*sizeof(uint8_t));
 	memset(uart3_rx_buffer, 0, BUFFER_WINDOW*sizeof(uint8_t));
-	
-	uart3_rx_data = (uint8_t *)mymalloc(2, BUFFER_WINDOW*sizeof(uint8_t));
-	memset(uart3_rx_data, 0, BUFFER_WINDOW*sizeof(uint8_t));
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

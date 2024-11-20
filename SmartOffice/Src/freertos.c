@@ -51,7 +51,6 @@
 #include "esp8266.h"
 #include <string.h>
 #include "esp8266_web.h"
-#include "usart3_dma.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -256,19 +255,7 @@ void WebServer_Task(void const * argument)
   MX_FATFS_Init();
 
   /* USER CODE BEGIN WebServer_Task */
-	
-	//创建互斥信号量
-	xMutexEsp8266 = xSemaphoreCreateMutex();
-
-	//使能esp8266并开启中断接收
-	ESP8266_Enable();  //CH使能
-	ESP8266_Reset();  //复位引脚拉高
-	 
-	//启用串口3DMA接收
-	USART3_Init_DMA();
-	
-	/*
-	taskENTER_CRITICAL();           // 进入临界段 
+	taskENTER_CRITICAL();           /* 进入临界段 */
 	
 	// 创建二值信号量 
 	xBinarySemaphoreFont = xSemaphoreCreateBinary();
@@ -283,13 +270,13 @@ void WebServer_Task(void const * argument)
 	lcd_init();                             // 初始化LCD
 	sprintf((char *)lcd_id, "LCD ID:%04X", lcddev.id);
 	
-	while (dht11_init())    // DHT11初始化
+	while (dht11_init())    /* DHT11初始化* */
 	{
 			printf("DHT11 Error !\n");
 			delay_ms(200);
 	}
 	printf("DHT11 init successed!\n");
-	lsens_init();                           // 初始化光敏传感器
+	lsens_init();                           /* 初始化光敏传感器 */
 	printf("lsens init down!\n");
 	
 	// 释放信号量，通知任务2可以执行了 
@@ -303,15 +290,15 @@ void WebServer_Task(void const * argument)
 	ESP8266_Reset();  //复位引脚拉高
 	 
 	//启用串口1和串口3中断接收
+	/*
+	printf("usart1 ok\n");
+	HAL_UART_Receive_IT(&huart1, uart1_rx_buffer, RX_BUFFER_SIZE);
+	*/
 	//HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, RX_BUFFER_SIZE);
-	//HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, MAX_RX_BUFFER_SIZE);
-	
-	//启用串口3DMA接收
-	USART3_Init_DMA();
+	HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, MAX_RX_BUFFER_SIZE);
 	
 
-	taskEXIT_CRITICAL();            // 出临界段
-	*/
+	taskEXIT_CRITICAL();            /* 出临界段 */
 	//vTaskDelete(xMountDisksTaskHandle);
     //xMountDisksTaskHandle = NULL;
   /* Infinite loop */
@@ -333,9 +320,8 @@ void Touch_Task(void const * argument)
 {
   /* USER CODE BEGIN Touch_Task */
 	// 等待任务1完成 
-	/*
 	if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
-		taskENTER_CRITICAL();           // 进入临界段 
+		taskENTER_CRITICAL();           /* 进入临界段 */
 
 		if(fonts_init()){  //初始化字库
 			printf("Init font failed!\n");
@@ -359,7 +345,13 @@ void Touch_Task(void const * argument)
 		printf("NORFlash f_open return :%d\n", res);
 		
 		//测试SD打开文件
-
+		/*
+		res = f_open(fftemp, "0:AlarmOn.bin", FA_READ);
+		printf("SD f_open return :%d\n", res);
+		
+		res = f_open(fftemp, "0:/img.jpg", FA_READ);
+		printf("SD f_open return :%d\n", res);
+		*/
 				
 		// 创建二值信号量 
 		xBinarySemaphoreICON = xSemaphoreCreateBinary();
@@ -382,28 +374,25 @@ void Touch_Task(void const * argument)
 		xSemaphoreGive(xBinarySemaphoreICON); 	
 		//emwin_test_touch();  //emWin坐标获取
 		
-		taskEXIT_CRITICAL();            // 出临界区
+		taskEXIT_CRITICAL();            /* 出临界区 */
 	}
-	*/
   /* Infinite loop */
   for(;;)
   {
-	  /*
-		if (t % 5 == 0) { // 每200ms读取一次
-			dht11_read_data(&temperature, &humidity); // 读取温湿度值 
+		if (t % 5 == 0) /* 每200ms读取一次 */ { 
+			dht11_read_data(&temperature, &humidity); /* 读取温湿度值 */
 			
-			//printf("temperature: %d.%d\n", temperature>>8, (temperature & 0xFF));// 显示温度  
-			//printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); // 显示湿度 
+			//printf("temperature: %d.%d\n", temperature>>8, (temperature & 0xFF));/* 显示温度 */ 
+			//printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* 显示湿度 */ 
 		}
-		if(t % 10 == 0) { // 每400ms读取一次
-				adcx = lsens_get_val();                                 // 获取亮度 
+		if(t % 10 == 0) /* 每400ms读取一次 */{ 
+				adcx = lsens_get_val();                                 /* 获取亮度 */
 				//printf("bright:%d\n", adcx);
 		}
 		t++; 
 		//osDelay(10);
 		//触摸屏需要轮询检测，否则emWin没有办法触发事件
 		GUI_TOUCH_Exec();
-	  */
 		osDelay(40);
   }
   /* USER CODE END Touch_Task */
@@ -419,9 +408,6 @@ void Touch_Task(void const * argument)
 void IOT_Task(void const * argument)
 {
   /* USER CODE BEGIN IOT_Task */
-  //创建互斥信号量
-  xMutexEsp8266 = xSemaphoreCreateMutex();
-	
   //使用互斥信号量保护esp8266的初始化及配置过程
   if (xSemaphoreTake(xMutexEsp8266, portMAX_DELAY) == pdTRUE) {
 	//ESP8266_Connect_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);
@@ -434,33 +420,8 @@ void IOT_Task(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-	//osDelay(10);  //不可以延时，否则无法收到web请求
-	//ESP8266_CheckRecvData(); // 处理网络请求 (可以成功收到)  //空转，影响其它任务执行
-	  
-	//任务在等待信号量时不会空转，从而节省CPU资源
-	/*
-	if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
-		ESP8266_CheckRecvData(); // 处理网络请求 (可以成功收到)
-	}
-	*/
-	  
-	// 从队列中接收数据 (IOT_Task 任务在从队列中接收数据时不会长时间阻塞，从而可以及时响应其他事件（如Web请求）。)
-	/*
-	uint8_t *rx_data;
-	// 从队列中接收数据
-	if (xQueueReceive(xQueueData, &rx_data, 0) == pdPASS)
-	{
-		// 处理接收到的数据
-		printf("Received %d bytes: %s\n", rx_index, rx_data);
-	}
-	*/
-
-	// 处理其他任务，例如Web请求
-	// 可以在这里添加其他任务的处理逻辑
-
-	// 短暂延迟，防止任务空转
 	osDelay(10);
-	
+	ESP8266_CheckRecvData(); // 处理网络请求 (可以成功收到)
   }
   /* USER CODE END IOT_Task */
 }
@@ -485,12 +446,10 @@ void GUI_Task(void const * argument)
 	}
 	taskEXIT_CRITICAL();            // 退出临界段
 	*/
-	/*
 	printf("GUI_Task\n");
 	if (xSemaphoreTake(xBinarySemaphoreICON, portMAX_DELAY) == pdTRUE) {
 		MainTask();
 	}
-	*/
   /* Infinite loop */
 	/*
   for(;;)

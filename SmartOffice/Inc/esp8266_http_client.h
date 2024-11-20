@@ -14,17 +14,10 @@ void ESP8266_SendHTTPRequest(const char* ip, const char* endpoint) {
     // 建立TCP连接
     snprintf(at_command, sizeof(at_command), "AT+CIPSTART=0,\"TCP\",\"%s\",80", ip);
     ESP8266_SendCmd(at_command);
-    if(ESP8266_WaitResponseFor("OK", 5000)){
+    if(ESP8266_WaitResponseFor("AT+CIPSTART=0,", 5000)){
 		printf("connect tcp\r\n");
 	}
-	/*
-	AT+CIPSTART="TCP","192.168.2.37",80\r\n请求成功后会返回
-	AT+CIPSTART="TCP","192.168.2.37",80
-	CONNECT
-
-	OK
-	*/
-    /*  
+    
     // 构造HTTP请求
     snprintf(http_request, sizeof(http_request), 
              "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\n\r\n", 
@@ -33,15 +26,15 @@ void ESP8266_SendHTTPRequest(const char* ip, const char* endpoint) {
     // 发送HTTP请求
     snprintf(at_command, sizeof(at_command), "AT+CIPSEND=0,%d", strlen(http_request));
     ESP8266_SendCmd(at_command);
-    if(ESP8266_WaitResponseFor(">", 1000)){
+    if(ESP8266_WaitResponseFor("AT+CIPSEND=0,", 1000)){
 		printf("ok\r\n");
 	}
-   
+    
     ESP8266_SendCmd(http_request);
     if(ESP8266_WaitResponseFor("GET", 5000)){
 		printf("send ok\r\n");
 	}
-
+    /* 
     // 等待响应并关闭连接
     if(ESP8266_WaitResponseFor("CLOSED", 10000)){
 		printf("send closed\r\n");
