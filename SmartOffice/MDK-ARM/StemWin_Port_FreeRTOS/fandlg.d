@@ -90,3 +90,6 @@ stemwin_port_freertos\fandlg.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ha
 stemwin_port_freertos\fandlg.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 stemwin_port_freertos\fandlg.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 stemwin_port_freertos\fandlg.o: ../Inc/gpio.h
+stemwin_port_freertos\fandlg.o: ../Inc/esp8266_web.h
+stemwin_port_freertos\fandlg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+stemwin_port_freertos\fandlg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

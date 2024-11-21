@@ -410,10 +410,10 @@ void IOT_Task(void const * argument)
   /* USER CODE BEGIN IOT_Task */
   //使用互斥信号量保护esp8266的初始化及配置过程
   if (xSemaphoreTake(xMutexEsp8266, portMAX_DELAY) == pdTRUE) {
-	//ESP8266_Connect_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);
+	//ESP8266_Connect_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);  //"DUOBAO", "yunshu666"
 	ESP8266_Connect_Wifi("Yunshu_Drwells", "yzy@0203yzy@0203");    //对ESP8266进行配置并连接到指定wifi
-	//ESP8266_Connect_Wifi("DUOBAO", "yunshu666");
-	//搜索所有的物联网子设备并获取它们的ip地址
+	//发起udp广播，所有在线的物联网子设备会主动连接过来从而获取它们的ip地址
+	ESP8266_startBroadCastCmd();  
 	//test();
 	xSemaphoreGive(xMutexEsp8266);
   }
@@ -421,7 +421,9 @@ void IOT_Task(void const * argument)
   for(;;)
   {
 	osDelay(10);
+	taskENTER_CRITICAL();           /* 进入临界段 */
 	ESP8266_CheckRecvData(); // 处理网络请求 (可以成功收到)
+	taskEXIT_CRITICAL();            /* 出临界区 */
   }
   /* USER CODE END IOT_Task */
 }

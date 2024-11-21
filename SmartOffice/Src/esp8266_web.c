@@ -126,6 +126,7 @@ static uint8_t ESP8266_WaitResponse(const char* expected_response, uint32_t time
 	return 0;
 }
 
+/*
 static void extractHTTPBody(char* response, char* extracted_ip) {
 	printf("strlen(response):%d \n", strlen(response));
 	printf("%s", response);
@@ -144,6 +145,7 @@ static void extractHTTPBody(char* response, char* extracted_ip) {
         }
     }
 }
+*/
 
 uint8_t ESP8266_WaitResponseFor(const char* expected_response, uint32_t timeout){
 	TickType_t startTime = xTaskGetTickCount();
@@ -153,15 +155,15 @@ uint8_t ESP8266_WaitResponseFor(const char* expected_response, uint32_t timeout)
 			//这个标志的清除是为了准备接收下一帧数据。如果不清除，系统将无法检测到下一次的空闲状态，从而可能错过数据帧的结束。
 			//用于调试某个AT命令的返回值
 			
-			if(!strcmp(expected_response, "AT+CIPSEND=0,")){
-				//printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // 调试输出
+			if(!strcmp(expected_response, "??")){
+				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // 调试输出
 				printf("Uart3 Received data length:%d\n", uart3_rx_index);
 				
 			}
 			//将ESP8266的数据转发给Uart1
 			if(!strcmp(expected_response, (const char*)uart3_rx_buffer) || strstr((const char*)uart3_rx_buffer, expected_response)) {
 				//用于调试某个AT命令的返回值
-				if(!strcmp(expected_response, "AT+CIPSEND=0,")){
+				if(!strcmp(expected_response, "??")){
 					printf("strlen(uart3_rx_buffer):%d \n", strlen((char*)uart3_rx_buffer));
 					printf("%s", uart3_rx_buffer);
 					// 提取并打印HTTP响应正文
@@ -429,14 +431,286 @@ void ESP8266_Connect_Wifi(const char* ssid, const char* password)
 }
 
 /**
+* @brief  ESP8266 处理网络请求数据
+* @param  无
+* @retval 无
+*/
+void ESP8266_CheckRecvData(void)
+{
+	if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //如果Uart3接收到了Esp8266的数据
+		__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //接收标志置零
+
+		printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // 调试输出
+		printf("Uart3 Received data length:%d\n", uart3_rx_index);
+		//解析Fan ip地址
+		/*
+		char *pdest = strstr((char*)uart3_rx_buffer, "Fan:");
+		if(pdest){
+			strcpy(FAN_ip_address, pdest+4);
+			printf("FAN_ip_address:%s\n", FAN_ip_address);
+		}
+		*/
+
+
+		ClearUart3ReceiveBuff();
+	 }
+}
+
+/*
+AT+CWMODE=1  //设置ESP8266为STA模式 
+AT+CWQAP  //断开可能存在的WiFi连接
+AT+CWAUTOCONN=0  //禁用自动连接
+AT+CWJAP="Yunshu_Drwells","yzy@0203yzy@0203"  //连接到指定的AP
+AT+CIFSR  //查询IP地址以确认连接
+AT+CIPMUX=1  //使用多连接(可以同时处理多个TCP/UDP连接)
+AT+CIPSERVER=1,80  //设置为服务器模式，并在指定端口（例如80）上监听
+AT+CIPSTO=60  //设置服务器超时时间（单位：秒，0表示永不超时）影响的是TCP连接的保持时间
+*/
+
+
+
+
+
+
+
+/*
+AT+CIPSTART=0,"UDP","255.255.255.255",8080
+AT+CIPSEND=0,16
+> DISCOVER_DEVICES
+
+AT+CIPSTART=0,"UDP","255.255.255.255",8080  //0: 这是连接ID，用于标识多连接模式下的不同连接。所有接收到广播数据包的设备必须在该端口上监听，才能接收到数据。
+AT+CIPSEND=0,16  // 发送16字节的数据
+> DISCOVER_DEVICES  // 输入要发送的数据
+*/
+
+/*
+// 发起UDP广播
+sendATCommand("AT+CIPSTART=0,\"UDP\",\"255.255.255.255\",8080");
+sendATCommand("AT+CIPSEND=0,16");
+sendATCommand("Hello, IoT Devices!");
+*/
+
+
+// 发送广播消息
+char sendBroadcastCmd[] = "AT+CIPSTART=0,\"UDP\",\"255.255.255.255\",8080\r\n";
+
+/*
+发送：
+AT+CIPSTART=0,"UDP","255.255.255.255",8080
+成功接收：
+AT+CIPSTART=0,"UDP","255.255.255.255",8080
+0,CONNECT
+
+OK
+*/
+uint8_t _ESP8266_sendBroadcastCmd(){
+	ESP8266_SendCmd(sendBroadcastCmd);
+    // 等待响应
+    if (!ESP8266_WaitResponseFor("OK", 5000)) {
+        printf("Failed to send Broadcast Cmd\r\n");
+        return 0;
+    }
+	printf("Successfully sent Broadcast Cmd\r\n");
+    return 1;
+}
+
+/*
+发送：
+AT+CIPSEND=0,16
+成功接收：
+RX：AT+CIPSEND=0,16
+
+OK
+> 
+*/
+uint8_t _ESP8266_sendDataCmd(char* sendDataCmd){
+	ESP8266_SendCmd(sendDataCmd);
+    // 等待响应
+    if (!ESP8266_WaitResponseFor(">", 5000)) {
+        printf("Failed to send Data Cmd\r\n");
+        return 0;
+    }
+	printf("Successfully sent Data Cmd\r\n");
+    return 1;
+}
+
+/*
+发送：
+DISCOVER_DEVICES
+成功接收：
+ES
+
+busy s...
+
+Recv 16 bytes
+
+SEND OK
+*/
+uint8_t _ESP8266_broadcastMessage(char* broadcastMessage){
+	ESP8266_SendCmd(broadcastMessage);
+    // 等待响应
+    if (!ESP8266_WaitResponseFor("SEND OK", 5000)) {
+        printf("Failed to send broadcast Message\r\n");
+        return 0;
+    }
+	printf("Successfully sent broadcast Message\r\n");
+    return 1;
+}
+
+/**
+* @brief  ESP8266 发送广播消息
+* @param  无
+* @retval 无
+*/
+//通过广播发起请求，然后让所有物联网设备返回自己的设备名称和ip地址，最后再通过ip地址的建立tcp从而与子模块通信
+//这样会损耗cpu性能，直接使用广播的方式对所有物联网设备进行控制
+void ESP8266_sendBroadcastCmd(char* broadcastMessage)
+{
+	char sendDataCmd[18] = {0};
+	sprintf(sendDataCmd, "AT+CIPSEND=0,%d\r\n", strlen(broadcastMessage));
+	
+	//等待 AT+CIPSEND=0,16 命令成功
+	while( ! _ESP8266_sendDataCmd(sendDataCmd) );
+	
+	//等待 发送信息成功
+	while( ! _ESP8266_broadcastMessage(broadcastMessage) );
+}
+
+#include "esp8266_fan.h"  //GetFanModuleIP
+
+/*
+FAN_ON
+FAN_OFF
+
+MasterLight_ON&R=<>&G=<>&B=<> (MasterLight_ON&R=255&G=255&B=255)
+MasterLight_OFF
+
+SpotLight_ON&R=<>&G=<>&B=<> (SpotLight_ON&R=255&G=255&B=255)
+SpotLight_OFF
+
+CONNECT_NEW_WIFI&ssid=Yunshu_Drwells&pwd=yzy@0203yzy@0203
+*/
+
+void ESP8266_startBroadCastCmd(){
+	//等待 AT+CIPSTART=0,"UDP","255.255.255.255",8080 命令成功
+	while( ! _ESP8266_sendBroadcastCmd() );
+}
+
+void test(){
+	ESP8266_startBroadCastCmd();
+	
+	//char broadcastMessage[] = "MasterLight_ON&R=255&G=255&B=255";
+	//发送广播
+	//ESP8266_sendBroadcastCmd(broadcastMessage);
+	//ESP8266_sendBroadcastCmd("MasterLight_ON&R=255&G=255&B=255");
+	/*	
+	ESP8266_sendBroadcastCmd("FAN_ON");
+	ESP8266_sendBroadcastCmd("MasterLight_ON&R=255&G=255&B=255");
+	ESP8266_sendBroadcastCmd("SpotLight_ON&R=255&G=255&B=255");
+
+	ESP8266_sendBroadcastCmd("FAN_OFF");
+	ESP8266_sendBroadcastCmd("MasterLight_OFF");
+	ESP8266_sendBroadcastCmd("SpotLight_OFF");
+	*/
+	
+}
+
+
+/**
+* @brief  ESP8266 连接新wifi函数
+ * @param ssid WiFi的SSID
+ * @param password WiFi的密码 
+* @retval 无
+*/
+uint8_t ESP8266_Connect_New_Wifi(const char* ssid, const char* password)
+{
+	//等待断开可能存在的WiFi连接成功
+	while( ! ESP8266_CWQAP() );
+	//等待禁用自动连接成功
+	while( ! ESP8266_CWAUTOCONN() );
+	//等待成功连接到某个指定的wifi并获取ip地址
+	if( ! ESP8266_JoinAP(ssid, password) ){
+		//失败
+		ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);
+		return 0;
+	}else{  //能成功连接
+		//发送广播消息，让所有的物联网设备连接新wifi
+		char sendDataCmd[128] = {0};
+		sprintf(sendDataCmd, "CONNECT_NEW_WIFI&ssid=%s&pwd=%s", ssid, password);
+		ESP8266_sendBroadcastCmd(sendDataCmd);
+		return 1;
+	}
+}
+
+
+/**
+* @brief  ESP8266 连接新wifi函数
+ * @param ssid WiFi的SSID
+ * @param password WiFi的密码 
+* @retval 无
+*/
+void ESP8266_Connect_New_Wifi_ALL(const char* ssid, const char* password)
+{
+	/*
+	//在连接新wifi之前统计所有物联网设备数
+	uint8_t devices = ESP8266_Count_Devices();
+
+	//等待成功连接到某个指定的wifi并获取ip地址
+	if( ! ESP8266_Connect_New_Wifi(ssid, password) ){
+		//失败
+		//连接回默认wifi
+		while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
+	}else{  //能成功连接
+	    //检查空闲的ip地址数是否大于所有的物联网设备数
+		uint8_t ips = ESP8266_Count_Free_ips();
+		if(devices >= ips){
+			//无法满足要求
+			//连接回默认wifi
+			while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
+		}else{
+			//可以满足要求
+			//连接回旧wifi
+			while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
+			//通知所有物联网设备连接新wifi
+			//...
+		}
+	}
+	*/
+	//等待成功连接到某个指定的wifi并获取ip地址
+	if( ! ESP8266_Connect_New_Wifi(ssid, password) ){
+		//失败
+		//连接回默认wifi
+		while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
+	}else{  //能成功连接
+		//连接回默认wifi
+		while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
+		//通知所有物联网设备连接新wifi
+		//。。。
+		//再连接回新wifi
+		while(!ESP8266_Connect_New_Wifi(ssid, password));
+	}
+}
+
+
+
+
+
+
+
+
+
+/**
 * @brief  统计连接了当前wifi的物联网设备数
  * @param ssid WiFi的SSID
  * @param password WiFi的密码 
 * @retval 无
 */
+/*
 uint8_t ESP8266_Count_Devices(){
 	return 0;
 }
+*/
+
 
 /*
 static uint8_t parseResponse(char *response)
@@ -664,77 +938,6 @@ uint8_t ESP8266_Count_Free_ips(){
 }
 */
 
-/**
-* @brief  ESP8266 连接新wifi函数
- * @param ssid WiFi的SSID
- * @param password WiFi的密码 
-* @retval 无
-*/
-uint8_t ESP8266_Connect_New_Wifi(const char* ssid, const char* password)
-{
-	//在连接新wifi之前统计所有物联网设备数
-	uint8_t devices = ESP8266_Count_Devices();
-	//等待断开可能存在的WiFi连接成功
-	while( ! ESP8266_CWQAP() );
-	//等待禁用自动连接成功
-	while( ! ESP8266_CWAUTOCONN() );
-	//等待成功连接到某个指定的wifi并获取ip地址
-	if( ! ESP8266_JoinAP(ssid, password) ){
-		//失败
-		return 0;
-	}else{  //能成功连接
-		return 1;
-	}
-}
-
-
-/**
-* @brief  ESP8266 连接新wifi函数
- * @param ssid WiFi的SSID
- * @param password WiFi的密码 
-* @retval 无
-*/
-void ESP8266_Connect_New_Wifi_ALL(const char* ssid, const char* password)
-{
-	/*
-	//在连接新wifi之前统计所有物联网设备数
-	uint8_t devices = ESP8266_Count_Devices();
-
-	//等待成功连接到某个指定的wifi并获取ip地址
-	if( ! ESP8266_Connect_New_Wifi(ssid, password) ){
-		//失败
-		//连接回默认wifi
-		while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
-	}else{  //能成功连接
-	    //检查空闲的ip地址数是否大于所有的物联网设备数
-		uint8_t ips = ESP8266_Count_Free_ips();
-		if(devices >= ips){
-			//无法满足要求
-			//连接回默认wifi
-			while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
-		}else{
-			//可以满足要求
-			//连接回旧wifi
-			while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
-			//通知所有物联网设备连接新wifi
-			//...
-		}
-	}
-	*/
-	//等待成功连接到某个指定的wifi并获取ip地址
-	if( ! ESP8266_Connect_New_Wifi(ssid, password) ){
-		//失败
-		//连接回默认wifi
-		while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
-	}else{  //能成功连接
-		//连接回默认wifi
-		while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
-		//通知所有物联网设备连接新wifi
-		//。。。
-		//再连接回新wifi
-		while(!ESP8266_Connect_New_Wifi(ssid, password));
-	}
-}
 
 /*
 static uint8_t ESP8266_WaitResponseForCIPSTART(const char* expected_response, uint32_t timeout){
@@ -808,30 +1011,3 @@ void send_broadcast_request(void)
 */
 
 
-#include "esp8266_fan.h"  //GetFanModuleIP
-
-void test(){
-	//while( ! ESP8266_Count_Free_ips() );
-	//获取所有物联网设备的ip地址
-	GetFanModuleIP();
-	//TurnOnFan();
-	//TurnOffFan();
-}
-
-
-/**
-* @brief  ESP8266 处理网络请求数据
-* @param  无
-* @retval 无
-*/
-void ESP8266_CheckRecvData(void)
-{
-	if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //如果Uart3接收到了Esp8266的数据
-		__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //接收标志置零
-
-		printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // 调试输出
-		printf("Uart3 Received data length:%d\n", uart3_rx_index);
-
-		ClearUart3ReceiveBuff();
-	 }
-}

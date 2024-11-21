@@ -120,8 +120,8 @@ static void UpdateTextTask(void *pvParameters) {
     WM_HWIN hItem = (WM_HWIN)pvParameters;
     while (1) {
         // 格式化字符串并设置文本
-				sprintf((char*)str, "%02d.%02d°C", temperature>>8, (temperature & 0xFF));
-				TEXT_SetText(hItem, (char*)str);
+		sprintf((char*)str, "%02d.%02d°C", temperature>>8, (temperature & 0xFF));
+		TEXT_SetText(hItem, (char*)str);
 
         // 强制刷新控件
         WM_InvalidateWindow(hItem);

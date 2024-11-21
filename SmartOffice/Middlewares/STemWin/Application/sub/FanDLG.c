@@ -25,6 +25,7 @@
 #include "include_dlg.h"
 #include "main.h"  //LED_Groups LED_pins
 #include "gpio.h"  //HAL_GPIO_WritePin
+#include "esp8266_web.h"  //ESP8266_sendBroadcastCmd
 /*********************************************************************
 *
 *       Defines
@@ -141,15 +142,17 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-				status = !status;
+		status = !status;
         if(status){
             BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmFanOn);
             //fan on
 			//HAL_GPIO_WritePin(Fan_GPIO_Port, Fan_Pin, GPIO_PIN_SET);
+			ESP8266_sendBroadcastCmd("FAN_ON");
         }else{
             BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmFanOff);
             //fan off
 			//HAL_GPIO_WritePin(Fan_GPIO_Port, Fan_Pin, GPIO_PIN_RESET);
+			ESP8266_sendBroadcastCmd("FAN_OFF");
         }
         // USER END
         break;

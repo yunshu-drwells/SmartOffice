@@ -25,6 +25,7 @@
 #include "include_dlg.h"
 #include "main.h"  //LED_Groups LED_pins
 #include "gpio.h"  //HAL_GPIO_WritePin
+#include "esp8266_web.h"  //ESP8266_sendBroadcastCmd
 /*********************************************************************
 *
 *       Defines
@@ -33,8 +34,14 @@
 */
 #define ID_WINDOW_0        (GUI_ID_USER + 0x00)
 #define ID_TEXT_0        (GUI_ID_USER + 0x01)
-#define ID_BUTTON_0        (GUI_ID_USER + 0x03)
-#define ID_BUTTON_1        (GUI_ID_USER + 0x05)
+#define ID_BUTTON_0        (GUI_ID_USER + 0x02)
+#define ID_BUTTON_1        (GUI_ID_USER + 0x03)
+#define ID_SLIDER_0    (GUI_ID_USER + 0x04)
+#define ID_SLIDER_1    (GUI_ID_USER + 0x05)
+#define ID_SLIDER_2    (GUI_ID_USER + 0x06)
+#define ID_TEXT_1    (GUI_ID_USER + 0x07)
+#define ID_TEXT_2    (GUI_ID_USER + 0x08)
+#define ID_TEXT_3    (GUI_ID_USER + 0x09)
 
 
 // USER START (Optionally insert additional defines)
@@ -44,6 +51,13 @@ extern GUI_CONST_STORAGE GUI_BITMAP bmMainPage;
 extern GUI_CONST_STORAGE GUI_BITMAP bmMainPagePressed;
 extern GUI_CONST_STORAGE GUI_FONT GUI_Fontfont;
 static int status = 0;
+
+static uint16_t R_slider = 0;  //保存当前R滑块值
+static uint16_t G_slider = 0;  //保存当前G滑块值
+static uint16_t B_slider = 0;  //保存当前B滑块值
+static char cmd[35] = {0};
+
+static uint8_t RGBchanged = 0;
 // USER END
 
 /*********************************************************************
@@ -65,6 +79,12 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { TEXT_CreateIndirect, "Text", ID_TEXT_0, 0, 0, 800, 32, 0, 0x64, 0 },
   { BUTTON_CreateIndirect, "", ID_BUTTON_0, 500, 200, 150, 150, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "", ID_BUTTON_1, 150, 200, 150, 150, 0, 0x0, 0 },
+  { SLIDER_CreateIndirect, "Slider", ID_SLIDER_0, 170, 50, 480, 20, 0, 0x0, 0 },
+  { SLIDER_CreateIndirect, "Slider", ID_SLIDER_1, 170, 100, 480, 20, 0, 0x0, 0 },
+  { SLIDER_CreateIndirect, "Slider", ID_SLIDER_2, 170, 150, 480, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "R", ID_TEXT_1, 150, 52, 80, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "G", ID_TEXT_2, 150, 102, 80, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "B", ID_TEXT_3, 150, 152, 80, 20, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -77,6 +97,36 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 */
 
 // USER START (Optionally insert additional static code)
+#include "FreeRTOS.h"
+#include "task.h"
+static TaskHandle_t xUpdateTaskHandle;
+static void UpdateTextTask(void *pvParameters) {
+    WM_HWIN hItem = (WM_HWIN)pvParameters;
+    while (1) {
+		if(RGBchanged){  //只有在灯光控制开关和RBG滑块滑动后才设置并强制刷新控件
+			// 格式化字符串并设置文本
+			if(R_slider || G_slider || B_slider){
+				status = 1;
+				BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmSpotlightOn);
+			}else{
+				status = 0;
+				BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmSpotlightOff);
+			}
+			// 强制刷新控件
+			WM_InvalidateWindow(hItem);
+			RGBchanged = 0;
+		}
+		
+        // 延时200ms
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+static void DeleteUpdateTask(void) {
+    if (xUpdateTaskHandle != NULL) {
+        vTaskDelete(xUpdateTaskHandle);
+        xUpdateTaskHandle = NULL;
+    }
+}
 // USER END
 
 /*********************************************************************
@@ -120,6 +170,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 	}else{
 			BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmSpotlightOff);
 	}
+	// 创建更新任务，传递ID_BUTTON_0控件句柄
+    xTaskCreate(UpdateTextTask, "UpdateTextTask", 256, (void*)hItem, tskIDLE_PRIORITY + 1, &xUpdateTaskHandle);
+	
 
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
     //
@@ -127,6 +180,44 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 	//
 	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmMainPage);
 	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmMainPagePressed);
+	
+	
+	//
+    // Initialization of 'R'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
+    TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
+	TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FF0000));
+    //
+    // Initialization of 'G'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
+    TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
+	TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x0000FF00));
+    //
+    // Initialization of 'B'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_3);
+    TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
+	TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x000000FF));
+	
+	hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_0);
+    SLIDER_SetFocusColor(hItem, 0x00043F97);
+    SLIDER_SetNumTicks(hItem, 256);
+    SLIDER_SetRange(hItem, 0, 255); //[0:255]
+    SLIDER_SetValue(hItem, 0);
+	
+	hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_1);
+    SLIDER_SetFocusColor(hItem, 0x00043F97);
+    SLIDER_SetNumTicks(hItem, 256);
+    SLIDER_SetRange(hItem, 0, 255); //[0:255]
+    SLIDER_SetValue(hItem, 0);
+	
+	hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_2);
+    SLIDER_SetFocusColor(hItem, 0x00043F97);
+    SLIDER_SetNumTicks(hItem, 256);
+    SLIDER_SetRange(hItem, 0, 255); //[0:255]
+    SLIDER_SetValue(hItem, 0);
     // USER END
     break;
   case WM_NOTIFY_PARENT:
@@ -141,16 +232,52 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-				status = !status;
+		status = !status;
         if(status){
-            BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmSpotlightOn);
+            //BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmSpotlightOn); //替换为使用更新任务更新按钮图片
             //light up
-						HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
+			//HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
+			//ESP8266_sendBroadcastCmd("SpotLight_ON&R=255&G=255&B=255");
+			
+			R_slider = 255;
+			G_slider = 255;
+			B_slider = 255;
+			sprintf(cmd, "SpotLight_ON&R=%d&G=%d&B=%d", R_slider, G_slider, B_slider);
+			//printf("%s", cmd);
+			ESP8266_sendBroadcastCmd(cmd);
+			
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_0);
+			SLIDER_SetValue(hItem, R_slider);
+			
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_1);
+			SLIDER_SetValue(hItem, G_slider);
+			
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_2);
+			SLIDER_SetValue(hItem, B_slider);
         }else{
-            BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmSpotlightOff);
+            //BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmSpotlightOff);
             //light off
-						HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+			//HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+			//ESP8266_sendBroadcastCmd("SpotLight_OFF");
+			
+			R_slider = 0;
+			G_slider = 0;
+			B_slider = 0;
+			
+			
+			HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
+			ESP8266_sendBroadcastCmd("SpotLight_OFF");
+			
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_0);
+			SLIDER_SetValue(hItem, R_slider);
+			
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_1);
+			SLIDER_SetValue(hItem, G_slider);
+			
+			hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_2);
+			SLIDER_SetValue(hItem, B_slider);
         }
+		RGBchanged = 1;
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -168,6 +295,102 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         //返回主页
         GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
         CreateWindowMain(); // 创建WindowMain界面，调用其它界面的Create方法
+	  
+	  	//销毁任务
+		DeleteUpdateTask();
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+	case ID_SLIDER_0: // Notifications sent by 'Slider'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+		//printf("clicked\n");
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+		//printf("released\n");
+	  /*
+		//这种方式会导致程序奔溃
+		if(R_slider){
+			status = 1;
+			BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOn);
+		}
+	  */
+		sprintf(cmd, "SpotLight_ON&R=%d&G=%d&B=%d", R_slider, G_slider, B_slider);
+		//printf("%s\n", cmd);
+		ESP8266_sendBroadcastCmd(cmd);
+        // USER END
+        break;
+      case WM_NOTIFICATION_VALUE_CHANGED:
+        // USER START (Optionally insert code for reacting on notification message)
+		//printf("value changed\n");
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_0);
+		R_slider = SLIDER_GetValue(hItem);
+		RGBchanged = 1;
+		//printf("%d\n", R_slider);
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+	case ID_SLIDER_1: // Notifications sent by 'Slider'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+	  /*
+		if(G_slider){
+			status = 1;
+			BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOn);
+		}
+	  */
+		sprintf(cmd, "SpotLight_ON&R=%d&G=%d&B=%d", R_slider, G_slider, B_slider);
+		ESP8266_sendBroadcastCmd(cmd);
+        // USER END
+        break;
+      case WM_NOTIFICATION_VALUE_CHANGED:
+        // USER START (Optionally insert code for reacting on notification message)
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_1);
+		G_slider = SLIDER_GetValue(hItem);
+		RGBchanged = 1;
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+	case ID_SLIDER_2: // Notifications sent by 'Slider'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+	  /*
+	  	if(B_slider){
+			status = 1;
+			BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOn);
+		}
+	  */
+		sprintf(cmd, "SpotLight_ON&R=%d&G=%d&B=%d", R_slider, G_slider, B_slider);
+		ESP8266_sendBroadcastCmd(cmd);
+        // USER END
+        break;
+      case WM_NOTIFICATION_VALUE_CHANGED:
+        // USER START (Optionally insert code for reacting on notification message)
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_2);
+		B_slider = SLIDER_GetValue(hItem);
+		RGBchanged = 1;
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
