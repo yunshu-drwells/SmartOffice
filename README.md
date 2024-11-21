@@ -28,3 +28,12 @@
 最后一点就是实现息屏和唤醒功能。重点就是如何让屏幕背光之后，不允许触发按键或者其它组件的事件，同时又可以处理触摸事件来让背光再次开启。我的处理思路就是在背光关闭之后，让所有组件处理响应的时候判断背光是否关闭，关闭的话不允许执行自己应该响应的事件，则就需要开启背光，并跳过自己的事件。然后让父容器window去处理WM_TOUCH事件，只要背光是关闭的，触摸事件便能唤醒背光，页面中的所有组件便可以正常响应正常逻辑。之所以这样做，是因为我发现BUTTON_SetFocusable或者WM_WindowDisable之类的方法并不好用。
 
 项目效果展示可以参考视频：<a href="https://www.bilibili.com/video/BV1RdyiYjEVu/">bilibili</a>
+
+# 说明
+
+SmartOffice——工程主程序keil工程
+esp8266_module——每个esp8266子模块的正式发布代码
+update FONT and ICON——用于更新字体和图标的独立工程
+模拟器——使用GUIBuilder实现STenWin界面的模拟器及相关页面内容
+esp8266_module for test——用于每个esp8266子模块的web测试代码
+f_mout SD and NORFlash——用于将SD卡和NORFlash挂载到windows上的独立工程
