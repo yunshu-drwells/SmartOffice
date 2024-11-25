@@ -79,8 +79,8 @@ void setup() {
   Serial.begin(115200);
   
   // 连接WiFi
-  if(false == connect_wifi(ssid0, password0, 10000)){
-    connect_wifi(ssid1, password1, 10000);
+  if(false == connect_wifi(ssid1, password1, 10000)){
+    connect_wifi(ssid0, password0, 10000);
   }
   
   //监听端口

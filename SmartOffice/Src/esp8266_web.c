@@ -236,6 +236,12 @@ static uint8_t ESP8266_CWQAP(){
  * @brief 禁用自动连接
  * @return 1 if successful, 0 if failed
  */
+/*
+发送：
+AT+CWAUTOCONN=0\r\n
+接收：
+AT+CWAUTOCONN=0\r\n\r\nOK\r\n
+*/
 uint8_t ESP8266_CWAUTOCONN(){
     ESP8266_SendCmd("AT+CWAUTOCONN=0\r\n");
     if (!ESP8266_WaitResponse("AT+CWAUTOCONN=0\r\n\r\nOK\r\n", 1000))
@@ -254,6 +260,9 @@ uint8_t ESP8266_CWAUTOCONN(){
  * @param password WiFi的密码
  * @return 1 if successful, 0 if failed
  */
+/*
+AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, password
+*/
 uint8_t ESP8266_JoinAP(const char* ssid, const char* password)
 {
     char cmd[128];
@@ -527,10 +536,10 @@ uint8_t _ESP8266_sendDataCmd(char* sendDataCmd){
 	ESP8266_SendCmd(sendDataCmd);
     // 等待响应
     if (!ESP8266_WaitResponseFor(">", 5000)) {
-        printf("Failed to send Data Cmd\r\n");
+        printf("Failed to send Data Cmd: %s\r\n", sendDataCmd);
         return 0;
     }
-	printf("Successfully sent Data Cmd\r\n");
+	printf("Successfully sent Data Cmd: %s\r\n", sendDataCmd);
     return 1;
 }
 
@@ -550,10 +559,10 @@ uint8_t _ESP8266_broadcastMessage(char* broadcastMessage){
 	ESP8266_SendCmd(broadcastMessage);
     // 等待响应
     if (!ESP8266_WaitResponseFor("SEND OK", 5000)) {
-        printf("Failed to send broadcast Message\r\n");
+        printf("Failed to send broadcast Message: %s\r\n", broadcastMessage);
         return 0;
     }
-	printf("Successfully sent broadcast Message\r\n");
+	printf("Successfully sent broadcast Message: %s\r\n", broadcastMessage);
     return 1;
 }
 
@@ -576,7 +585,7 @@ void ESP8266_sendBroadcastCmd(char* broadcastMessage)
 	while( ! _ESP8266_broadcastMessage(broadcastMessage) );
 }
 
-#include "esp8266_fan.h"  //GetFanModuleIP
+//#include "esp8266_fan.h"  //GetFanModuleIP
 
 /*
 FAN_ON
@@ -596,25 +605,6 @@ void ESP8266_startBroadCastCmd(){
 	while( ! _ESP8266_sendBroadcastCmd() );
 }
 
-void test(){
-	ESP8266_startBroadCastCmd();
-	
-	//char broadcastMessage[] = "MasterLight_ON&R=255&G=255&B=255";
-	//发送广播
-	//ESP8266_sendBroadcastCmd(broadcastMessage);
-	//ESP8266_sendBroadcastCmd("MasterLight_ON&R=255&G=255&B=255");
-	/*	
-	ESP8266_sendBroadcastCmd("FAN_ON");
-	ESP8266_sendBroadcastCmd("MasterLight_ON&R=255&G=255&B=255");
-	ESP8266_sendBroadcastCmd("SpotLight_ON&R=255&G=255&B=255");
-
-	ESP8266_sendBroadcastCmd("FAN_OFF");
-	ESP8266_sendBroadcastCmd("MasterLight_OFF");
-	ESP8266_sendBroadcastCmd("SpotLight_OFF");
-	*/
-	
-}
-
 
 /**
 * @brief  ESP8266 连接新wifi函数
@@ -622,22 +612,23 @@ void test(){
  * @param password WiFi的密码 
 * @retval 无
 */
+/*
+AT+CWQAP\r\n
+AT+CWAUTOCONN=0\r\n
+AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, password
+*/
 uint8_t ESP8266_Connect_New_Wifi(const char* ssid, const char* password)
 {
 	//等待断开可能存在的WiFi连接成功
-	while( ! ESP8266_CWQAP() );
+	//while( ! ESP8266_CWQAP() );
 	//等待禁用自动连接成功
-	while( ! ESP8266_CWAUTOCONN() );
+	//while( ! ESP8266_CWAUTOCONN() );
 	//等待成功连接到某个指定的wifi并获取ip地址
 	if( ! ESP8266_JoinAP(ssid, password) ){
 		//失败
-		ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);
 		return 0;
-	}else{  //能成功连接
-		//发送广播消息，让所有的物联网设备连接新wifi
-		char sendDataCmd[128] = {0};
-		sprintf(sendDataCmd, "CONNECT_NEW_WIFI&ssid=%s&pwd=%s", ssid, password);
-		ESP8266_sendBroadcastCmd(sendDataCmd);
+	}else{  
+		//能成功连接
 		return 1;
 	}
 }
@@ -682,21 +673,64 @@ void ESP8266_Connect_New_Wifi_ALL(const char* ssid, const char* password)
 		//连接回默认wifi
 		while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
 	}else{  //能成功连接
+		printf("start connect to old wifi\n");
 		//连接回默认wifi
-		while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
+		ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);
+		printf("connected to old wifi\n");
+		//开启广播
+		//ESP8266_startBroadCastCmd();
+		
 		//通知所有物联网设备连接新wifi
-		//。。。
+		//发送广播消息，让所有的物联网设备连接新wifi
+		char sendDataCmd[128] = {0};
+		sprintf(sendDataCmd, "CONNECT_NEW_WIFI&ssid=%s&pwd=%s", ssid, password);
+		ESP8266_sendBroadcastCmd(sendDataCmd);
+		printf("message all\n");
+		
 		//再连接回新wifi
-		while(!ESP8266_Connect_New_Wifi(ssid, password));
+		ESP8266_Connect_New_Wifi(ssid, password);
+		printf("connected new wifi\n");
+		//开启广播
+		//ESP8266_startBroadCastCmd();
 	}
+}
+
+void ESP8266_Lora_SenCmd(const char* str){
+	HAL_UART_Transmit(&huart6, (uint8_t*)str, strlen(str), HAL_MAX_DELAY);
+}
+
+void Lora_OpenDoor(){
+	ESP8266_Lora_SenCmd("Open_Door");
 }
 
 
 
 
+void test(){
+	//测试风扇、主灯、射灯
+	//ESP8266_startBroadCastCmd();
+	
+	//char broadcastMessage[] = "MasterLight_ON&R=255&G=255&B=255";
+	//发送广播
+	//ESP8266_sendBroadcastCmd(broadcastMessage);
+	//ESP8266_sendBroadcastCmd("MasterLight_ON&R=255&G=255&B=255");
+	/*	
+	ESP8266_sendBroadcastCmd("FAN_ON");
+	ESP8266_sendBroadcastCmd("MasterLight_ON&R=255&G=255&B=255");
+	ESP8266_sendBroadcastCmd("SpotLight_ON&R=255&G=255&B=255");
 
-
-
+	ESP8266_sendBroadcastCmd("FAN_OFF");
+	ESP8266_sendBroadcastCmd("MasterLight_OFF");
+	ESP8266_sendBroadcastCmd("SpotLight_OFF");
+	*/
+	
+	//测试电磁门锁
+	//Lora_OpenDoor();
+	
+	//测试wifi
+	//ESP8266_Connect_New_Wifi_ALL(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);
+	ESP8266_Connect_New_Wifi_ALL("Yunshu_Drwells", "yzy@0203yzy@0203");
+}
 
 
 /**

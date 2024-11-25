@@ -14,6 +14,8 @@ void ESP8266_Connect_Wifi(const char* ssid, const char* password);
 void ESP8266_startBroadCastCmd(void);
 void ESP8266_sendBroadcastCmd(char* broadcastMessage);
 void test(void);
+void ESP8266_Connect_New_Wifi_ALL(const char* ssid, const char* password);
+void Lora_OpenDoor(void);
 //void ESP8266_Enable_SERVER(void);
 //void ESP8266_Enable_Client(void);
 void ESP8266_CheckRecvData(void);

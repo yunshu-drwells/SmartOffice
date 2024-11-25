@@ -60,6 +60,3 @@ stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/
 stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 stemwin_port_freertos\esp8266_web.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-stemwin_port_freertos\esp8266_web.o: ../Inc/esp8266_fan.h
-stemwin_port_freertos\esp8266_web.o: ../Inc/esp8266_http_client.h
-stemwin_port_freertos\esp8266_web.o: ../Inc/esp8266_web.h
