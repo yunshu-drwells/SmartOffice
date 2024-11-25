@@ -33,7 +33,7 @@
 #include "touch.h"  //tp_dev
 #include "norflash.h"  //norflash_init
 
-#include "dht11.h"  //dht11_init¡¢dht11_read_data
+#include "dht11.h"  //dht11_initã€dht11_read_data
 
 #include "lsens.h"  //lsens_init
 
@@ -41,7 +41,7 @@
 
 #include "diskio.h"
 
-#include "fatfs.h"  //SDFatFS¡¢USERFatFS
+#include "fatfs.h"  //SDFatFSã€USERFatFS
 #include "fonts.h"  //fonts_update_font
 #include "mymalloc.h"  //mymalloc
 #include "icon.h"
@@ -86,15 +86,15 @@ uint16_t adcx;
 unsigned long recv = 0;
 
 //TaskHandle_t xMountDisksTaskHandle;
-// ´´½¨¶şÖµĞÅºÅÁ¿¾ä±ú 
+// åˆ›å»ºäºŒå€¼ä¿¡å·é‡å¥æŸ„ 
 SemaphoreHandle_t xBinarySemaphoreCheckFontsAndIconBin;
-//¸üĞÂ×Ö¿âÏà¹Ø
+//æ›´æ–°å­—åº“ç›¸å…³
 extern uint8_t fonts_update_res;
 
-// ´´½¨¶şÖµĞÅºÅÁ¿¾ä±ú 
+// åˆ›å»ºäºŒå€¼ä¿¡å·é‡å¥æŸ„ 
 SemaphoreHandle_t xBinarySemaphoreFont;
 
-// ´´½¨¶şÖµĞÅºÅÁ¿¾ä±ú
+// åˆ›å»ºäºŒå€¼ä¿¡å·é‡å¥æŸ„
 SemaphoreHandle_t xBinarySemaphoreICON;
 
 //esp8266 uart3
@@ -102,7 +102,7 @@ SemaphoreHandle_t xBinarySemaphoreICON;
 volatile uint16_t uart3_rx_index = 0;
 uint8_t Uart3FramFinishFlag = 0;
 
-// ´´½¨»¥³âĞÅºÅÁ¿¾ä±ú 
+// åˆ›å»ºäº’æ–¥ä¿¡å·é‡å¥æŸ„ 
 SemaphoreHandle_t xMutexEsp8266;
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
@@ -115,7 +115,7 @@ osThreadId GUIHandle;
 extern void MainTask(void); 
 
 void init_disks(){
-	while(disk_initialize(0)){  //SD¿¨³õÊ¼»¯
+	while(disk_initialize(0)){  //SDå¡åˆå§‹åŒ–
 		//printf("SD Card Error!\n");
 		delay_ms(500);
 		//printf("Please Check!\n");
@@ -124,7 +124,7 @@ void init_disks(){
 	//printf("SD Card init OK!\n");
 	disk_ioctl(0, 1, (void*)&recv);
 	//printf("SD sector count: %d\n", (int)recv);
-	while(disk_initialize(1)){  //NORFlash³õÊ¼»¯
+	while(disk_initialize(1)){  //NORFlashåˆå§‹åŒ–
 			//printf("Noflash Error!\n");
 			delay_ms(500);
 			//printf("Please Check!\n");
@@ -137,42 +137,42 @@ void init_disks(){
 
 //void fmout_disks(void *pvParameters){
 void fmout_disks(uint8_t opt){
-	//uint8_t work_buff[512] = {0};  //»º³åÇø
+	//uint8_t work_buff[512] = {0};  //ç¼“å†²åŒº
 	uint8_t * work_buff = (uint8_t *)mymalloc(2, 512);
 	uint8_t res = 0;
-	res = f_mount(SDFatFS, "0:", 0);        // ¹ÒÔØSD¿¨
+	res = f_mount(SDFatFS, "0:", 0);        // æŒ‚è½½SDå¡
 	printf("f_mount sd res:%u\n", res);
 	if(FR_OK == res){
-		//printf("SD Disk Mount Successed!\n");     //SD¿¨³É¹¦¹ÒÔØ
+		//printf("SD Disk Mount Successed!\n");     //SDå¡æˆåŠŸæŒ‚è½½
 	}
-	if (res == 0X0D) {               // SD¿¨¹ÒÔØÊ§°Ü ÎÄ¼şÏµÍ³´íÎó
+	if (res == 0X0D) {               // SDå¡æŒ‚è½½å¤±è´¥ æ–‡ä»¶ç³»ç»Ÿé”™è¯¯
 			//printf("sd fs error!\n");
 			//printf("SD Disk Formatting...\n");
-			res = f_mkfs("0:", 0, 0, work_buff, _MAX_SS);                                            /* ¸ñÊ½»¯SD,0:,ÅÌ·û;0,Ê¹ÓÃÄ¬ÈÏ¸ñÊ½»¯²ÎÊı */
+			res = f_mkfs("0:", 0, 0, work_buff, _MAX_SS);                                            /* æ ¼å¼åŒ–SD,0:,ç›˜ç¬¦;0,ä½¿ç”¨é»˜è®¤æ ¼å¼åŒ–å‚æ•° */
 
 			if (res == 0){
-					f_setlabel((const TCHAR *)"0:ALIENTEK_SD");                                    /* ÉèÖÃSD´ÅÅÌµÄÃû×ÖÎª£ºALIENTEK_SD */
-					//printf("SD Disk Format Finish\n");     // ¸ñÊ½»¯³É¹¦
+					f_setlabel((const TCHAR *)"0:ALIENTEK_SD");                                    /* è®¾ç½®SDç£ç›˜çš„åå­—ä¸ºï¼šALIENTEK_SD */
+					//printf("SD Disk Format Finish\n");     // æ ¼å¼åŒ–æˆåŠŸ
 			}	else	{
-					//printf("SD Disk Format Error\n");     // ¸ñÊ½»¯Ê§°Ü
+					//printf("SD Disk Format Error\n");     // æ ¼å¼åŒ–å¤±è´¥
 			}
 	}
 	
-	res = f_mount(USERFatFS, "1:", opt);  // ¹ÒÔØNORFlash
+	res = f_mount(USERFatFS, "1:", opt);  // æŒ‚è½½NORFlash
 	printf("f_mount flash res:%u\n", res);
 	if(FR_OK == res){
-		//printf("Flash Disk Mount Successed!\n");     // ¹ÒÔØNORFlash³É¹¦
+		//printf("Flash Disk Mount Successed!\n");     // æŒ‚è½½NORFlashæˆåŠŸ
 	}
-	if (res == 0X0D) {                // NORFlashÎÄ¼şÏµÍ³Ëğ»µ
+	if (res == 0X0D) {                // NORFlashæ–‡ä»¶ç³»ç»ŸæŸå
 			//printf("flash fs error!\n");
 			//printf("Flash Disk Formatting...\n");
-			res = f_mkfs("1:", 0, 0, work_buff, _MAX_SS);                                            /* ¸ñÊ½»¯FLASH,1:,ÅÌ·û;1,Ê¹ÓÃÄ¬ÈÏ¸ñÊ½»¯²ÎÊı */
+			res = f_mkfs("1:", 0, 0, work_buff, _MAX_SS);                                            /* æ ¼å¼åŒ–FLASH,1:,ç›˜ç¬¦;1,ä½¿ç”¨é»˜è®¤æ ¼å¼åŒ–å‚æ•° */
 
 			if (res == 0)	{
-					f_setlabel((const TCHAR *)"1:ALIENTEK_FLASH");                                    /* ÉèÖÃFlash´ÅÅÌµÄÃû×ÖÎª£ºALIENTEK_FLASH */
-					//printf("Flash Disk Format Finish\n");     /* ¸ñÊ½»¯Íê³É */
+					f_setlabel((const TCHAR *)"1:ALIENTEK_FLASH");                                    /* è®¾ç½®Flashç£ç›˜çš„åå­—ä¸ºï¼šALIENTEK_FLASH */
+					//printf("Flash Disk Format Finish\n");     /* æ ¼å¼åŒ–å®Œæˆ */
 			}	else {
-					//printf("Flash Disk Format Error \n");     /* ¸ñÊ½»¯Ê§°Ü */
+					//printf("Flash Disk Format Error \n");     /* æ ¼å¼åŒ–å¤±è´¥ */
 			}
 	}
 	myfree(2, work_buff);
@@ -255,41 +255,41 @@ void WebServer_Task(void const * argument)
   MX_FATFS_Init();
 
   /* USER CODE BEGIN WebServer_Task */
-	taskENTER_CRITICAL();           /* ½øÈëÁÙ½ç¶Î */
+	taskENTER_CRITICAL();           /* è¿›å…¥ä¸´ç•Œæ®µ */
 	
-	// ´´½¨¶şÖµĞÅºÅÁ¿ 
+	// åˆ›å»ºäºŒå€¼ä¿¡å·é‡ 
 	xBinarySemaphoreFont = xSemaphoreCreateBinary();
 	
-	//³õÊ¼»¯norflashºÍSD¿¨
+	//åˆå§‹åŒ–norflashå’ŒSDå¡
 	init_disks();
 
-	//¹ÒÔØnorflashºÍSD¿¨
+	//æŒ‚è½½norflashå’ŒSDå¡
 	fmout_disks(1);
 
-	delay_init(168);                    // ³õÊ¼»¯×Ô¶¨ÒåÑÓÊ±º¯Êı
-	lcd_init();                             // ³õÊ¼»¯LCD
+	delay_init(168);                    // åˆå§‹åŒ–è‡ªå®šä¹‰å»¶æ—¶å‡½æ•°
+	lcd_init();                             // åˆå§‹åŒ–LCD
 	sprintf((char *)lcd_id, "LCD ID:%04X", lcddev.id);
 	
-	while (dht11_init())    /* DHT11³õÊ¼»¯* */
+	while (dht11_init())    /* DHT11åˆå§‹åŒ–* */
 	{
 			printf("DHT11 Error !\n");
 			delay_ms(200);
 	}
 	printf("DHT11 init successed!\n");
-	lsens_init();                           /* ³õÊ¼»¯¹âÃô´«¸ĞÆ÷ */
+	lsens_init();                           /* åˆå§‹åŒ–å…‰æ•ä¼ æ„Ÿå™¨ */
 	printf("lsens init down!\n");
 	
-	// ÊÍ·ÅĞÅºÅÁ¿£¬Í¨ÖªÈÎÎñ2¿ÉÒÔÖ´ĞĞÁË 
+	// é‡Šæ”¾ä¿¡å·é‡ï¼Œé€šçŸ¥ä»»åŠ¡2å¯ä»¥æ‰§è¡Œäº† 
 	xSemaphoreGive(xBinarySemaphoreFont);
 	
-	//´´½¨»¥³âĞÅºÅÁ¿
+	//åˆ›å»ºäº’æ–¥ä¿¡å·é‡
 	xMutexEsp8266 = xSemaphoreCreateMutex();
 	
-	//Ê¹ÄÜesp8266²¢¿ªÆôÖĞ¶Ï½ÓÊÕ
-	ESP8266_Enable();  //CHÊ¹ÄÜ
-	ESP8266_Reset();  //¸´Î»Òı½ÅÀ­¸ß
+	//ä½¿èƒ½esp8266å¹¶å¼€å¯ä¸­æ–­æ¥æ”¶
+	ESP8266_Enable();  //CHä½¿èƒ½
+	ESP8266_Reset();  //å¤ä½å¼•è„šæ‹‰é«˜
 	 
-	//ÆôÓÃ´®¿Ú1ºÍ´®¿Ú3ÖĞ¶Ï½ÓÊÕ
+	//å¯ç”¨ä¸²å£1å’Œä¸²å£3ä¸­æ–­æ¥æ”¶
 	/*
 	printf("usart1 ok\n");
 	HAL_UART_Receive_IT(&huart1, uart1_rx_buffer, RX_BUFFER_SIZE);
@@ -298,7 +298,7 @@ void WebServer_Task(void const * argument)
 	HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, MAX_RX_BUFFER_SIZE);
 	
 
-	taskEXIT_CRITICAL();            /* ³öÁÙ½ç¶Î */
+	taskEXIT_CRITICAL();            /* å‡ºä¸´ç•Œæ®µ */
 	//vTaskDelete(xMountDisksTaskHandle);
     //xMountDisksTaskHandle = NULL;
   /* Infinite loop */
@@ -319,32 +319,32 @@ void WebServer_Task(void const * argument)
 void Touch_Task(void const * argument)
 {
   /* USER CODE BEGIN Touch_Task */
-	// µÈ´ıÈÎÎñ1Íê³É 
+	// ç­‰å¾…ä»»åŠ¡1å®Œæˆ 
 	if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
-		taskENTER_CRITICAL();           /* ½øÈëÁÙ½ç¶Î */
+		taskENTER_CRITICAL();           /* è¿›å…¥ä¸´ç•Œæ®µ */
 
-		if(fonts_init()){  //³õÊ¼»¯×Ö¿â
+		if(fonts_init()){  //åˆå§‹åŒ–å­—åº“
 			printf("Init font failed!\n");
 		}else{
 			printf("Init font successed!\n");
 		}
 
-		if(icons_init()){  //³õÊ¼»¯Í¼¿â
+		if(icons_init()){  //åˆå§‹åŒ–å›¾åº“
 			printf("Init icons failed!\n");
 		}else{
 			printf("Init icons successed!\n");
 		}
 		
-		//²âÊÔNORFlash´ò¿ªÎÄ¼ş
+		//æµ‹è¯•NORFlashæ‰“å¼€æ–‡ä»¶
 		FIL *fftemp;
-		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // ¸øÎÄ¼şÃèÊö·û¿ª±Ù¿Õ¼ä
+		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // ç»™æ–‡ä»¶æè¿°ç¬¦å¼€è¾Ÿç©ºé—´
 		uint8_t res = f_open(fftemp, "1:AlarmOn.bin", FA_READ);
 		printf("NORFlash f_open return :%d\n", res);
 
 		res = f_open(fftemp, "1:/img.jpg", FA_READ);
 		printf("NORFlash f_open return :%d\n", res);
 		
-		//²âÊÔSD´ò¿ªÎÄ¼ş
+		//æµ‹è¯•SDæ‰“å¼€æ–‡ä»¶
 		/*
 		res = f_open(fftemp, "0:AlarmOn.bin", FA_READ);
 		printf("SD f_open return :%d\n", res);
@@ -353,45 +353,45 @@ void Touch_Task(void const * argument)
 		printf("SD f_open return :%d\n", res);
 		*/
 				
-		// ´´½¨¶şÖµĞÅºÅÁ¿ 
+		// åˆ›å»ºäºŒå€¼ä¿¡å·é‡ 
 		xBinarySemaphoreICON = xSemaphoreCreateBinary();
-		//½«Í¼¿â¼ÓÔØµ½ÍâÀ©SRAMÖĞ
+		//å°†å›¾åº“åŠ è½½åˆ°å¤–æ‰©SRAMä¸­
 		read_icons();
-		//³õÊ¼»¯Î»Í¼½á¹¹ÌåĞÅÏ¢
+		//åˆå§‹åŒ–ä½å›¾ç»“æ„ä½“ä¿¡æ¯
 		InitDynamicImage();
 
 
-		lcd_set_backlight_by_pwm(0xFF); // ÉèÖÃÕ¼¿Õ±ÈÎª255£¬¿ªÆô±³¹â×îÁÁ
-		lcd_clear(WHITE);  //ÇåÆÁ
+		lcd_set_backlight_by_pwm(0xFF); // è®¾ç½®å ç©ºæ¯”ä¸º255ï¼Œå¼€å¯èƒŒå…‰æœ€äº®
+		lcd_clear(WHITE);  //æ¸…å±
 		
 		//screen touch init
-		res = tp_dev.init();                      // ´¥ÃşÆÁ³õÊ¼»¯
+		res = tp_dev.init();                      // è§¦æ‘¸å±åˆå§‹åŒ–
 		if(!res){
 			printf("LCD Touch init Successful!\n");
 		}
 		
-		// ÊÍ·ÅĞÅºÅÁ¿£¬Í¨ÖªÈÎÎñGUI_Task¿ÉÒÔÖ´ĞĞÁË 
+		// é‡Šæ”¾ä¿¡å·é‡ï¼Œé€šçŸ¥ä»»åŠ¡GUI_Taskå¯ä»¥æ‰§è¡Œäº† 
 		xSemaphoreGive(xBinarySemaphoreICON); 	
-		//emwin_test_touch();  //emWin×ø±ê»ñÈ¡
+		//emwin_test_touch();  //emWinåæ ‡è·å–
 		
-		taskEXIT_CRITICAL();            /* ³öÁÙ½çÇø */
+		taskEXIT_CRITICAL();            /* å‡ºä¸´ç•ŒåŒº */
 	}
   /* Infinite loop */
   for(;;)
   {
-		if (t % 5 == 0) /* Ã¿200ms¶ÁÈ¡Ò»´Î */ { 
-			dht11_read_data(&temperature, &humidity); /* ¶ÁÈ¡ÎÂÊª¶ÈÖµ */
+		if (t % 5 == 0) /* æ¯200msè¯»å–ä¸€æ¬¡ */ { 
+			dht11_read_data(&temperature, &humidity); /* è¯»å–æ¸©æ¹¿åº¦å€¼ */
 			
-			//printf("temperature: %d.%d\n", temperature>>8, (temperature & 0xFF));/* ÏÔÊ¾ÎÂ¶È */ 
-			//printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* ÏÔÊ¾Êª¶È */ 
+			//printf("temperature: %d.%d\n", temperature>>8, (temperature & 0xFF));/* æ˜¾ç¤ºæ¸©åº¦ */ 
+			//printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* æ˜¾ç¤ºæ¹¿åº¦ */ 
 		}
-		if(t % 10 == 0) /* Ã¿400ms¶ÁÈ¡Ò»´Î */{ 
-				adcx = lsens_get_val();                                 /* »ñÈ¡ÁÁ¶È */
+		if(t % 10 == 0) /* æ¯400msè¯»å–ä¸€æ¬¡ */{ 
+				adcx = lsens_get_val();                                 /* è·å–äº®åº¦ */
 				//printf("bright:%d\n", adcx);
 		}
 		t++; 
 		//osDelay(10);
-		//´¥ÃşÆÁĞèÒªÂÖÑ¯¼ì²â£¬·ñÔòemWinÃ»ÓĞ°ì·¨´¥·¢ÊÂ¼ş
+		//è§¦æ‘¸å±éœ€è¦è½®è¯¢æ£€æµ‹ï¼Œå¦åˆ™emWinæ²¡æœ‰åŠæ³•è§¦å‘äº‹ä»¶
 		GUI_TOUCH_Exec();
 		osDelay(40);
   }
@@ -408,22 +408,22 @@ void Touch_Task(void const * argument)
 void IOT_Task(void const * argument)
 {
   /* USER CODE BEGIN IOT_Task */
-  //Ê¹ÓÃ»¥³âĞÅºÅÁ¿±£»¤esp8266µÄ³õÊ¼»¯¼°ÅäÖÃ¹ı³Ì
+  //ä½¿ç”¨äº’æ–¥ä¿¡å·é‡ä¿æŠ¤esp8266çš„åˆå§‹åŒ–åŠé…ç½®è¿‡ç¨‹
   if (xSemaphoreTake(xMutexEsp8266, portMAX_DELAY) == pdTRUE) {
 	ESP8266_Connect_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);  //"DUOBAO", "yunshu666"
-	//ESP8266_Connect_Wifi("Yunshu_Drwells", "yzy@0203yzy@0203");    //¶ÔESP8266½øĞĞÅäÖÃ²¢Á¬½Óµ½Ö¸¶¨wifi
-	//·¢Æğudp¹ã²¥£¬ËùÓĞÔÚÏßµÄÎïÁªÍø×ÓÉè±¸»áÖ÷¶¯Á¬½Ó¹ıÀ´´Ó¶ø»ñÈ¡ËüÃÇµÄipµØÖ·
+	//ESP8266_Connect_Wifi("Yunshu_Drwells", "yzy@0203yzy@0203");    //å¯¹ESP8266è¿›è¡Œé…ç½®å¹¶è¿æ¥åˆ°æŒ‡å®šwifi
+	//å‘èµ·udpå¹¿æ’­ï¼Œæ‰€æœ‰åœ¨çº¿çš„ç‰©è”ç½‘å­è®¾å¤‡ä¼šä¸»åŠ¨è¿æ¥è¿‡æ¥ä»è€Œè·å–å®ƒä»¬çš„ipåœ°å€
 	ESP8266_startBroadCastCmd();  
-	test();
+	//test();
 	xSemaphoreGive(xMutexEsp8266);
   }
   /* Infinite loop */
   for(;;)
   {
 	osDelay(10);
-	taskENTER_CRITICAL();           /* ½øÈëÁÙ½ç¶Î */
-	ESP8266_CheckRecvData(); // ´¦ÀíÍøÂçÇëÇó (¿ÉÒÔ³É¹¦ÊÕµ½)
-	taskEXIT_CRITICAL();            /* ³öÁÙ½çÇø */
+	taskENTER_CRITICAL();           /* è¿›å…¥ä¸´ç•Œæ®µ */
+	ESP8266_CheckRecvData(); // å¤„ç†ç½‘ç»œè¯·æ±‚ (å¯ä»¥æˆåŠŸæ”¶åˆ°)
+	taskEXIT_CRITICAL();            /* å‡ºä¸´ç•ŒåŒº */
   }
   /* USER CODE END IOT_Task */
 }
@@ -439,14 +439,14 @@ void GUI_Task(void const * argument)
 {
   /* USER CODE BEGIN GUI_Task */
 	/*
-	taskENTER_CRITICAL();           // ½øÈëÁÙ½ç¶Î
+	taskENTER_CRITICAL();           // è¿›å…¥ä¸´ç•Œæ®µ
 	
-	// µÈ´ıÈÎÎñ1Íê³É 
+	// ç­‰å¾…ä»»åŠ¡1å®Œæˆ 
 	if (xSemaphoreTake(xBinarySemaphoreCheckFontsAndIconBin, portMAX_DELAY) == pdTRUE) { 
-		// Ö´ĞĞÈÎÎñ2µÄ²Ù×÷ // ...
+		// æ‰§è¡Œä»»åŠ¡2çš„æ“ä½œ // ...
 		MainTask();
 	}
-	taskEXIT_CRITICAL();            // ÍË³öÁÙ½ç¶Î
+	taskEXIT_CRITICAL();            // é€€å‡ºä¸´ç•Œæ®µ
 	*/
 	printf("GUI_Task\n");
 	if (xSemaphoreTake(xBinarySemaphoreICON, portMAX_DELAY) == pdTRUE) {

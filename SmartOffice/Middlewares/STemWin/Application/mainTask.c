@@ -8,7 +8,7 @@ void MainTask(void)
 {
 
 	GUI_Init();                     //初始化emWin/ucGUI
-  GUI_UC_SetEncodeUTF8();         //使能utf-8方案
+	GUI_UC_SetEncodeUTF8();         //使能utf-8方案
 
     //GUI_SetFont(&GUI_Fontfont);  // 设置字体
     //GUI_DispString("主灯");

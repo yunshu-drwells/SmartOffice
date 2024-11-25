@@ -4,33 +4,33 @@
 
 
 /**
- * @brief       ³õÊ¼»¯¹âÃô´«¸ÐÆ÷
- * @param       ÎÞ
- * @retval      ÎÞ
+ * @brief       åˆå§‹åŒ–å…‰æ•ä¼ æ„Ÿå™¨
+ * @param       æ— 
+ * @retval      æ— 
  */
 void lsens_init(void)
 {
     GPIO_InitTypeDef gpio_init_struct;
-    LSENS_ADC3_CHX_GPIO_CLK_ENABLE();   /* IO¿ÚÊ±ÖÓÊ¹ÄÜ */
+    LSENS_ADC3_CHX_GPIO_CLK_ENABLE();   /* IOå£æ—¶é’Ÿä½¿èƒ½ */
 
-    /* AD²É¼¯Òý½ÅÄ£Ê½ÉèÖÃ,Ä£ÄâÊäÈë */
+    /* ADé‡‡é›†å¼•è„šæ¨¡å¼è®¾ç½®,æ¨¡æ‹Ÿè¾“å…¥ */
     gpio_init_struct.Pin = LSENS_ADC3_CHX_GPIO_PIN;        
     gpio_init_struct.Mode = GPIO_MODE_ANALOG; 
     gpio_init_struct.Pull = GPIO_NOPULL;      
     HAL_GPIO_Init(LSENS_ADC3_CHX_GPIO_PORT, &gpio_init_struct);
 
-    adc3_init();                        /* ³õÊ¼»¯ADC */
+    adc3_init();                        /* åˆå§‹åŒ–ADC */
 }
 
 /**
- * @brief       ¶ÁÈ¡¹âÃô´«¸ÐÆ÷Öµ
- * @param       ÎÞ
- * @retval      0~100:0,×î°µ;100,×îÁÁ
+ * @brief       è¯»å–å…‰æ•ä¼ æ„Ÿå™¨å€¼
+ * @param       æ— 
+ * @retval      0~100:0,æœ€æš—;100,æœ€äº®
  */
 uint8_t lsens_get_val(void)
 {
     uint32_t temp_val = 0;
-    temp_val = adc3_get_result_average(LSENS_ADC3_CHX, 10); /* ¶ÁÈ¡Æ½¾ùÖµ */
+    temp_val = adc3_get_result_average(LSENS_ADC3_CHX, 10); /* è¯»å–å¹³å‡å€¼ */
     temp_val /= 40;
 
     if (temp_val > 100)temp_val = 100;

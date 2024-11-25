@@ -3,36 +3,36 @@
 #include "norflash.h"
 
 
-uint16_t g_norflash_type = W25Q128;     /* Ä¬ÈÏÊÇNM25Q128 */
+uint16_t g_norflash_type = W25Q128;     /* é»˜è®¤æ˜¯NM25Q128 */
 
 /**
- * @brief       ³õÊ¼»¯SPI NOR FLASH
- * @param       ÎŞ
- * @retval      ÎŞ
+ * @brief       åˆå§‹åŒ–SPI NOR FLASH
+ * @param       æ— 
+ * @retval      æ— 
  */
 void norflash_init(void)
 {
     uint8_t temp;
 
-    NORFLASH_CS(1);                         /* È¡ÏûÆ¬Ñ¡ */
+    NORFLASH_CS(1);                         /* å–æ¶ˆç‰‡é€‰ */
 
-    //spi1_init();                            /* ³õÊ¼»¯SPI1 */
-    spi1_set_speed(SPI_SPEED_4);            /* SPI1 ÇĞ»»µ½¸ßËÙ×´Ì¬ 21Mhz */
+    //spi1_init();                            /* åˆå§‹åŒ–SPI1 */
+    spi1_set_speed(SPI_SPEED_4);            /* SPI1 åˆ‡æ¢åˆ°é«˜é€ŸçŠ¶æ€ 21Mhz */
     
-    g_norflash_type = norflash_read_id();   /* ¶ÁÈ¡FLASH ID. */
+    g_norflash_type = norflash_read_id();   /* è¯»å–FLASH ID. */
     
-    if (g_norflash_type == W25Q256)         /* SPI FLASHÎªW25Q256, ±ØĞëÊ¹ÄÜ4×Ö½ÚµØÖ·Ä£Ê½ */
+    if (g_norflash_type == W25Q256)         /* SPI FLASHä¸ºW25Q256, å¿…é¡»ä½¿èƒ½4å­—èŠ‚åœ°å€æ¨¡å¼ */
     {
-        temp = norflash_read_sr(3);         /* ¶ÁÈ¡×´Ì¬¼Ä´æÆ÷3£¬ÅĞ¶ÏµØÖ·Ä£Ê½ */
+        temp = norflash_read_sr(3);         /* è¯»å–çŠ¶æ€å¯„å­˜å™¨3ï¼Œåˆ¤æ–­åœ°å€æ¨¡å¼ */
 
-        if ((temp & 0X01) == 0)             /* Èç¹û²»ÊÇ4×Ö½ÚµØÖ·Ä£Ê½,Ôò½øÈë4×Ö½ÚµØÖ·Ä£Ê½ */
+        if ((temp & 0X01) == 0)             /* å¦‚æœä¸æ˜¯4å­—èŠ‚åœ°å€æ¨¡å¼,åˆ™è¿›å…¥4å­—èŠ‚åœ°å€æ¨¡å¼ */
         {
-            norflash_write_enable();        /* Ğ´Ê¹ÄÜ */
-            temp |= 1 << 1;                 /* ADP=1, ÉÏµç4Î»µØÖ·Ä£Ê½ */
-            norflash_write_sr(3, temp);     /* Ğ´SR3 */
+            norflash_write_enable();        /* å†™ä½¿èƒ½ */
+            temp |= 1 << 1;                 /* ADP=1, ä¸Šç”µ4ä½åœ°å€æ¨¡å¼ */
+            norflash_write_sr(3, temp);     /* å†™SR3 */
             
             NORFLASH_CS(0);
-            spi1_read_write_byte(FLASH_Enable4ByteAddr);    /* Ê¹ÄÜ4×Ö½ÚµØÖ·Ö¸Áî */
+            spi1_read_write_byte(FLASH_Enable4ByteAddr);    /* ä½¿èƒ½4å­—èŠ‚åœ°å€æŒ‡ä»¤ */
             NORFLASH_CS(1);
         }
     }
@@ -41,66 +41,66 @@ void norflash_init(void)
 }
 
 /**
- * @brief       µÈ´ı¿ÕÏĞ
- * @param       ÎŞ
- * @retval      ÎŞ
+ * @brief       ç­‰å¾…ç©ºé—²
+ * @param       æ— 
+ * @retval      æ— 
  */
 static void norflash_wait_busy(void)
 {
-    while ((norflash_read_sr(1) & 0x01) == 0x01);   /* µÈ´ıBUSYÎ»Çå¿Õ */
+    while ((norflash_read_sr(1) & 0x01) == 0x01);   /* ç­‰å¾…BUSYä½æ¸…ç©º */
 }
 
 /**
- * @brief       25QXXĞ´Ê¹ÄÜ
- *   @note      ½«S1¼Ä´æÆ÷µÄWELÖÃÎ»
- * @param       ÎŞ
- * @retval      ÎŞ
+ * @brief       25QXXå†™ä½¿èƒ½
+ *   @note      å°†S1å¯„å­˜å™¨çš„WELç½®ä½
+ * @param       æ— 
+ * @retval      æ— 
  */
 void norflash_write_enable(void)
 {
     NORFLASH_CS(0);
-    spi1_read_write_byte(FLASH_WriteEnable);   /* ·¢ËÍĞ´Ê¹ÄÜ */
+    spi1_read_write_byte(FLASH_WriteEnable);   /* å‘é€å†™ä½¿èƒ½ */
     NORFLASH_CS(1);
 }
 
 /**
- * @brief       25QXX·¢ËÍµØÖ·
- *   @note      ¸ù¾İĞ¾Æ¬ĞÍºÅµÄ²»Í¬, ·¢ËÍ24ibt / 32bitµØÖ·
- * @param       address : Òª·¢ËÍµÄµØÖ·
- * @retval      ÎŞ
+ * @brief       25QXXå‘é€åœ°å€
+ *   @note      æ ¹æ®èŠ¯ç‰‡å‹å·çš„ä¸åŒ, å‘é€24ibt / 32bitåœ°å€
+ * @param       address : è¦å‘é€çš„åœ°å€
+ * @retval      æ— 
  */
 static void norflash_send_address(uint32_t address)
 {
-    if (g_norflash_type == W25Q256)                     /* Ö»ÓĞW25Q256Ö§³Ö4×Ö½ÚµØÖ·Ä£Ê½ */
+    if (g_norflash_type == W25Q256)                     /* åªæœ‰W25Q256æ”¯æŒ4å­—èŠ‚åœ°å€æ¨¡å¼ */
     {
-        spi1_read_write_byte((uint8_t)((address)>>24)); /* ·¢ËÍ bit31 ~ bit24 µØÖ· */
+        spi1_read_write_byte((uint8_t)((address)>>24)); /* å‘é€ bit31 ~ bit24 åœ°å€ */
     } 
-    spi1_read_write_byte((uint8_t)((address)>>16));     /* ·¢ËÍ bit23 ~ bit16 µØÖ· */
-    spi1_read_write_byte((uint8_t)((address)>>8));      /* ·¢ËÍ bit15 ~ bit8  µØÖ· */
-    spi1_read_write_byte((uint8_t)address);             /* ·¢ËÍ bit7  ~ bit0  µØÖ· */
+    spi1_read_write_byte((uint8_t)((address)>>16));     /* å‘é€ bit23 ~ bit16 åœ°å€ */
+    spi1_read_write_byte((uint8_t)((address)>>8));      /* å‘é€ bit15 ~ bit8  åœ°å€ */
+    spi1_read_write_byte((uint8_t)address);             /* å‘é€ bit7  ~ bit0  åœ°å€ */
 }
 
 /**
- * @brief       ¶ÁÈ¡25QXXµÄ×´Ì¬¼Ä´æÆ÷£¬25QXXÒ»¹²ÓĞ3¸ö×´Ì¬¼Ä´æÆ÷
- *   @note      ×´Ì¬¼Ä´æÆ÷1£º
+ * @brief       è¯»å–25QXXçš„çŠ¶æ€å¯„å­˜å™¨ï¼Œ25QXXä¸€å…±æœ‰3ä¸ªçŠ¶æ€å¯„å­˜å™¨
+ *   @note      çŠ¶æ€å¯„å­˜å™¨1ï¼š
  *              BIT7  6   5   4   3   2   1   0
  *              SPR   RV  TB BP2 BP1 BP0 WEL BUSY
- *              SPR:Ä¬ÈÏ0,×´Ì¬¼Ä´æÆ÷±£»¤Î»,ÅäºÏWPÊ¹ÓÃ
- *              TB,BP2,BP1,BP0:FLASHÇøÓòĞ´±£»¤ÉèÖÃ
- *              WEL:Ğ´Ê¹ÄÜËø¶¨
- *              BUSY:Ã¦±ê¼ÇÎ»(1,Ã¦;0,¿ÕÏĞ)
- *              Ä¬ÈÏ:0x00
+ *              SPR:é»˜è®¤0,çŠ¶æ€å¯„å­˜å™¨ä¿æŠ¤ä½,é…åˆWPä½¿ç”¨
+ *              TB,BP2,BP1,BP0:FLASHåŒºåŸŸå†™ä¿æŠ¤è®¾ç½®
+ *              WEL:å†™ä½¿èƒ½é”å®š
+ *              BUSY:å¿™æ ‡è®°ä½(1,å¿™;0,ç©ºé—²)
+ *              é»˜è®¤:0x00
  *
- *              ×´Ì¬¼Ä´æÆ÷2£º
+ *              çŠ¶æ€å¯„å­˜å™¨2ï¼š
  *              BIT7  6   5   4   3   2   1   0
  *              SUS   CMP LB3 LB2 LB1 (R) QE  SRP1
  *
- *              ×´Ì¬¼Ä´æÆ÷3£º
+ *              çŠ¶æ€å¯„å­˜å™¨3ï¼š
  *              BIT7      6    5    4   3   2   1   0
  *              HOLD/RST  DRV1 DRV0 (R) (R) WPS ADP ADS
  *
- * @param       regno: ×´Ì¬¼Ä´æÆ÷ºÅ£¬·¶:1~3
- * @retval      ×´Ì¬¼Ä´æÆ÷Öµ
+ * @param       regno: çŠ¶æ€å¯„å­˜å™¨å·ï¼ŒèŒƒ:1~3
+ * @retval      çŠ¶æ€å¯„å­˜å™¨å€¼
  */
 uint8_t norflash_read_sr(uint8_t regno)
 {
@@ -109,15 +109,15 @@ uint8_t norflash_read_sr(uint8_t regno)
     switch (regno)
     {
         case 1:
-            command = FLASH_ReadStatusReg1;  /* ¶Á×´Ì¬¼Ä´æÆ÷1Ö¸Áî */
+            command = FLASH_ReadStatusReg1;  /* è¯»çŠ¶æ€å¯„å­˜å™¨1æŒ‡ä»¤ */
             break;
 
         case 2:
-            command = FLASH_ReadStatusReg2;  /* ¶Á×´Ì¬¼Ä´æÆ÷2Ö¸Áî */
+            command = FLASH_ReadStatusReg2;  /* è¯»çŠ¶æ€å¯„å­˜å™¨2æŒ‡ä»¤ */
             break;
 
         case 3:
-            command = FLASH_ReadStatusReg3;  /* ¶Á×´Ì¬¼Ä´æÆ÷3Ö¸Áî */
+            command = FLASH_ReadStatusReg3;  /* è¯»çŠ¶æ€å¯„å­˜å™¨3æŒ‡ä»¤ */
             break;
 
         default:
@@ -126,19 +126,19 @@ uint8_t norflash_read_sr(uint8_t regno)
     }
 
     NORFLASH_CS(0);
-    spi1_read_write_byte(command);      /* ·¢ËÍ¶Á¼Ä´æÆ÷ÃüÁî */
-    byte = spi1_read_write_byte(0Xff);  /* ¶ÁÈ¡Ò»¸ö×Ö½Ú */
+    spi1_read_write_byte(command);      /* å‘é€è¯»å¯„å­˜å™¨å‘½ä»¤ */
+    byte = spi1_read_write_byte(0Xff);  /* è¯»å–ä¸€ä¸ªå­—èŠ‚ */
     NORFLASH_CS(1);
     
     return byte;
 }
 
 /**
- * @brief       Ğ´25QXX×´Ì¬¼Ä´æÆ÷
- *   @note      ¼Ä´æÆ÷ËµÃ÷¼ûnorflash_read_srº¯ÊıËµÃ÷
- * @param       regno: ×´Ì¬¼Ä´æÆ÷ºÅ£¬·¶:1~3
- * @param       sr   : ÒªĞ´Èë×´Ì¬¼Ä´æÆ÷µÄÖµ
- * @retval      ÎŞ
+ * @brief       å†™25QXXçŠ¶æ€å¯„å­˜å™¨
+ *   @note      å¯„å­˜å™¨è¯´æ˜è§norflash_read_srå‡½æ•°è¯´æ˜
+ * @param       regno: çŠ¶æ€å¯„å­˜å™¨å·ï¼ŒèŒƒ:1~3
+ * @param       sr   : è¦å†™å…¥çŠ¶æ€å¯„å­˜å™¨çš„å€¼
+ * @retval      æ— 
  */
 void norflash_write_sr(uint8_t regno, uint8_t sr)
 {
@@ -147,15 +147,15 @@ void norflash_write_sr(uint8_t regno, uint8_t sr)
     switch (regno)
     {
         case 1:
-            command = FLASH_WriteStatusReg1;  /* Ğ´×´Ì¬¼Ä´æÆ÷1Ö¸Áî */
+            command = FLASH_WriteStatusReg1;  /* å†™çŠ¶æ€å¯„å­˜å™¨1æŒ‡ä»¤ */
             break;
 
         case 2:
-            command = FLASH_WriteStatusReg2;  /* Ğ´×´Ì¬¼Ä´æÆ÷2Ö¸Áî */
+            command = FLASH_WriteStatusReg2;  /* å†™çŠ¶æ€å¯„å­˜å™¨2æŒ‡ä»¤ */
             break;
 
         case 3:
-            command = FLASH_WriteStatusReg3;  /* Ğ´×´Ì¬¼Ä´æÆ÷3Ö¸Áî */
+            command = FLASH_WriteStatusReg3;  /* å†™çŠ¶æ€å¯„å­˜å™¨3æŒ‡ä»¤ */
             break;
 
         default:
@@ -164,146 +164,146 @@ void norflash_write_sr(uint8_t regno, uint8_t sr)
     }
 
     NORFLASH_CS(0);
-    spi1_read_write_byte(command);  /* ·¢ËÍ¶Á¼Ä´æÆ÷ÃüÁî */
-    spi1_read_write_byte(sr);       /* Ğ´ÈëÒ»¸ö×Ö½Ú */
+    spi1_read_write_byte(command);  /* å‘é€è¯»å¯„å­˜å™¨å‘½ä»¤ */
+    spi1_read_write_byte(sr);       /* å†™å…¥ä¸€ä¸ªå­—èŠ‚ */
     NORFLASH_CS(1);
 }
 
 /**
- * @brief       ¶ÁÈ¡Ğ¾Æ¬ID
- * @param       ÎŞ
- * @retval      FLASHĞ¾Æ¬ID
- *   @note      Ğ¾Æ¬IDÁĞ±í¼û: norflash.h, Ğ¾Æ¬ÁĞ±í²¿·Ö
+ * @brief       è¯»å–èŠ¯ç‰‡ID
+ * @param       æ— 
+ * @retval      FLASHèŠ¯ç‰‡ID
+ *   @note      èŠ¯ç‰‡IDåˆ—è¡¨è§: norflash.h, èŠ¯ç‰‡åˆ—è¡¨éƒ¨åˆ†
  */
 uint16_t norflash_read_id(void)
 {
     uint16_t deviceid;
 
     NORFLASH_CS(0);
-    spi1_read_write_byte(FLASH_ManufactDeviceID);   /* ·¢ËÍ¶Á ID ÃüÁî */
-    spi1_read_write_byte(0);                        /* Ğ´ÈëÒ»¸ö×Ö½Ú */
+    spi1_read_write_byte(FLASH_ManufactDeviceID);   /* å‘é€è¯» ID å‘½ä»¤ */
+    spi1_read_write_byte(0);                        /* å†™å…¥ä¸€ä¸ªå­—èŠ‚ */
     spi1_read_write_byte(0);
     spi1_read_write_byte(0);
-    deviceid = spi1_read_write_byte(0xFF) << 8;     /* ¶ÁÈ¡¸ß8Î»×Ö½Ú */
-    deviceid |= spi1_read_write_byte(0xFF);         /* ¶ÁÈ¡µÍ8Î»×Ö½Ú */
+    deviceid = spi1_read_write_byte(0xFF) << 8;     /* è¯»å–é«˜8ä½å­—èŠ‚ */
+    deviceid |= spi1_read_write_byte(0xFF);         /* è¯»å–ä½8ä½å­—èŠ‚ */
     NORFLASH_CS(1);
 
     return deviceid;
 }
 
 /**
- * @brief       ¶ÁÈ¡SPI FLASH
- *   @note      ÔÚÖ¸¶¨µØÖ·¿ªÊ¼¶ÁÈ¡Ö¸¶¨³¤¶ÈµÄÊı¾İ
- * @param       pbuf    : Êı¾İ´æ´¢Çø
- * @param       addr    : ¿ªÊ¼¶ÁÈ¡µÄµØÖ·(×î´ó32bit)
- * @param       datalen : Òª¶ÁÈ¡µÄ×Ö½ÚÊı(×î´ó65535)
- * @retval      ÎŞ
+ * @brief       è¯»å–SPI FLASH
+ *   @note      åœ¨æŒ‡å®šåœ°å€å¼€å§‹è¯»å–æŒ‡å®šé•¿åº¦çš„æ•°æ®
+ * @param       pbuf    : æ•°æ®å­˜å‚¨åŒº
+ * @param       addr    : å¼€å§‹è¯»å–çš„åœ°å€(æœ€å¤§32bit)
+ * @param       datalen : è¦è¯»å–çš„å­—èŠ‚æ•°(æœ€å¤§65535)
+ * @retval      æ— 
  */
 void norflash_read(uint8_t *pbuf, uint32_t addr, uint16_t datalen)
 {
     uint16_t i;
 
     NORFLASH_CS(0);
-    spi1_read_write_byte(FLASH_ReadData);       /* ·¢ËÍ¶ÁÈ¡ÃüÁî */
-    norflash_send_address(addr);                /* ·¢ËÍµØÖ· */
+    spi1_read_write_byte(FLASH_ReadData);       /* å‘é€è¯»å–å‘½ä»¤ */
+    norflash_send_address(addr);                /* å‘é€åœ°å€ */
     
     for (i = 0; i < datalen; i++)
     {
-        pbuf[i] = spi1_read_write_byte(0XFF);   /* Ñ­»·¶ÁÈ¡ */
+        pbuf[i] = spi1_read_write_byte(0XFF);   /* å¾ªç¯è¯»å– */
     }
     
     NORFLASH_CS(1);
 }
 
 /**
- * @brief       SPIÔÚÒ»Ò³(0~65535)ÄÚĞ´ÈëÉÙÓÚ256¸ö×Ö½ÚµÄÊı¾İ
- *   @note      ÔÚÖ¸¶¨µØÖ·¿ªÊ¼Ğ´Èë×î´ó256×Ö½ÚµÄÊı¾İ
- * @param       pbuf    : Êı¾İ´æ´¢Çø
- * @param       addr    : ¿ªÊ¼Ğ´ÈëµÄµØÖ·(×î´ó32bit)
- * @param       datalen : ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó256),¸ÃÊı²»Ó¦¸Ã³¬¹ı¸ÃÒ³µÄÊ£Óà×Ö½ÚÊı!!!
- * @retval      ÎŞ
+ * @brief       SPIåœ¨ä¸€é¡µ(0~65535)å†…å†™å…¥å°‘äº256ä¸ªå­—èŠ‚çš„æ•°æ®
+ *   @note      åœ¨æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æœ€å¤§256å­—èŠ‚çš„æ•°æ®
+ * @param       pbuf    : æ•°æ®å­˜å‚¨åŒº
+ * @param       addr    : å¼€å§‹å†™å…¥çš„åœ°å€(æœ€å¤§32bit)
+ * @param       datalen : è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§256),è¯¥æ•°ä¸åº”è¯¥è¶…è¿‡è¯¥é¡µçš„å‰©ä½™å­—èŠ‚æ•°!!!
+ * @retval      æ— 
  */
 static void norflash_write_page(uint8_t *pbuf, uint32_t addr, uint16_t datalen)
 {
     uint16_t i;
 
-    norflash_write_enable();                    /* Ğ´Ê¹ÄÜ */
+    norflash_write_enable();                    /* å†™ä½¿èƒ½ */
 
     NORFLASH_CS(0);
-    spi1_read_write_byte(FLASH_PageProgram);    /* ·¢ËÍĞ´Ò³ÃüÁî */
-    norflash_send_address(addr);                /* ·¢ËÍµØÖ· */
+    spi1_read_write_byte(FLASH_PageProgram);    /* å‘é€å†™é¡µå‘½ä»¤ */
+    norflash_send_address(addr);                /* å‘é€åœ°å€ */
 
     for (i = 0; i < datalen; i++)
     {
-        spi1_read_write_byte(pbuf[i]);          /* Ñ­»·¶ÁÈ¡ */
+        spi1_read_write_byte(pbuf[i]);          /* å¾ªç¯è¯»å– */
     }
     
     NORFLASH_CS(1);
-    norflash_wait_busy();       /* µÈ´ıĞ´Èë½áÊø */
+    norflash_wait_busy();       /* ç­‰å¾…å†™å…¥ç»“æŸ */
 }
 
 /**
- * @brief       ÎŞ¼ìÑéĞ´SPI FLASH
- *   @note      ±ØĞëÈ·±£ËùĞ´µÄµØÖ··¶Î§ÄÚµÄÊı¾İÈ«²¿Îª0XFF,·ñÔòÔÚ·Ç0XFF´¦Ğ´ÈëµÄÊı¾İ½«Ê§°Ü!
- *              ¾ßÓĞ×Ô¶¯»»Ò³¹¦ÄÜ
- *              ÔÚÖ¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨³¤¶ÈµÄÊı¾İ,µ«ÊÇÒªÈ·±£µØÖ·²»Ô½½ç!
+ * @brief       æ— æ£€éªŒå†™SPI FLASH
+ *   @note      å¿…é¡»ç¡®ä¿æ‰€å†™çš„åœ°å€èŒƒå›´å†…çš„æ•°æ®å…¨éƒ¨ä¸º0XFF,å¦åˆ™åœ¨é0XFFå¤„å†™å…¥çš„æ•°æ®å°†å¤±è´¥!
+ *              å…·æœ‰è‡ªåŠ¨æ¢é¡µåŠŸèƒ½
+ *              åœ¨æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ®,ä½†æ˜¯è¦ç¡®ä¿åœ°å€ä¸è¶Šç•Œ!
  *
- * @param       pbuf    : Êı¾İ´æ´¢Çø
- * @param       addr    : ¿ªÊ¼Ğ´ÈëµÄµØÖ·(×î´ó32bit)
- * @param       datalen : ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó65535)
- * @retval      ÎŞ
+ * @param       pbuf    : æ•°æ®å­˜å‚¨åŒº
+ * @param       addr    : å¼€å§‹å†™å…¥çš„åœ°å€(æœ€å¤§32bit)
+ * @param       datalen : è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§65535)
+ * @retval      æ— 
  */
 static void norflash_write_nocheck(uint8_t *pbuf, uint32_t addr, uint16_t datalen)
 {
     uint16_t pageremain;
-    pageremain = 256 - addr % 256;  /* µ¥Ò³Ê£ÓàµÄ×Ö½ÚÊı */
+    pageremain = 256 - addr % 256;  /* å•é¡µå‰©ä½™çš„å­—èŠ‚æ•° */
 
-    if (datalen <= pageremain)      /* ²»´óÓÚ256¸ö×Ö½Ú */
+    if (datalen <= pageremain)      /* ä¸å¤§äº256ä¸ªå­—èŠ‚ */
     {
         pageremain = datalen;
     }
 
     while (1)
     {
-        /* µ±Ğ´Èë×Ö½Ú±ÈÒ³ÄÚÊ£ÓàµØÖ·»¹ÉÙµÄÊ±ºò, Ò»´ÎĞÔĞ´Íê
-         * µ±Ğ´ÈëÖ±½Ó±ÈÒ³ÄÚÊ£ÓàµØÖ·»¹¶àµÄÊ±ºò, ÏÈĞ´ÍêÕû¸öÒ³ÄÚÊ£ÓàµØÖ·, È»ºó¸ù¾İÊ£Óà³¤¶È½øĞĞ²»Í¬´¦Àí
+        /* å½“å†™å…¥å­—èŠ‚æ¯”é¡µå†…å‰©ä½™åœ°å€è¿˜å°‘çš„æ—¶å€™, ä¸€æ¬¡æ€§å†™å®Œ
+         * å½“å†™å…¥ç›´æ¥æ¯”é¡µå†…å‰©ä½™åœ°å€è¿˜å¤šçš„æ—¶å€™, å…ˆå†™å®Œæ•´ä¸ªé¡µå†…å‰©ä½™åœ°å€, ç„¶åæ ¹æ®å‰©ä½™é•¿åº¦è¿›è¡Œä¸åŒå¤„ç†
          */
         norflash_write_page(pbuf, addr, pageremain);
 
-        if (datalen == pageremain)      /* Ğ´Èë½áÊøÁË */
+        if (datalen == pageremain)      /* å†™å…¥ç»“æŸäº† */
         {
             break;
         }
         else                            /* datalen > pageremain */
         {
-            pbuf += pageremain;         /* pbufÖ¸ÕëµØÖ·Æ«ÒÆ,Ç°ÃæÒÑ¾­Ğ´ÁËpageremain×Ö½Ú */
-            addr += pageremain;         /* Ğ´µØÖ·Æ«ÒÆ,Ç°ÃæÒÑ¾­Ğ´ÁËpageremain×Ö½Ú */
-            datalen -= pageremain;      /* Ğ´Èë×Ü³¤¶È¼õÈ¥ÒÑ¾­Ğ´ÈëÁËµÄ×Ö½ÚÊı */
+            pbuf += pageremain;         /* pbufæŒ‡é’ˆåœ°å€åç§»,å‰é¢å·²ç»å†™äº†pageremainå­—èŠ‚ */
+            addr += pageremain;         /* å†™åœ°å€åç§»,å‰é¢å·²ç»å†™äº†pageremainå­—èŠ‚ */
+            datalen -= pageremain;      /* å†™å…¥æ€»é•¿åº¦å‡å»å·²ç»å†™å…¥äº†çš„å­—èŠ‚æ•° */
 
-            if (datalen > 256)          /* Ê£ÓàÊı¾İ»¹´óÓÚÒ»Ò³,¿ÉÒÔÒ»´ÎĞ´Ò»Ò³ */
+            if (datalen > 256)          /* å‰©ä½™æ•°æ®è¿˜å¤§äºä¸€é¡µ,å¯ä»¥ä¸€æ¬¡å†™ä¸€é¡µ */
             {
-                pageremain = 256;       /* Ò»´Î¿ÉÒÔĞ´Èë256¸ö×Ö½Ú */
+                pageremain = 256;       /* ä¸€æ¬¡å¯ä»¥å†™å…¥256ä¸ªå­—èŠ‚ */
             }
-            else                        /* Ê£ÓàÊı¾İĞ¡ÓÚÒ»Ò³,¿ÉÒÔÒ»´ÎĞ´Íê */
+            else                        /* å‰©ä½™æ•°æ®å°äºä¸€é¡µ,å¯ä»¥ä¸€æ¬¡å†™å®Œ */
             {
-                pageremain = datalen;   /* ²»¹»256¸ö×Ö½ÚÁË */
+                pageremain = datalen;   /* ä¸å¤Ÿ256ä¸ªå­—èŠ‚äº† */
             }
         }
     }
 }
 
 /**
- * @brief       Ğ´SPI FLASH
- *   @note      ÔÚÖ¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨³¤¶ÈµÄÊı¾İ , ¸Ãº¯Êı´ø²Á³ı²Ù×÷!
- *              SPI FLASH Ò»°ãÊÇ: 256¸ö×Ö½ÚÎªÒ»¸öPage, 4KbytesÎªÒ»¸öSector, 16¸öÉÈÇøÎª1¸öBlock
- *              ²Á³ıµÄ×îĞ¡µ¥Î»ÎªSector.
+ * @brief       å†™SPI FLASH
+ *   @note      åœ¨æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ® , è¯¥å‡½æ•°å¸¦æ“¦é™¤æ“ä½œ!
+ *              SPI FLASH ä¸€èˆ¬æ˜¯: 256ä¸ªå­—èŠ‚ä¸ºä¸€ä¸ªPage, 4Kbytesä¸ºä¸€ä¸ªSector, 16ä¸ªæ‰‡åŒºä¸º1ä¸ªBlock
+ *              æ“¦é™¤çš„æœ€å°å•ä½ä¸ºSector.
  *
- * @param       pbuf    : Êı¾İ´æ´¢Çø
- * @param       addr    : ¿ªÊ¼Ğ´ÈëµÄµØÖ·(×î´ó32bit)
- * @param       datalen : ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó65535)
- * @retval      ÎŞ
+ * @param       pbuf    : æ•°æ®å­˜å‚¨åŒº
+ * @param       addr    : å¼€å§‹å†™å…¥çš„åœ°å€(æœ€å¤§32bit)
+ * @param       datalen : è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§65535)
+ * @retval      æ— 
  */
-uint8_t g_norflash_buf[4096];   /* ÉÈÇø»º´æ */
+uint8_t g_norflash_buf[4096];   /* æ‰‡åŒºç¼“å­˜ */
 
 void norflash_write(uint8_t *pbuf, uint32_t addr, uint16_t datalen)
 {
@@ -314,103 +314,103 @@ void norflash_write(uint8_t *pbuf, uint32_t addr, uint16_t datalen)
     uint8_t *norflash_buf;
 
     norflash_buf = g_norflash_buf;
-    secpos = addr / 4096;       /* ÉÈÇøµØÖ· */
-    secoff = addr % 4096;       /* ÔÚÉÈÇøÄÚµÄÆ«ÒÆ */
-    secremain = 4096 - secoff;  /* ÉÈÇøÊ£Óà¿Õ¼ä´óĞ¡ */
+    secpos = addr / 4096;       /* æ‰‡åŒºåœ°å€ */
+    secoff = addr % 4096;       /* åœ¨æ‰‡åŒºå†…çš„åç§» */
+    secremain = 4096 - secoff;  /* æ‰‡åŒºå‰©ä½™ç©ºé—´å¤§å° */
 
-    //printf("ad:%X,nb:%X\r\n", addr, datalen); /* ²âÊÔÓÃ */
+    //printf("ad:%X,nb:%X\r\n", addr, datalen); /* æµ‹è¯•ç”¨ */
     if (datalen <= secremain)
     {
-        secremain = datalen;    /* ²»´óÓÚ4096¸ö×Ö½Ú */
+        secremain = datalen;    /* ä¸å¤§äº4096ä¸ªå­—èŠ‚ */
     }
 
     while (1)
     {
-        norflash_read(norflash_buf, secpos * 4096, 4096);   /* ¶Á³öÕû¸öÉÈÇøµÄÄÚÈİ */
+        norflash_read(norflash_buf, secpos * 4096, 4096);   /* è¯»å‡ºæ•´ä¸ªæ‰‡åŒºçš„å†…å®¹ */
 
-        for (i = 0; i < secremain; i++)     /* Ğ£ÑéÊı¾İ */
+        for (i = 0; i < secremain; i++)     /* æ ¡éªŒæ•°æ® */
         {
             if (norflash_buf[secoff + i] != 0XFF)
             {
-                break;                      /* ĞèÒª²Á³ı, Ö±½ÓÍË³öforÑ­»· */
+                break;                      /* éœ€è¦æ“¦é™¤, ç›´æ¥é€€å‡ºforå¾ªç¯ */
             }
         }
 
-        if (i < secremain)                  /* ĞèÒª²Á³ı */
+        if (i < secremain)                  /* éœ€è¦æ“¦é™¤ */
         {
-            norflash_erase_sector(secpos);  /* ²Á³ıÕâ¸öÉÈÇø */
+            norflash_erase_sector(secpos);  /* æ“¦é™¤è¿™ä¸ªæ‰‡åŒº */
 
-            for (i = 0; i < secremain; i++) /* ¸´ÖÆ */
+            for (i = 0; i < secremain; i++) /* å¤åˆ¶ */
             {
                 norflash_buf[i + secoff] = pbuf[i];
             }
 
-            norflash_write_nocheck(norflash_buf, secpos * 4096, 4096);  /* Ğ´ÈëÕû¸öÉÈÇø */
+            norflash_write_nocheck(norflash_buf, secpos * 4096, 4096);  /* å†™å…¥æ•´ä¸ªæ‰‡åŒº */
         }
-        else    /* Ğ´ÒÑ¾­²Á³ıÁËµÄ,Ö±½ÓĞ´ÈëÉÈÇøÊ£ÓàÇø¼ä. */
+        else    /* å†™å·²ç»æ“¦é™¤äº†çš„,ç›´æ¥å†™å…¥æ‰‡åŒºå‰©ä½™åŒºé—´. */
         {
-            norflash_write_nocheck(pbuf, addr, secremain);              /* Ö±½ÓĞ´ÉÈÇø */
+            norflash_write_nocheck(pbuf, addr, secremain);              /* ç›´æ¥å†™æ‰‡åŒº */
         }
 
         if (datalen == secremain)
         {
-            break;  /* Ğ´Èë½áÊøÁË */
+            break;  /* å†™å…¥ç»“æŸäº† */
         }
-        else        /* Ğ´ÈëÎ´½áÊø */
+        else        /* å†™å…¥æœªç»“æŸ */
         {
-            secpos++;               /* ÉÈÇøµØÖ·Ôö1 */
-            secoff = 0;             /* Æ«ÒÆÎ»ÖÃÎª0 */
+            secpos++;               /* æ‰‡åŒºåœ°å€å¢1 */
+            secoff = 0;             /* åç§»ä½ç½®ä¸º0 */
 
-            pbuf += secremain;      /* Ö¸ÕëÆ«ÒÆ */
-            addr += secremain;      /* Ğ´µØÖ·Æ«ÒÆ */
-            datalen -= secremain;   /* ×Ö½ÚÊıµİ¼õ */
+            pbuf += secremain;      /* æŒ‡é’ˆåç§» */
+            addr += secremain;      /* å†™åœ°å€åç§» */
+            datalen -= secremain;   /* å­—èŠ‚æ•°é€’å‡ */
 
             if (datalen > 4096)
             {
-                secremain = 4096;   /* ÏÂÒ»¸öÉÈÇø»¹ÊÇĞ´²»Íê */
+                secremain = 4096;   /* ä¸‹ä¸€ä¸ªæ‰‡åŒºè¿˜æ˜¯å†™ä¸å®Œ */
             }
             else
             {
-                secremain = datalen;/* ÏÂÒ»¸öÉÈÇø¿ÉÒÔĞ´ÍêÁË */
+                secremain = datalen;/* ä¸‹ä¸€ä¸ªæ‰‡åŒºå¯ä»¥å†™å®Œäº† */
             }
         }
     }
 }
 
 /**
- * @brief       ²Á³ıÕû¸öĞ¾Æ¬
- *   @note      µÈ´ıÊ±¼ä³¬³¤...
- * @param       ÎŞ
- * @retval      ÎŞ
+ * @brief       æ“¦é™¤æ•´ä¸ªèŠ¯ç‰‡
+ *   @note      ç­‰å¾…æ—¶é—´è¶…é•¿...
+ * @param       æ— 
+ * @retval      æ— 
  */
 void norflash_erase_chip(void)
 {
-    norflash_write_enable();    /* Ğ´Ê¹ÄÜ */
-    norflash_wait_busy();       /* µÈ´ı¿ÕÏĞ */
+    norflash_write_enable();    /* å†™ä½¿èƒ½ */
+    norflash_wait_busy();       /* ç­‰å¾…ç©ºé—² */
     NORFLASH_CS(0);
-    spi1_read_write_byte(FLASH_ChipErase);  /* ·¢ËÍ¶Á¼Ä´æÆ÷ÃüÁî */ 
+    spi1_read_write_byte(FLASH_ChipErase);  /* å‘é€è¯»å¯„å­˜å™¨å‘½ä»¤ */ 
     NORFLASH_CS(1);
-    norflash_wait_busy();       /* µÈ´ıĞ¾Æ¬²Á³ı½áÊø */
+    norflash_wait_busy();       /* ç­‰å¾…èŠ¯ç‰‡æ“¦é™¤ç»“æŸ */
 }
 
 /**
- * @brief       ²Á³ıÒ»¸öÉÈÇø
- *   @note      ×¢Òâ,ÕâÀïÊÇÉÈÇøµØÖ·,²»ÊÇ×Ö½ÚµØÖ·!!
- *              ²Á³ıÒ»¸öÉÈÇøµÄ×îÉÙÊ±¼ä:150ms
+ * @brief       æ“¦é™¤ä¸€ä¸ªæ‰‡åŒº
+ *   @note      æ³¨æ„,è¿™é‡Œæ˜¯æ‰‡åŒºåœ°å€,ä¸æ˜¯å­—èŠ‚åœ°å€!!
+ *              æ“¦é™¤ä¸€ä¸ªæ‰‡åŒºçš„æœ€å°‘æ—¶é—´:150ms
  * 
- * @param       saddr : ÉÈÇøµØÖ· ¸ù¾İÊµ¼ÊÈİÁ¿ÉèÖÃ
- * @retval      ÎŞ
+ * @param       saddr : æ‰‡åŒºåœ°å€ æ ¹æ®å®é™…å®¹é‡è®¾ç½®
+ * @retval      æ— 
  */
 void norflash_erase_sector(uint32_t saddr)
 {
-    //printf("fe:%x\r\n", saddr);   /* ¼àÊÓfalsh²Á³ıÇé¿ö,²âÊÔÓÃ */
+    //printf("fe:%x\r\n", saddr);   /* ç›‘è§†falshæ“¦é™¤æƒ…å†µ,æµ‹è¯•ç”¨ */
     saddr *= 4096;
-    norflash_write_enable();        /* Ğ´Ê¹ÄÜ */
-    norflash_wait_busy();           /* µÈ´ı¿ÕÏĞ */
+    norflash_write_enable();        /* å†™ä½¿èƒ½ */
+    norflash_wait_busy();           /* ç­‰å¾…ç©ºé—² */
 
     NORFLASH_CS(0);
-    spi1_read_write_byte(FLASH_SectorErase);    /* ·¢ËÍĞ´Ò³ÃüÁî */
-    norflash_send_address(saddr);   /* ·¢ËÍµØÖ· */
+    spi1_read_write_byte(FLASH_SectorErase);    /* å‘é€å†™é¡µå‘½ä»¤ */
+    norflash_send_address(saddr);   /* å‘é€åœ°å€ */
     NORFLASH_CS(1);
-    norflash_wait_busy();           /* µÈ´ıÉÈÇø²Á³ıÍê³É */
+    norflash_wait_busy();           /* ç­‰å¾…æ‰‡åŒºæ“¦é™¤å®Œæˆ */
 }

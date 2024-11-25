@@ -70,20 +70,20 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-// ¶¨Òå¶ÑÇøÓòÊý×é
+// å®šä¹‰å †åŒºåŸŸæ•°ç»„
 HeapRegion_t xHeapRegions[] = {
-    { ( uint8_t * ) 0x68020000, 0xa000 },  // ¶¨Òå´Ó0x68000000¿ªÊ¼µÄ40K×Ö½ÚÄÚ´æ¿é
-    { NULL, 0 }                            // ÖÕÖ¹Êý×é
+    { ( uint8_t * ) 0x68020000, 0xa000 },  // å®šä¹‰ä»Ž0x68000000å¼€å§‹çš„40Kå­—èŠ‚å†…å­˜å—
+    { NULL, 0 }                            // ç»ˆæ­¢æ•°ç»„
 };
 
 void configureHeapRegions(void)
 {
-    vPortDefineHeapRegions(xHeapRegions);  // ¶¨Òå¶ÑÇøÓò
+    vPortDefineHeapRegions(xHeapRegions);  // å®šä¹‰å †åŒºåŸŸ
 }
 
-//uint8_t paddr[20] = {0};                  /* ´æ·ÅÄÚ´æEXSRAMÊ¹ÓÃÂÊ */
+//uint8_t paddr[20] = {0};                  /* å­˜æ”¾å†…å­˜EXSRAMä½¿ç”¨çŽ‡ */
 uint8_t* paddr;
-uint16_t memused = 0;                     /* ÄÚ´æÊ¹ÓÃ°Ù·Ö±È */
+uint16_t memused = 0;                     /* å†…å­˜ä½¿ç”¨ç™¾åˆ†æ¯” */
 
 //uint8_t lcd_id[12];
 uint8_t* lcd_id;
@@ -98,9 +98,9 @@ _font_info* ftinfo;
 _icon_info* iconftinfo;
 uint8_t* uart3_rx_buffer;
 
-char FAN_ip_address[MAX_IP_LENGTH] = {0};  //·çÉÈÄ£¿éipµØÖ·
-char MasterLight_ip_address[MAX_IP_LENGTH] = {0};  //Ö÷µÆÄ£¿éipµØÖ·
-char SpotLight_ip_address[MAX_IP_LENGTH] = {0};  //ÉäµÆÄ£¿éipµØÖ·
+char FAN_ip_address[MAX_IP_LENGTH] = {0};  //é£Žæ‰‡æ¨¡å—ipåœ°å€
+char MasterLight_ip_address[MAX_IP_LENGTH] = {0};  //ä¸»ç¯æ¨¡å—ipåœ°å€
+char SpotLight_ip_address[MAX_IP_LENGTH] = {0};  //å°„ç¯æ¨¡å—ipåœ°å€
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -155,26 +155,26 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
-	// µ÷ÓÃÅäÖÃ¶ÑÇøÓòµÄº¯Êý
-	configureHeapRegions();  //FreeRTOS¶¨Òåheap5µÄ¶ÑÇøµØÖ··¶Î§
+	// è°ƒç”¨é…ç½®å †åŒºåŸŸçš„å‡½æ•°
+	configureHeapRegions();  //FreeRTOSå®šä¹‰heap5çš„å †åŒºåœ°å€èŒƒå›´
 	
-	sram_init();                        /* ÍâÀ©SRAM³õÊ¼»¯ */
+	sram_init();                        /* å¤–æ‰©SRAMåˆå§‹åŒ– */
 
-	//my_mem_init(SRAMIN);                /* ³õÊ¼»¯ÄÚ²¿SRAMÄÚ´æ³Ø */
-	my_mem_init(SRAMEX);                /* ³õÊ¼»¯Íâ²¿SRAMÄÚ´æ³Ø */
-	my_mem_init(SRAMCCM);               /* ³õÊ¼»¯ÄÚ²¿CCMÄÚ´æ³Ø */
+	//my_mem_init(SRAMIN);                /* åˆå§‹åŒ–å†…éƒ¨SRAMå†…å­˜æ±  */
+	my_mem_init(SRAMEX);                /* åˆå§‹åŒ–å¤–éƒ¨SRAMå†…å­˜æ±  */
+	my_mem_init(SRAMCCM);               /* åˆå§‹åŒ–å†…éƒ¨CCMå†…å­˜æ±  */
 	
 	paddr = (uint8_t *)mymalloc(0, 20);
 	memset(paddr, 0, 20);	
 	
-	//ÒòÎª½«ÍâÀ©SRAMµÄÍ·²¿40KB¸øFreeRTOSÊ¹ÓÃ£¬ËùÒÔÒª½«Õâ²¿·ÖÔÚÄÚ´æ¹ÜÀí±íÖÐ¶ÔÓ¦µÄ±íÏî¸³ÖµÎª·ÇÁã£¬±íÊ¾ÒÑ¾­±»Õ¼ÓÃÁË£¬·ÀÖ¹Ó°ÏìFreeRTOSµÄ¶ÑÇø
+	//å› ä¸ºå°†å¤–æ‰©SRAMçš„å¤´éƒ¨40KBç»™FreeRTOSä½¿ç”¨ï¼Œæ‰€ä»¥è¦å°†è¿™éƒ¨åˆ†åœ¨å†…å­˜ç®¡ç†è¡¨ä¸­å¯¹åº”çš„è¡¨é¡¹èµ‹å€¼ä¸ºéžé›¶ï¼Œè¡¨ç¤ºå·²ç»è¢«å ç”¨äº†ï¼Œé˜²æ­¢å½±å“FreeRTOSçš„å †åŒº
 	my_mem_occupy(SRAMEX, 40*1024);
 	
 	memused = my_mem_perused(SRAMEX);
 	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
 	printf("SRAMEX   USED: %s\n", (char *)paddr);
 	
-	//ÒòÎªÔÚÍâÀ©SRAM½ô¸ú×ÅFreeRTOSµÄ¿Õ¼äºóÃæ¸øLWIP·ÖÅäMEM_SIZE´óÐ¡µÄ¿Õ¼ä£¬ËùÒÔÒª½«Õâ²¿·ÖÔÚÄÚ´æ¹ÜÀí±íÖÐ¶ÔÓ¦µÄ±íÏî¸³ÖµÎª·ÇÁã
+	//å› ä¸ºåœ¨å¤–æ‰©SRAMç´§è·Ÿç€FreeRTOSçš„ç©ºé—´åŽé¢ç»™LWIPåˆ†é…MEM_SIZEå¤§å°çš„ç©ºé—´ï¼Œæ‰€ä»¥è¦å°†è¿™éƒ¨åˆ†åœ¨å†…å­˜ç®¡ç†è¡¨ä¸­å¯¹åº”çš„è¡¨é¡¹èµ‹å€¼ä¸ºéžé›¶
 	my_mem_occupy_from(SRAMEX, 40*1024, MEM_SIZE);
 	memused = my_mem_perused(SRAMEX);
 	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
@@ -270,13 +270,13 @@ void emwin_test_touch(void){
 	GUI_SetColor(GUI_YELLOW);
 	GUI_Clear();
 	while(1){
-		//Ö´ÐÐ´¥Ãþ±Ê¼ì²â
+		//æ‰§è¡Œè§¦æ‘¸ç¬”æ£€æµ‹
 		GUI_TOUCH_Exec();
-		//»ñÈ¡´¥Ãþ±Ê×´Ì¬Öµ
+		//èŽ·å–è§¦æ‘¸ç¬”çŠ¶æ€å€¼
 		GUI_TOUCH_GetState(&State);
-		//ÊÇ·ñ°´ÏÂ
+		//æ˜¯å¦æŒ‰ä¸‹
 		if(State.Pressed){
-			//´òÓ¡´¥Ãþ±Ê×ø±êÐÅÏ¢
+			//æ‰“å°è§¦æ‘¸ç¬”åæ ‡ä¿¡æ¯
 			GUI_DispStringAt("X:", 0, 0);
 			GUI_DispDecAt(State.x, 32, 0, 4);
 			GUI_DispStringAt("Y:", 0, 24);
@@ -286,11 +286,11 @@ void emwin_test_touch(void){
 		}
 
 		delay_ms(10);
-		if (State.x > lcddev.width - 40 && State.y < 20) //°´EXIT 
+		if (State.x > lcddev.width - 40 && State.y < 20) //æŒ‰EXIT 
 		{
 				GUI_SetBkColor(GUI_WHITE);
 				GUI_Clear();
-				return;  //ÍË³ö²âÊÔËÀÑ­»·
+				return;  //é€€å‡ºæµ‹è¯•æ­»å¾ªçŽ¯
 		}
 	}
 }

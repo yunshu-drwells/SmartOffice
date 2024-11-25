@@ -106,32 +106,32 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
 
 /* USER CODE BEGIN 1 */
 /**
- * @brief       SPI1ËÙ¶ÈÉèÖÃº¯Êý
- *   @note      SPI1Ê±ÖÓÑ¡ÔñÀ´×ÔAPB1, ¼´PCLK1, Îª36Mhz
- *              SPIËÙ¶È = PCLK1 / 2^(speed + 1)
- * @param       speed   : SPI1Ê±ÖÓ·ÖÆµÏµÊý
-                        È¡ÖµÎªSPI_BAUDRATEPRESCALER_2~SPI_BAUDRATEPRESCALER_2 256
- * @retval      ÎÞ
+ * @brief       SPI1é€Ÿåº¦è®¾ç½®å‡½æ•°
+ *   @note      SPI1æ—¶é’Ÿé€‰æ‹©æ¥è‡ªAPB1, å³PCLK1, ä¸º36Mhz
+ *              SPIé€Ÿåº¦ = PCLK1 / 2^(speed + 1)
+ * @param       speed   : SPI1æ—¶é’Ÿåˆ†é¢‘ç³»æ•°
+                        å–å€¼ä¸ºSPI_BAUDRATEPRESCALER_2~SPI_BAUDRATEPRESCALER_2 256
+ * @retval      æ— 
  */
 void spi1_set_speed(uint8_t speed)
 {
-    assert_param(IS_SPI_BAUDRATE_PRESCALER(speed)); /* ÅÐ¶ÏÓÐÐ§ÐÔ */
-    __HAL_SPI_DISABLE(&hspi1);             /* ¹Ø±ÕSPI */
-    hspi1.Instance->CR1 &= 0xFFC7;         /* Î»3-5ÇåÁã£¬ÓÃÀ´ÉèÖÃ²¨ÌØÂÊ */
-    hspi1.Instance->CR1 |= speed << 3;     /* ÉèÖÃSPIËÙ¶È */
-    __HAL_SPI_ENABLE(&hspi1);              /* Ê¹ÄÜSPI */
+    assert_param(IS_SPI_BAUDRATE_PRESCALER(speed)); /* åˆ¤æ–­æœ‰æ•ˆæ€§ */
+    __HAL_SPI_DISABLE(&hspi1);             /* å…³é—­SPI */
+    hspi1.Instance->CR1 &= 0xFFC7;         /* ä½3-5æ¸…é›¶ï¼Œç”¨æ¥è®¾ç½®æ³¢ç‰¹çŽ‡ */
+    hspi1.Instance->CR1 |= speed << 3;     /* è®¾ç½®SPIé€Ÿåº¦ */
+    __HAL_SPI_ENABLE(&hspi1);              /* ä½¿èƒ½SPI */
 }
 
 /**
- * @brief       SPI1¶ÁÐ´Ò»¸ö×Ö½ÚÊý¾Ý
- * @param       txdata  : Òª·¢ËÍµÄÊý¾Ý(1×Ö½Ú)
- * @retval      ½ÓÊÕµ½µÄÊý¾Ý(1×Ö½Ú)
+ * @brief       SPI1è¯»å†™ä¸€ä¸ªå­—èŠ‚æ•°æ®
+ * @param       txdata  : è¦å‘é€çš„æ•°æ®(1å­—èŠ‚)
+ * @retval      æŽ¥æ”¶åˆ°çš„æ•°æ®(1å­—èŠ‚)
  */
 uint8_t spi1_read_write_byte(uint8_t txdata)
 {
     uint8_t rxdata;
     HAL_SPI_TransmitReceive(&hspi1, &txdata, &rxdata, 1, 1000);
-    return rxdata; /* ·µ»ØÊÕµ½µÄÊý¾Ý */
+    return rxdata; /* è¿”å›žæ”¶åˆ°çš„æ•°æ® */
 }
 /* USER CODE END 1 */
 

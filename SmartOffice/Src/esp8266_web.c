@@ -6,7 +6,7 @@
 #include "string.h" //strcmp memset
 #include "delay.h"  //delay_ms
 
-// ¶¨ÒåÃ¶¾ÙÀàĞÍ
+// å®šä¹‰æšä¸¾ç±»å‹
 typedef enum {
     TCP,
     UDP
@@ -21,14 +21,14 @@ void ESP8266_SendCmd(const char* str){
 }
 
 static void ClearUart3ReceiveBuff(void){
-	// Çå¿Õ»º³åÇø
+	// æ¸…ç©ºç¼“å†²åŒº
 	memset(uart3_rx_buffer, 0, MAX_RX_BUFFER_SIZE);
-	__HAL_UART_FLUSH_DRREGISTER(&huart3);  // Çå¿ÕÊı¾İ¼Ä´æÆ÷
-	//Uart3FramFinishFlag = 0;  //½ÓÊÕÍê³É±êÖ¾ÖÃÁã
+	__HAL_UART_FLUSH_DRREGISTER(&huart3);  // æ¸…ç©ºæ•°æ®å¯„å­˜å™¨
+	//Uart3FramFinishFlag = 0;  //æ¥æ”¶å®Œæˆæ ‡å¿—ç½®é›¶
 	uart3_rx_index = 0;
 	
 	// Re-enable UART1 receive interrupt
-	// ÖØĞÂ¿ªÊ¼½ÓÊÕÊı¾İ
+	// é‡æ–°å¼€å§‹æ¥æ”¶æ•°æ®
 	if (HAL_UART_GetState(&huart3) == HAL_UART_STATE_READY)
 	{
 		HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, MAX_RX_BUFFER_SIZE);
@@ -51,7 +51,7 @@ char* extract_ip_address(const char* input, char* ip_address, size_t max_length)
         return NULL;
     }
     
-    start += 14; // Ìø¹ı "+CIFSR:STAIP,\""
+    start += 14; // è·³è¿‡ "+CIFSR:STAIP,\""
     const char* end = strchr(start, '"');
     if (end == NULL) {
         return NULL;
@@ -77,27 +77,27 @@ static uint8_t ESP8266_WaitResponse(const char* expected_response, uint32_t time
 	//while ((HAL_GetTick() - startTime) < timeout){
 	TickType_t startTime = xTaskGetTickCount();
     while ((xTaskGetTickCount() - startTime) < pdMS_TO_TICKS(timeout)){
-		if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //Èç¹ûUart3½ÓÊÕµ½ÁËEsp8266µÄÊı¾İ
-			__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //½ÓÊÕ±êÖ¾ÖÃÁã
+		if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //å¦‚æœUart3æ¥æ”¶åˆ°äº†Esp8266çš„æ•°æ®
+			__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //æ¥æ”¶æ ‡å¿—ç½®é›¶
 
-			//ÓÃÓÚµ÷ÊÔÄ³¸öATÃüÁîµÄ·µ»ØÖµ
+			//ç”¨äºè°ƒè¯•æŸä¸ªATå‘½ä»¤çš„è¿”å›å€¼
 			if(!strcmp(expected_response, "??")){
-				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // µ÷ÊÔÊä³ö
+				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // è°ƒè¯•è¾“å‡º
 				printf("Uart3 Received data length:%d\n", uart3_rx_index);
 			}
 
-			//printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // µ÷ÊÔÊä³ö
+			//printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // è°ƒè¯•è¾“å‡º
 			//printf("Uart3 Received data length:%d\n", uart3_rx_index);
 			/*
-			//µ÷ÊÔ»òÕß´òÓ¡¶¼ÎŞ·¨´òÓ¡ÕıÈ·Öµ£¬printfÌ«ºÄÊ±£¬»áµ¼ÖÂuart3½ÓÊÕÊ§°Ü
+			//è°ƒè¯•æˆ–è€…æ‰“å°éƒ½æ— æ³•æ‰“å°æ­£ç¡®å€¼ï¼Œprintfå¤ªè€—æ—¶ï¼Œä¼šå¯¼è‡´uart3æ¥æ”¶å¤±è´¥
 			for(uint8_t i = 0; i<10; i++){
 				printf("uart3_rx_buffer[%d]: %d\n", (uint8_t)uart3_rx_buffer[i]);
 			}
 			*/
-			//½«ESP8266µÄÊı¾İ×ª·¢¸øUart1
+			//å°†ESP8266çš„æ•°æ®è½¬å‘ç»™Uart1
 			if(!strcmp(expected_response, (const char*)uart3_rx_buffer) || strstr((const char*)uart3_rx_buffer, expected_response)) {
 				if(!strcmp(expected_response, "OK")){
-					//½âÎöipµØÖ·
+					//è§£æipåœ°å€
 					/*
 					AT+CIFSR
 					+CIFSR:STAIP,"192.168.2.38"
@@ -112,7 +112,7 @@ static uint8_t ESP8266_WaitResponse(const char* expected_response, uint32_t time
 					}			
 					//printf("identical \n");
 				}
-				//ÓÃÓÚµ÷ÊÔÄ³¸öATÃüÁîµÄ·µ»ØÖµ
+				//ç”¨äºè°ƒè¯•æŸä¸ªATå‘½ä»¤çš„è¿”å›å€¼
 				if(!strcmp(expected_response, "??")){
 					printf("identical \n");
 				}
@@ -130,10 +130,10 @@ static uint8_t ESP8266_WaitResponse(const char* expected_response, uint32_t time
 static void extractHTTPBody(char* response, char* extracted_ip) {
 	printf("strlen(response):%d \n", strlen(response));
 	printf("%s", response);
-    // ½âÎöÏìÓ¦£¬ÌáÈ¡ÕıÎÄ
+    // è§£æå“åº”ï¼Œæå–æ­£æ–‡
     char* body_start = strstr(response, "\r\n\r\n");
     if (body_start != NULL) {
-        body_start += 4; // Ìø¹ı"\r\n\r\n"
+        body_start += 4; // è·³è¿‡"\r\n\r\n"
         char* body_end = strstr(body_start, "\r\nCLOSED");
         if (body_end != NULL) {
             int ip_length = body_end - body_start;
@@ -150,23 +150,23 @@ static void extractHTTPBody(char* response, char* extracted_ip) {
 uint8_t ESP8266_WaitResponseFor(const char* expected_response, uint32_t timeout){
 	TickType_t startTime = xTaskGetTickCount();
     while ((xTaskGetTickCount() - startTime) < pdMS_TO_TICKS(timeout)){
-		if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //Èç¹ûUart3½ÓÊÕµ½ÁËEsp8266µÄÊı¾İ
-			__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //½ÓÊÕ±êÖ¾ÖÃÁã
-			//Õâ¸ö±êÖ¾µÄÇå³ıÊÇÎªÁË×¼±¸½ÓÊÕÏÂÒ»Ö¡Êı¾İ¡£Èç¹û²»Çå³ı£¬ÏµÍ³½«ÎŞ·¨¼ì²âµ½ÏÂÒ»´ÎµÄ¿ÕÏĞ×´Ì¬£¬´Ó¶ø¿ÉÄÜ´í¹ıÊı¾İÖ¡µÄ½áÊø¡£
-			//ÓÃÓÚµ÷ÊÔÄ³¸öATÃüÁîµÄ·µ»ØÖµ
+		if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //å¦‚æœUart3æ¥æ”¶åˆ°äº†Esp8266çš„æ•°æ®
+			__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //æ¥æ”¶æ ‡å¿—ç½®é›¶
+			//è¿™ä¸ªæ ‡å¿—çš„æ¸…é™¤æ˜¯ä¸ºäº†å‡†å¤‡æ¥æ”¶ä¸‹ä¸€å¸§æ•°æ®ã€‚å¦‚æœä¸æ¸…é™¤ï¼Œç³»ç»Ÿå°†æ— æ³•æ£€æµ‹åˆ°ä¸‹ä¸€æ¬¡çš„ç©ºé—²çŠ¶æ€ï¼Œä»è€Œå¯èƒ½é”™è¿‡æ•°æ®å¸§çš„ç»“æŸã€‚
+			//ç”¨äºè°ƒè¯•æŸä¸ªATå‘½ä»¤çš„è¿”å›å€¼
 			
 			if(!strcmp(expected_response, "??")){
-				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // µ÷ÊÔÊä³ö
+				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // è°ƒè¯•è¾“å‡º
 				printf("Uart3 Received data length:%d\n", uart3_rx_index);
 				
 			}
-			//½«ESP8266µÄÊı¾İ×ª·¢¸øUart1
+			//å°†ESP8266çš„æ•°æ®è½¬å‘ç»™Uart1
 			if(!strcmp(expected_response, (const char*)uart3_rx_buffer) || strstr((const char*)uart3_rx_buffer, expected_response)) {
-				//ÓÃÓÚµ÷ÊÔÄ³¸öATÃüÁîµÄ·µ»ØÖµ
+				//ç”¨äºè°ƒè¯•æŸä¸ªATå‘½ä»¤çš„è¿”å›å€¼
 				if(!strcmp(expected_response, "??")){
 					printf("strlen(uart3_rx_buffer):%d \n", strlen((char*)uart3_rx_buffer));
 					printf("%s", uart3_rx_buffer);
-					// ÌáÈ¡²¢´òÓ¡HTTPÏìÓ¦ÕıÎÄ
+					// æå–å¹¶æ‰“å°HTTPå“åº”æ­£æ–‡
 					/*
 					extractHTTPBody((char*)uart3_rx_buffer, FAN_ip_address);
 					if (strlen(FAN_ip_address)) {
@@ -201,7 +201,7 @@ static uint8_t ESP8266_AT_Test(void){
 }
 
 /**
- * @brief ÉèÖÃESP8266ÎªSTAÄ£Ê½
+ * @brief è®¾ç½®ESP8266ä¸ºSTAæ¨¡å¼
  * @return 1 if successful, 0 if failed
  */
 static uint8_t ESP8266_SetSTAMode(void)
@@ -217,7 +217,7 @@ static uint8_t ESP8266_SetSTAMode(void)
 }
 
 /**
- * @brief ¶Ï¿ª¿ÉÄÜ´æÔÚµÄWiFiÁ¬½Ó
+ * @brief æ–­å¼€å¯èƒ½å­˜åœ¨çš„WiFiè¿æ¥
  * @return 1 if successful, 0 if failed
  */
 static uint8_t ESP8266_CWQAP(){
@@ -233,13 +233,13 @@ static uint8_t ESP8266_CWQAP(){
 }
 
 /**
- * @brief ½ûÓÃ×Ô¶¯Á¬½Ó
+ * @brief ç¦ç”¨è‡ªåŠ¨è¿æ¥
  * @return 1 if successful, 0 if failed
  */
 /*
-·¢ËÍ£º
+å‘é€ï¼š
 AT+CWAUTOCONN=0\r\n
-½ÓÊÕ£º
+æ¥æ”¶ï¼š
 AT+CWAUTOCONN=0\r\n\r\nOK\r\n
 */
 uint8_t ESP8266_CWAUTOCONN(){
@@ -255,9 +255,9 @@ uint8_t ESP8266_CWAUTOCONN(){
 }
 
 /**
- * @brief Ê¹ESP8266Á¬½Óµ½Ö¸¶¨µÄWiFiÈÈµã
- * @param ssid WiFiµÄSSID
- * @param password WiFiµÄÃÜÂë
+ * @brief ä½¿ESP8266è¿æ¥åˆ°æŒ‡å®šçš„WiFiçƒ­ç‚¹
+ * @param ssid WiFiçš„SSID
+ * @param password WiFiçš„å¯†ç 
  * @return 1 if successful, 0 if failed
  */
 /*
@@ -267,10 +267,10 @@ uint8_t ESP8266_JoinAP(const char* ssid, const char* password)
 {
     char cmd[128];
     
-    // 1. ÉèÖÃWiFiÄ£Ê½ÎªStationÄ£Ê½
-	//ÒÑ¾­Íê³ÉÁË
+    // 1. è®¾ç½®WiFiæ¨¡å¼ä¸ºStationæ¨¡å¼
+	//å·²ç»å®Œæˆäº†
 	
-    // 2. Á¬½Óµ½Ö¸¶¨µÄAP
+    // 2. è¿æ¥åˆ°æŒ‡å®šçš„AP
     snprintf(cmd, sizeof(cmd), "AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, password);
     ESP8266_SendCmd(cmd);
     
@@ -298,7 +298,7 @@ uint8_t ESP8266_JoinAP(const char* ssid, const char* password)
 	
 	
     
-    // 3. ²éÑ¯IPµØÖ·ÒÔÈ·ÈÏÁ¬½Ó
+    // 3. æŸ¥è¯¢IPåœ°å€ä»¥ç¡®è®¤è¿æ¥
     ESP8266_SendCmd("AT+CIFSR\r\n");
     if (!ESP8266_WaitResponse("OK", 5000)) {
         printf("Failed to get IP address\r\n");
@@ -311,8 +311,8 @@ uint8_t ESP8266_JoinAP(const char* ssid, const char* password)
 
 
 /**
- * @brief ¿ªÆô»ò¹Ø±Õ¶àÁ¬½Ó
- * @param enable 1¿ªÆô,0¹Ø±Õ
+ * @brief å¼€å¯æˆ–å…³é—­å¤šè¿æ¥
+ * @param enable 1å¼€å¯,0å…³é—­
  * @return 1 if successful, 0 if failed
  */
 static uint8_t ESP8266_Enable_MultipleId(int enable) {
@@ -322,7 +322,7 @@ static uint8_t ESP8266_Enable_MultipleId(int enable) {
     
     ESP8266_SendCmd(command);
 	snprintf(command, sizeof(command), "AT+CIPMUX=%d\r\n\r\nOK\r\n", enable);
-    // µÈ´ıÏìÓ¦
+    // ç­‰å¾…å“åº”
     if (!ESP8266_WaitResponse(command, 5000)) {
         printf("Failed to set Multiple %d\r\n", enable);
         return 0;
@@ -333,12 +333,12 @@ static uint8_t ESP8266_Enable_MultipleId(int enable) {
 
 
 /**
- * @brief Ê¹ESP8266¿ªÆô·şÎñÆ÷Ä£Ê½
+ * @brief ä½¿ESP8266å¼€å¯æœåŠ¡å™¨æ¨¡å¼
  * @return 1 if successful, 0 if failed
  */
 static uint8_t _ESP8266_Enable_SERVER() {
     ESP8266_SendCmd("AT+CIPSERVER=1,80\r\n");
-    // µÈ´ıÏìÓ¦ Ê×´ÎÉèÖÃºÍµÚ¶ş´ÎÉèÖÃ³É¹¦·µ»Ø×Ö·ûÊÇ²»Í¬µÄ
+    // ç­‰å¾…å“åº” é¦–æ¬¡è®¾ç½®å’Œç¬¬äºŒæ¬¡è®¾ç½®æˆåŠŸè¿”å›å­—ç¬¦æ˜¯ä¸åŒçš„
     if (!ESP8266_WaitResponse("AT+CIPSERVER=1,80\r\n\r\nOK\r\n", 5000)){
 		ESP8266_SendCmd("AT+CIPSERVER=1,80\r\n");
 		if (!ESP8266_WaitResponse("AT+CIPSERVER=1,80\r\nno change\r\n\r\nOK\r\n", 5000)) {
@@ -351,7 +351,7 @@ static uint8_t _ESP8266_Enable_SERVER() {
 }
 
 /**
- * @brief Ê¹ESP8266¿ªÆô·şÎñ¶ËÄ£Ê½
+ * @brief ä½¿ESP8266å¼€å¯æœåŠ¡ç«¯æ¨¡å¼
  * @return 1 if successful, 0 if failed
  */
 /*
@@ -359,22 +359,22 @@ AT+CIPMUX=1
 AT+CIPSERVER=1,80
 */
 void ESP8266_Enable_SERVER(){
-	//µÈ´ı½ûÓÃESP8266¶àÁ¬½Ó³É¹¦
+	//ç­‰å¾…ç¦ç”¨ESP8266å¤šè¿æ¥æˆåŠŸ
 	while( ! ESP8266_Enable_MultipleId(1) );
 	
-	//µÈ´ıÉèÖÃÎª¿Í»§¶ËÄ£Ê½³É¹¦
+	//ç­‰å¾…è®¾ç½®ä¸ºå®¢æˆ·ç«¯æ¨¡å¼æˆåŠŸ
 	while( ! _ESP8266_Enable_SERVER() );
 }
 
 
 /**
- * @brief Ê¹ESP8266¿ªÆô¿Í»§¶ËÄ£Ê½
+ * @brief ä½¿ESP8266å¼€å¯å®¢æˆ·ç«¯æ¨¡å¼
  * @return 1 if successful, 0 if failed
  */
 
 static uint8_t _ESP8266_Enable_Client(){
 	ESP8266_SendCmd("AT+CIPSERVER=0\r\n");
-    // µÈ´ıÏìÓ¦
+    // ç­‰å¾…å“åº”
     if (!ESP8266_WaitResponse("AT+CIPSERVER=0\r\n\r\nOK\r\n", 5000)){
 		printf("Failed to set Client\r\n");
 		return 0;
@@ -388,20 +388,20 @@ AT+CIPSERVER=0
 AT+CIPMUX=0
 */
 void ESP8266_Enable_Client(){
-	//µÈ´ıÉèÖÃÎª¿Í»§¶ËÄ£Ê½³É¹¦
+	//ç­‰å¾…è®¾ç½®ä¸ºå®¢æˆ·ç«¯æ¨¡å¼æˆåŠŸ
 	while( ! _ESP8266_Enable_Client() );
 	
-	//µÈ´ı½ûÓÃESP8266¶àÁ¬½Ó³É¹¦
+	//ç­‰å¾…ç¦ç”¨ESP8266å¤šè¿æ¥æˆåŠŸ
 	while( ! ESP8266_Enable_MultipleId(0) );
 }
 
 /**
- * @brief ÉèÖÃESP8266·şÎñÆ÷³¬Ê±Ê±¼ä
+ * @brief è®¾ç½®ESP8266æœåŠ¡å™¨è¶…æ—¶æ—¶é—´
  * @return 1 if successful, 0 if failed
  */
 static uint8_t ESP8266_Enable_STO() {
     ESP8266_SendCmd("AT+CIPSTO=60\r\n");
-    // µÈ´ıÏìÓ¦
+    // ç­‰å¾…å“åº”
     if (!ESP8266_WaitResponse("AT+CIPSTO=60\r\n\r\nOK\r\n", 5000)) {
         printf("Failed to set STO\r\n");
         return 0;
@@ -411,47 +411,47 @@ static uint8_t ESP8266_Enable_STO() {
 }
 
 /**
-* @brief  ESP8266 Á¬½Ówifiº¯Êı
- * @param ssid WiFiµÄSSID
- * @param password WiFiµÄÃÜÂë 
-* @retval ÎŞ
+* @brief  ESP8266 è¿æ¥wifiå‡½æ•°
+ * @param ssid WiFiçš„SSID
+ * @param password WiFiçš„å¯†ç  
+* @retval æ— 
 */
 void ESP8266_Connect_Wifi(const char* ssid, const char* password)
 {
-	//µÈ´ıATÃüÁî³É¹¦
+	//ç­‰å¾…ATå‘½ä»¤æˆåŠŸ
 	while( ! ESP8266_AT_Test() );
-	//µÈ´ıÉèÖÃWiFiÄ£Ê½ÎªSTA³É¹¦
+	//ç­‰å¾…è®¾ç½®WiFiæ¨¡å¼ä¸ºSTAæˆåŠŸ
 	while( ! ESP8266_SetSTAMode() );
-	//µÈ´ı¶Ï¿ª¿ÉÄÜ´æÔÚµÄWiFiÁ¬½Ó³É¹¦
+	//ç­‰å¾…æ–­å¼€å¯èƒ½å­˜åœ¨çš„WiFiè¿æ¥æˆåŠŸ
 	while( ! ESP8266_CWQAP() );
-	//µÈ´ı½ûÓÃ×Ô¶¯Á¬½Ó³É¹¦
+	//ç­‰å¾…ç¦ç”¨è‡ªåŠ¨è¿æ¥æˆåŠŸ
 	while( ! ESP8266_CWAUTOCONN() );
-	//µÈ´ı³É¹¦Á¬½Óµ½Ä³¸öÖ¸¶¨µÄwifi²¢»ñÈ¡ipµØÖ·
+	//ç­‰å¾…æˆåŠŸè¿æ¥åˆ°æŸä¸ªæŒ‡å®šçš„wifiå¹¶è·å–ipåœ°å€
 	while( ! ESP8266_JoinAP(ssid, password) );
   
-	//µÈ´ı¿ªÆôESP8266¶àÁ¬½Ó³É¹¦
+	//ç­‰å¾…å¼€å¯ESP8266å¤šè¿æ¥æˆåŠŸ
 	while( ! ESP8266_Enable_MultipleId(1) );
 	
-	//µÈ´ıÉèÖÃÎª·şÎñÆ÷Ä£Ê½³É¹¦
+	//ç­‰å¾…è®¾ç½®ä¸ºæœåŠ¡å™¨æ¨¡å¼æˆåŠŸ
 	while( ! _ESP8266_Enable_SERVER() );
 	
-	//µÈ´ıÉèÖÃ·şÎñÆ÷³¬Ê±Ê±¼ä³É¹¦
+	//ç­‰å¾…è®¾ç½®æœåŠ¡å™¨è¶…æ—¶æ—¶é—´æˆåŠŸ
 	while( ! ESP8266_Enable_STO() );
 }
 
 /**
-* @brief  ESP8266 ´¦ÀíÍøÂçÇëÇóÊı¾İ
-* @param  ÎŞ
-* @retval ÎŞ
+* @brief  ESP8266 å¤„ç†ç½‘ç»œè¯·æ±‚æ•°æ®
+* @param  æ— 
+* @retval æ— 
 */
 void ESP8266_CheckRecvData(void)
 {
-	if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //Èç¹ûUart3½ÓÊÕµ½ÁËEsp8266µÄÊı¾İ
-		__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //½ÓÊÕ±êÖ¾ÖÃÁã
+	if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //å¦‚æœUart3æ¥æ”¶åˆ°äº†Esp8266çš„æ•°æ®
+		__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //æ¥æ”¶æ ‡å¿—ç½®é›¶
 
-		printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // µ÷ÊÔÊä³ö
+		printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // è°ƒè¯•è¾“å‡º
 		printf("Uart3 Received data length:%d\n", uart3_rx_index);
-		//½âÎöFan ipµØÖ·
+		//è§£æFan ipåœ°å€
 		/*
 		char *pdest = strstr((char*)uart3_rx_buffer, "Fan:");
 		if(pdest){
@@ -466,14 +466,14 @@ void ESP8266_CheckRecvData(void)
 }
 
 /*
-AT+CWMODE=1  //ÉèÖÃESP8266ÎªSTAÄ£Ê½ 
-AT+CWQAP  //¶Ï¿ª¿ÉÄÜ´æÔÚµÄWiFiÁ¬½Ó
-AT+CWAUTOCONN=0  //½ûÓÃ×Ô¶¯Á¬½Ó
-AT+CWJAP="Yunshu_Drwells","yzy@0203yzy@0203"  //Á¬½Óµ½Ö¸¶¨µÄAP
-AT+CIFSR  //²éÑ¯IPµØÖ·ÒÔÈ·ÈÏÁ¬½Ó
-AT+CIPMUX=1  //Ê¹ÓÃ¶àÁ¬½Ó(¿ÉÒÔÍ¬Ê±´¦Àí¶à¸öTCP/UDPÁ¬½Ó)
-AT+CIPSERVER=1,80  //ÉèÖÃÎª·şÎñÆ÷Ä£Ê½£¬²¢ÔÚÖ¸¶¨¶Ë¿Ú£¨ÀıÈç80£©ÉÏ¼àÌı
-AT+CIPSTO=60  //ÉèÖÃ·şÎñÆ÷³¬Ê±Ê±¼ä£¨µ¥Î»£ºÃë£¬0±íÊ¾ÓÀ²»³¬Ê±£©Ó°ÏìµÄÊÇTCPÁ¬½ÓµÄ±£³ÖÊ±¼ä
+AT+CWMODE=1  //è®¾ç½®ESP8266ä¸ºSTAæ¨¡å¼ 
+AT+CWQAP  //æ–­å¼€å¯èƒ½å­˜åœ¨çš„WiFiè¿æ¥
+AT+CWAUTOCONN=0  //ç¦ç”¨è‡ªåŠ¨è¿æ¥
+AT+CWJAP="Yunshu_Drwells","yzy@0203yzy@0203"  //è¿æ¥åˆ°æŒ‡å®šçš„AP
+AT+CIFSR  //æŸ¥è¯¢IPåœ°å€ä»¥ç¡®è®¤è¿æ¥
+AT+CIPMUX=1  //ä½¿ç”¨å¤šè¿æ¥(å¯ä»¥åŒæ—¶å¤„ç†å¤šä¸ªTCP/UDPè¿æ¥)
+AT+CIPSERVER=1,80  //è®¾ç½®ä¸ºæœåŠ¡å™¨æ¨¡å¼ï¼Œå¹¶åœ¨æŒ‡å®šç«¯å£ï¼ˆä¾‹å¦‚80ï¼‰ä¸Šç›‘å¬
+AT+CIPSTO=60  //è®¾ç½®æœåŠ¡å™¨è¶…æ—¶æ—¶é—´ï¼ˆå•ä½ï¼šç§’ï¼Œ0è¡¨ç¤ºæ°¸ä¸è¶…æ—¶ï¼‰å½±å“çš„æ˜¯TCPè¿æ¥çš„ä¿æŒæ—¶é—´
 */
 
 
@@ -487,26 +487,26 @@ AT+CIPSTART=0,"UDP","255.255.255.255",8080
 AT+CIPSEND=0,16
 > DISCOVER_DEVICES
 
-AT+CIPSTART=0,"UDP","255.255.255.255",8080  //0: ÕâÊÇÁ¬½ÓID£¬ÓÃÓÚ±êÊ¶¶àÁ¬½ÓÄ£Ê½ÏÂµÄ²»Í¬Á¬½Ó¡£ËùÓĞ½ÓÊÕµ½¹ã²¥Êı¾İ°üµÄÉè±¸±ØĞëÔÚ¸Ã¶Ë¿ÚÉÏ¼àÌı£¬²ÅÄÜ½ÓÊÕµ½Êı¾İ¡£
-AT+CIPSEND=0,16  // ·¢ËÍ16×Ö½ÚµÄÊı¾İ
-> DISCOVER_DEVICES  // ÊäÈëÒª·¢ËÍµÄÊı¾İ
+AT+CIPSTART=0,"UDP","255.255.255.255",8080  //0: è¿™æ˜¯è¿æ¥IDï¼Œç”¨äºæ ‡è¯†å¤šè¿æ¥æ¨¡å¼ä¸‹çš„ä¸åŒè¿æ¥ã€‚æ‰€æœ‰æ¥æ”¶åˆ°å¹¿æ’­æ•°æ®åŒ…çš„è®¾å¤‡å¿…é¡»åœ¨è¯¥ç«¯å£ä¸Šç›‘å¬ï¼Œæ‰èƒ½æ¥æ”¶åˆ°æ•°æ®ã€‚
+AT+CIPSEND=0,16  // å‘é€16å­—èŠ‚çš„æ•°æ®
+> DISCOVER_DEVICES  // è¾“å…¥è¦å‘é€çš„æ•°æ®
 */
 
 /*
-// ·¢ÆğUDP¹ã²¥
+// å‘èµ·UDPå¹¿æ’­
 sendATCommand("AT+CIPSTART=0,\"UDP\",\"255.255.255.255\",8080");
 sendATCommand("AT+CIPSEND=0,16");
 sendATCommand("Hello, IoT Devices!");
 */
 
 
-// ·¢ËÍ¹ã²¥ÏûÏ¢
+// å‘é€å¹¿æ’­æ¶ˆæ¯
 char sendBroadcastCmd[] = "AT+CIPSTART=0,\"UDP\",\"255.255.255.255\",8080\r\n";
 
 /*
-·¢ËÍ£º
+å‘é€ï¼š
 AT+CIPSTART=0,"UDP","255.255.255.255",8080
-³É¹¦½ÓÊÕ£º
+æˆåŠŸæ¥æ”¶ï¼š
 AT+CIPSTART=0,"UDP","255.255.255.255",8080
 0,CONNECT
 
@@ -514,7 +514,7 @@ OK
 */
 uint8_t _ESP8266_sendBroadcastCmd(){
 	ESP8266_SendCmd(sendBroadcastCmd);
-    // µÈ´ıÏìÓ¦
+    // ç­‰å¾…å“åº”
     if (!ESP8266_WaitResponseFor("OK", 5000)) {
         printf("Failed to send Broadcast Cmd\r\n");
         return 0;
@@ -524,17 +524,17 @@ uint8_t _ESP8266_sendBroadcastCmd(){
 }
 
 /*
-·¢ËÍ£º
+å‘é€ï¼š
 AT+CIPSEND=0,16
-³É¹¦½ÓÊÕ£º
-RX£ºAT+CIPSEND=0,16
+æˆåŠŸæ¥æ”¶ï¼š
+RXï¼šAT+CIPSEND=0,16
 
 OK
 > 
 */
 uint8_t _ESP8266_sendDataCmd(char* sendDataCmd){
 	ESP8266_SendCmd(sendDataCmd);
-    // µÈ´ıÏìÓ¦
+    // ç­‰å¾…å“åº”
     if (!ESP8266_WaitResponseFor(">", 5000)) {
         printf("Failed to send Data Cmd: %s\r\n", sendDataCmd);
         return 0;
@@ -544,9 +544,9 @@ uint8_t _ESP8266_sendDataCmd(char* sendDataCmd){
 }
 
 /*
-·¢ËÍ£º
+å‘é€ï¼š
 DISCOVER_DEVICES
-³É¹¦½ÓÊÕ£º
+æˆåŠŸæ¥æ”¶ï¼š
 ES
 
 busy s...
@@ -557,7 +557,7 @@ SEND OK
 */
 uint8_t _ESP8266_broadcastMessage(char* broadcastMessage){
 	ESP8266_SendCmd(broadcastMessage);
-    // µÈ´ıÏìÓ¦
+    // ç­‰å¾…å“åº”
     if (!ESP8266_WaitResponseFor("SEND OK", 5000)) {
         printf("Failed to send broadcast Message: %s\r\n", broadcastMessage);
         return 0;
@@ -567,21 +567,21 @@ uint8_t _ESP8266_broadcastMessage(char* broadcastMessage){
 }
 
 /**
-* @brief  ESP8266 ·¢ËÍ¹ã²¥ÏûÏ¢
-* @param  ÎŞ
-* @retval ÎŞ
+* @brief  ESP8266 å‘é€å¹¿æ’­æ¶ˆæ¯
+* @param  æ— 
+* @retval æ— 
 */
-//Í¨¹ı¹ã²¥·¢ÆğÇëÇó£¬È»ºóÈÃËùÓĞÎïÁªÍøÉè±¸·µ»Ø×Ô¼ºµÄÉè±¸Ãû³ÆºÍipµØÖ·£¬×îºóÔÙÍ¨¹ıipµØÖ·µÄ½¨Á¢tcp´Ó¶øÓë×ÓÄ£¿éÍ¨ĞÅ
-//ÕâÑù»áËğºÄcpuĞÔÄÜ£¬Ö±½ÓÊ¹ÓÃ¹ã²¥µÄ·½Ê½¶ÔËùÓĞÎïÁªÍøÉè±¸½øĞĞ¿ØÖÆ
+//é€šè¿‡å¹¿æ’­å‘èµ·è¯·æ±‚ï¼Œç„¶åè®©æ‰€æœ‰ç‰©è”ç½‘è®¾å¤‡è¿”å›è‡ªå·±çš„è®¾å¤‡åç§°å’Œipåœ°å€ï¼Œæœ€åå†é€šè¿‡ipåœ°å€çš„å»ºç«‹tcpä»è€Œä¸å­æ¨¡å—é€šä¿¡
+//è¿™æ ·ä¼šæŸè€—cpuæ€§èƒ½ï¼Œç›´æ¥ä½¿ç”¨å¹¿æ’­çš„æ–¹å¼å¯¹æ‰€æœ‰ç‰©è”ç½‘è®¾å¤‡è¿›è¡Œæ§åˆ¶
 void ESP8266_sendBroadcastCmd(char* broadcastMessage)
 {
 	char sendDataCmd[18] = {0};
 	sprintf(sendDataCmd, "AT+CIPSEND=0,%d\r\n", strlen(broadcastMessage));
 	
-	//µÈ´ı AT+CIPSEND=0,16 ÃüÁî³É¹¦
+	//ç­‰å¾… AT+CIPSEND=0,16 å‘½ä»¤æˆåŠŸ
 	while( ! _ESP8266_sendDataCmd(sendDataCmd) );
 	
-	//µÈ´ı ·¢ËÍĞÅÏ¢³É¹¦
+	//ç­‰å¾… å‘é€ä¿¡æ¯æˆåŠŸ
 	while( ! _ESP8266_broadcastMessage(broadcastMessage) );
 }
 
@@ -601,16 +601,16 @@ CONNECT_NEW_WIFI&ssid=Yunshu_Drwells&pwd=yzy@0203yzy@0203
 */
 
 void ESP8266_startBroadCastCmd(){
-	//µÈ´ı AT+CIPSTART=0,"UDP","255.255.255.255",8080 ÃüÁî³É¹¦
+	//ç­‰å¾… AT+CIPSTART=0,"UDP","255.255.255.255",8080 å‘½ä»¤æˆåŠŸ
 	while( ! _ESP8266_sendBroadcastCmd() );
 }
 
 
 /**
-* @brief  ESP8266 Á¬½ÓĞÂwifiº¯Êı
- * @param ssid WiFiµÄSSID
- * @param password WiFiµÄÃÜÂë 
-* @retval ÎŞ
+* @brief  ESP8266 è¿æ¥æ–°wifiå‡½æ•°
+ * @param ssid WiFiçš„SSID
+ * @param password WiFiçš„å¯†ç  
+* @retval æ— 
 */
 /*
 AT+CWQAP\r\n
@@ -619,78 +619,78 @@ AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, password
 */
 uint8_t ESP8266_Connect_New_Wifi(const char* ssid, const char* password)
 {
-	//µÈ´ı¶Ï¿ª¿ÉÄÜ´æÔÚµÄWiFiÁ¬½Ó³É¹¦
+	//ç­‰å¾…æ–­å¼€å¯èƒ½å­˜åœ¨çš„WiFiè¿æ¥æˆåŠŸ
 	//while( ! ESP8266_CWQAP() );
-	//µÈ´ı½ûÓÃ×Ô¶¯Á¬½Ó³É¹¦
+	//ç­‰å¾…ç¦ç”¨è‡ªåŠ¨è¿æ¥æˆåŠŸ
 	//while( ! ESP8266_CWAUTOCONN() );
-	//µÈ´ı³É¹¦Á¬½Óµ½Ä³¸öÖ¸¶¨µÄwifi²¢»ñÈ¡ipµØÖ·
+	//ç­‰å¾…æˆåŠŸè¿æ¥åˆ°æŸä¸ªæŒ‡å®šçš„wifiå¹¶è·å–ipåœ°å€
 	if( ! ESP8266_JoinAP(ssid, password) ){
-		//Ê§°Ü
+		//å¤±è´¥
 		return 0;
 	}else{  
-		//ÄÜ³É¹¦Á¬½Ó
+		//èƒ½æˆåŠŸè¿æ¥
 		return 1;
 	}
 }
 
 
 /**
-* @brief  ESP8266 Á¬½ÓĞÂwifiº¯Êı
- * @param ssid WiFiµÄSSID
- * @param password WiFiµÄÃÜÂë 
-* @retval ÎŞ
+* @brief  ESP8266 è¿æ¥æ–°wifiå‡½æ•°
+ * @param ssid WiFiçš„SSID
+ * @param password WiFiçš„å¯†ç  
+* @retval æ— 
 */
 void ESP8266_Connect_New_Wifi_ALL(const char* ssid, const char* password)
 {
 	/*
-	//ÔÚÁ¬½ÓĞÂwifiÖ®Ç°Í³¼ÆËùÓĞÎïÁªÍøÉè±¸Êı
+	//åœ¨è¿æ¥æ–°wifiä¹‹å‰ç»Ÿè®¡æ‰€æœ‰ç‰©è”ç½‘è®¾å¤‡æ•°
 	uint8_t devices = ESP8266_Count_Devices();
 
-	//µÈ´ı³É¹¦Á¬½Óµ½Ä³¸öÖ¸¶¨µÄwifi²¢»ñÈ¡ipµØÖ·
+	//ç­‰å¾…æˆåŠŸè¿æ¥åˆ°æŸä¸ªæŒ‡å®šçš„wifiå¹¶è·å–ipåœ°å€
 	if( ! ESP8266_Connect_New_Wifi(ssid, password) ){
-		//Ê§°Ü
-		//Á¬½Ó»ØÄ¬ÈÏwifi
+		//å¤±è´¥
+		//è¿æ¥å›é»˜è®¤wifi
 		while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
-	}else{  //ÄÜ³É¹¦Á¬½Ó
-	    //¼ì²é¿ÕÏĞµÄipµØÖ·ÊıÊÇ·ñ´óÓÚËùÓĞµÄÎïÁªÍøÉè±¸Êı
+	}else{  //èƒ½æˆåŠŸè¿æ¥
+	    //æ£€æŸ¥ç©ºé—²çš„ipåœ°å€æ•°æ˜¯å¦å¤§äºæ‰€æœ‰çš„ç‰©è”ç½‘è®¾å¤‡æ•°
 		uint8_t ips = ESP8266_Count_Free_ips();
 		if(devices >= ips){
-			//ÎŞ·¨Âú×ãÒªÇó
-			//Á¬½Ó»ØÄ¬ÈÏwifi
+			//æ— æ³•æ»¡è¶³è¦æ±‚
+			//è¿æ¥å›é»˜è®¤wifi
 			while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
 		}else{
-			//¿ÉÒÔÂú×ãÒªÇó
-			//Á¬½Ó»Ø¾Éwifi
+			//å¯ä»¥æ»¡è¶³è¦æ±‚
+			//è¿æ¥å›æ—§wifi
 			while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
-			//Í¨ÖªËùÓĞÎïÁªÍøÉè±¸Á¬½ÓĞÂwifi
+			//é€šçŸ¥æ‰€æœ‰ç‰©è”ç½‘è®¾å¤‡è¿æ¥æ–°wifi
 			//...
 		}
 	}
 	*/
-	//µÈ´ı³É¹¦Á¬½Óµ½Ä³¸öÖ¸¶¨µÄwifi²¢»ñÈ¡ipµØÖ·
+	//ç­‰å¾…æˆåŠŸè¿æ¥åˆ°æŸä¸ªæŒ‡å®šçš„wifiå¹¶è·å–ipåœ°å€
 	if( ! ESP8266_Connect_New_Wifi(ssid, password) ){
-		//Ê§°Ü
-		//Á¬½Ó»ØÄ¬ÈÏwifi
+		//å¤±è´¥
+		//è¿æ¥å›é»˜è®¤wifi
 		while(!ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd));
-	}else{  //ÄÜ³É¹¦Á¬½Ó
+	}else{  //èƒ½æˆåŠŸè¿æ¥
 		printf("start connect to old wifi\n");
-		//Á¬½Ó»ØÄ¬ÈÏwifi
+		//è¿æ¥å›é»˜è®¤wifi
 		ESP8266_Connect_New_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);
 		printf("connected to old wifi\n");
-		//¿ªÆô¹ã²¥
+		//å¼€å¯å¹¿æ’­
 		//ESP8266_startBroadCastCmd();
 		
-		//Í¨ÖªËùÓĞÎïÁªÍøÉè±¸Á¬½ÓĞÂwifi
-		//·¢ËÍ¹ã²¥ÏûÏ¢£¬ÈÃËùÓĞµÄÎïÁªÍøÉè±¸Á¬½ÓĞÂwifi
+		//é€šçŸ¥æ‰€æœ‰ç‰©è”ç½‘è®¾å¤‡è¿æ¥æ–°wifi
+		//å‘é€å¹¿æ’­æ¶ˆæ¯ï¼Œè®©æ‰€æœ‰çš„ç‰©è”ç½‘è®¾å¤‡è¿æ¥æ–°wifi
 		char sendDataCmd[128] = {0};
 		sprintf(sendDataCmd, "CONNECT_NEW_WIFI&ssid=%s&pwd=%s", ssid, password);
 		ESP8266_sendBroadcastCmd(sendDataCmd);
 		printf("message all\n");
 		
-		//ÔÙÁ¬½Ó»ØĞÂwifi
+		//å†è¿æ¥å›æ–°wifi
 		ESP8266_Connect_New_Wifi(ssid, password);
 		printf("connected new wifi\n");
-		//¿ªÆô¹ã²¥
+		//å¼€å¯å¹¿æ’­
 		//ESP8266_startBroadCastCmd();
 	}
 }
@@ -707,11 +707,11 @@ void Lora_OpenDoor(){
 
 
 void test(){
-	//²âÊÔ·çÉÈ¡¢Ö÷µÆ¡¢ÉäµÆ
+	//æµ‹è¯•é£æ‰‡ã€ä¸»ç¯ã€å°„ç¯
 	//ESP8266_startBroadCastCmd();
 	
 	//char broadcastMessage[] = "MasterLight_ON&R=255&G=255&B=255";
-	//·¢ËÍ¹ã²¥
+	//å‘é€å¹¿æ’­
 	//ESP8266_sendBroadcastCmd(broadcastMessage);
 	//ESP8266_sendBroadcastCmd("MasterLight_ON&R=255&G=255&B=255");
 	/*	
@@ -724,20 +724,20 @@ void test(){
 	ESP8266_sendBroadcastCmd("SpotLight_OFF");
 	*/
 	
-	//²âÊÔµç´ÅÃÅËø
+	//æµ‹è¯•ç”µç£é—¨é”
 	//Lora_OpenDoor();
 	
-	//²âÊÔwifi
+	//æµ‹è¯•wifi
 	//ESP8266_Connect_New_Wifi_ALL(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);
 	ESP8266_Connect_New_Wifi_ALL("Yunshu_Drwells", "yzy@0203yzy@0203");
 }
 
 
 /**
-* @brief  Í³¼ÆÁ¬½ÓÁËµ±Ç°wifiµÄÎïÁªÍøÉè±¸Êı
- * @param ssid WiFiµÄSSID
- * @param password WiFiµÄÃÜÂë 
-* @retval ÎŞ
+* @brief  ç»Ÿè®¡è¿æ¥äº†å½“å‰wifiçš„ç‰©è”ç½‘è®¾å¤‡æ•°
+ * @param ssid WiFiçš„SSID
+ * @param password WiFiçš„å¯†ç  
+* @retval æ— 
 */
 /*
 uint8_t ESP8266_Count_Devices(){
@@ -750,14 +750,14 @@ uint8_t ESP8266_Count_Devices(){
 static uint8_t parseResponse(char *response)
 {
   uint8_t freeIPCount = 0;
-  // ½âÎöÏìÓ¦£¬ÌáÈ¡¿ÕÏĞIPµØÖ·ÊıÁ¿
-  // ÕâÀïÖ»ÊÇÒ»¸ö¼òµ¥µÄÊ¾Àı£¬Êµ¼Ê½âÎöÂß¼­¿ÉÄÜ¸ü¸´ÔÓ
+  // è§£æå“åº”ï¼Œæå–ç©ºé—²IPåœ°å€æ•°é‡
+  // è¿™é‡Œåªæ˜¯ä¸€ä¸ªç®€å•çš„ç¤ºä¾‹ï¼Œå®é™…è§£æé€»è¾‘å¯èƒ½æ›´å¤æ‚
   char *token = strtok(response, ",");
   while (token != NULL)
   {
     if (strstr(token, "+CWLAP:") != NULL)
     {
-      // ÌáÈ¡¿ÕÏĞIPµØÖ·ÊıÁ¿
+      // æå–ç©ºé—²IPåœ°å€æ•°é‡
       freeIPCount = atoi(strtok(NULL, ":"));
       char countStr[10];
       sprintf(countStr, "%d", freeIPCount);
@@ -774,17 +774,17 @@ static uint8_t ESP8266_WaitResponse_ForCWLAP(const char* expected_response, uint
 	//while ((HAL_GetTick() - startTime) < timeout){
 	TickType_t startTime = xTaskGetTickCount();
     while ((xTaskGetTickCount() - startTime) < pdMS_TO_TICKS(timeout)){
-		if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //Èç¹ûUart3½ÓÊÕµ½ÁËEsp8266µÄÊı¾İ
-			__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //½ÓÊÕ±êÖ¾ÖÃÁã
+		if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //å¦‚æœUart3æ¥æ”¶åˆ°äº†Esp8266çš„æ•°æ®
+			__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //æ¥æ”¶æ ‡å¿—ç½®é›¶
 
-			//ÓÃÓÚµ÷ÊÔÄ³¸öATÃüÁîµÄ·µ»ØÖµ
+			//ç”¨äºè°ƒè¯•æŸä¸ªATå‘½ä»¤çš„è¿”å›å€¼
 			if(!strcmp(expected_response, "OK")){
-				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // µ÷ÊÔÊä³ö
+				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // è°ƒè¯•è¾“å‡º
 				printf("Uart3 Received data length:%d\n", uart3_rx_index);
 			}
 
 
-			//½«ESP8266µÄÊı¾İ×ª·¢¸øUart1
+			//å°†ESP8266çš„æ•°æ®è½¬å‘ç»™Uart1
 				if(!strcmp(expected_response, "OK")){		
 					printf("identical \n");
 				}
@@ -802,10 +802,10 @@ static uint8_t ESP8266_WaitResponse_ForCWLAP(const char* expected_response, uint
 
 
 /**
-* @brief  »ñÈ¡ËùÓĞ¿ÉÓÃµÄwifi
- * @param ssid WiFiµÄSSID
- * @param password WiFiµÄÃÜÂë 
-* @retval ÎŞ
+* @brief  è·å–æ‰€æœ‰å¯ç”¨çš„wifi
+ * @param ssid WiFiçš„SSID
+ * @param password WiFiçš„å¯†ç  
+* @retval æ— 
 */
 /*
 uint8_t ESP8266_Get_Enable_Wifi(){
@@ -829,13 +829,13 @@ static int findNthOccurrence(const char *str, char ch, int n) {
         if (*ptr == ch) {
             count++;
             if (count == n) {
-                return ptr - str; // ·µ»ØÏà¶ÔÓÚ×Ö·û´®ÆğÊ¼Î»ÖÃµÄÆ«ÒÆÁ¿
+                return ptr - str; // è¿”å›ç›¸å¯¹äºå­—ç¬¦ä¸²èµ·å§‹ä½ç½®çš„åç§»é‡
             }
         }
         ptr++;
     }
 
-    return -1; // Ã»ÓĞÕÒµ½µÚn¸ö×Ö·û
+    return -1; // æ²¡æœ‰æ‰¾åˆ°ç¬¬nä¸ªå­—ç¬¦
 }
 */
 
@@ -845,16 +845,16 @@ static uint8_t ESP8266_WaitResponse_ForPING(const char* expected_response, uint3
 	//while ((HAL_GetTick() - startTime) < timeout){
 	TickType_t startTime = xTaskGetTickCount();
     while ((xTaskGetTickCount() - startTime) < pdMS_TO_TICKS(timeout)){
-		if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //Èç¹ûUart3½ÓÊÕµ½ÁËEsp8266µÄÊı¾İ
-			__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //½ÓÊÕ±êÖ¾ÖÃÁã
+		if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //å¦‚æœUart3æ¥æ”¶åˆ°äº†Esp8266çš„æ•°æ®
+			__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //æ¥æ”¶æ ‡å¿—ç½®é›¶
 
-			//ÓÃÓÚµ÷ÊÔÄ³¸öATÃüÁîµÄ·µ»ØÖµ
+			//ç”¨äºè°ƒè¯•æŸä¸ªATå‘½ä»¤çš„è¿”å›å€¼
 			if(!strcmp(expected_response, "OK")){
-				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // µ÷ÊÔÊä³ö
+				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // è°ƒè¯•è¾“å‡º
 				printf("Uart3 Received data length:%d\n", uart3_rx_index);
 			}
 
-			//½«ESP8266µÄÊı¾İ×ª·¢¸øUart1
+			//å°†ESP8266çš„æ•°æ®è½¬å‘ç»™Uart1
 			if(!strcmp(expected_response, (const char*)uart3_rx_buffer) || strstr((const char*)uart3_rx_buffer, expected_response)) {
 				if(!strcmp(expected_response, "OK")){		
 					printf("identical \n");
@@ -877,16 +877,16 @@ static uint8_t ESP8266_WaitResponse_ForARP(const char* expected_response, uint32
 	//while ((HAL_GetTick() - startTime) < timeout){
 	TickType_t startTime = xTaskGetTickCount();
     while ((xTaskGetTickCount() - startTime) < pdMS_TO_TICKS(timeout)){
-		if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //Èç¹ûUart3½ÓÊÕµ½ÁËEsp8266µÄÊı¾İ
-			__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //½ÓÊÕ±êÖ¾ÖÃÁã
+		if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //å¦‚æœUart3æ¥æ”¶åˆ°äº†Esp8266çš„æ•°æ®
+			__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //æ¥æ”¶æ ‡å¿—ç½®é›¶
 
-			//ÓÃÓÚµ÷ÊÔÄ³¸öATÃüÁîµÄ·µ»ØÖµ
+			//ç”¨äºè°ƒè¯•æŸä¸ªATå‘½ä»¤çš„è¿”å›å€¼
 			if(!strcmp(expected_response, "OK")){
-				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // µ÷ÊÔÊä³ö
+				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // è°ƒè¯•è¾“å‡º
 				printf("Uart3 Received data length:%d\n", uart3_rx_index);
 			}
 
-			//½«ESP8266µÄÊı¾İ×ª·¢¸øUart1
+			//å°†ESP8266çš„æ•°æ®è½¬å‘ç»™Uart1
 			if(!strcmp(expected_response, (const char*)uart3_rx_buffer) || strstr((const char*)uart3_rx_buffer, expected_response)) {
 				if(!strcmp(expected_response, "OK")){			
 					printf("identical \n");
@@ -903,9 +903,9 @@ static uint8_t ESP8266_WaitResponse_ForARP(const char* expected_response, uint32
 */
 
 /**
- * @brief  ·¢ËÍ ARP ÇëÇó
- * @param  ip_address: Ä¿±ê IP µØÖ·
- * @return ³É¹¦·µ»Ø 1£¬Ê§°Ü·µ»Ø 0
+ * @brief  å‘é€ ARP è¯·æ±‚
+ * @param  ip_address: ç›®æ ‡ IP åœ°å€
+ * @return æˆåŠŸè¿”å› 1ï¼Œå¤±è´¥è¿”å› 0
  */
 /*
 int sendARPRequest(const char *ip_address) {
@@ -918,28 +918,28 @@ int sendARPRequest(const char *ip_address) {
 
 
 /**
-* @brief  Í³¼ÆÁ¬½ÓµÄµ±Ç°wifiµÄ¿ÕÏĞipÊıÁ¿
- * @param ÎŞ
- * @return ¿ÕÏĞipÊı
+* @brief  ç»Ÿè®¡è¿æ¥çš„å½“å‰wifiçš„ç©ºé—²ipæ•°é‡
+ * @param æ— 
+ * @return ç©ºé—²ipæ•°
 */
 /*
 uint8_t ESP8266_Count_Free_ips(){
-	 // ·¢ËÍATÖ¸ÁîÖ´ĞĞpingÃüÁî
+	 // å‘é€ATæŒ‡ä»¤æ‰§è¡Œpingå‘½ä»¤
     //sendATCommand("AT+PING=\"www.google.com\"\r\n");
 	
-	//»ñÈ¡ÒÑ¾­Ê¹ÓÃµÄipÊıÁ¿
+	//è·å–å·²ç»ä½¿ç”¨çš„ipæ•°é‡
 	uint8_t usedIPs = 0;
 	uint8_t freeIps = 0;
 	char temp_ip_address[MAX_IP_LENGTH] = {0};
 	strcpy(temp_ip_address, ip_address);
 	char str[4];
 	//192.168.2.38
-	//ÕÒµ½µÚÈı¸ö.µÄÏÂ±ê
+	//æ‰¾åˆ°ç¬¬ä¸‰ä¸ª.çš„ä¸‹æ ‡
 	int index = findNthOccurrence(temp_ip_address, '.', 3);
-	//ATÃüÁî
+	//ATå‘½ä»¤
 	//char cmd[26] = {0};
 	for(uint8_t i=0; i<255; i++){  //[0:254]
-		// Ê¹ÓÃsprintf½«uint8_t×ª»»Îª×Ö·û´®
+		// ä½¿ç”¨sprintfå°†uint8_tè½¬æ¢ä¸ºå­—ç¬¦ä¸²
 		sprintf(str, "%u", i);
 		strncpy(temp_ip_address+index+1, str, 4);
 
@@ -956,15 +956,15 @@ uint8_t ESP8266_Count_Free_ips(){
 			usedIPs++;
 		}
 
-		//PingËÙ¶ÈÌ«ÂıÁË
+		//Pingé€Ÿåº¦å¤ªæ…¢äº†
 		
-		//²ÉÓÃARP É¨Ãè
+		//é‡‡ç”¨ARP æ‰«æ
 		if (!sendARPRequest(temp_ip_address)) {
             freeIps++;
         } else {
             usedIPs++;
         }
-		//ËÙ¶ÈÒÀÈ»ºÜÂı£¬Òò´Ë·ÅÆú¶Ô¿ÕÏĞipÊıÁ¿µÄÍ³¼Æ
+		//é€Ÿåº¦ä¾ç„¶å¾ˆæ…¢ï¼Œå› æ­¤æ”¾å¼ƒå¯¹ç©ºé—²ipæ•°é‡çš„ç»Ÿè®¡
 		
 	}
 	printf("free ip counts:%d", freeIps);
@@ -979,27 +979,27 @@ static uint8_t ESP8266_WaitResponseForCIPSTART(const char* expected_response, ui
 	//while ((HAL_GetTick() - startTime) < timeout){
 	TickType_t startTime = xTaskGetTickCount();
     while ((xTaskGetTickCount() - startTime) < pdMS_TO_TICKS(timeout)){
-		if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //Èç¹ûUart3½ÓÊÕµ½ÁËEsp8266µÄÊı¾İ
-			__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //½ÓÊÕ±êÖ¾ÖÃÁã
+		if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //å¦‚æœUart3æ¥æ”¶åˆ°äº†Esp8266çš„æ•°æ®
+			__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //æ¥æ”¶æ ‡å¿—ç½®é›¶
 
-			//ÓÃÓÚµ÷ÊÔÄ³¸öATÃüÁîµÄ·µ»ØÖµ
+			//ç”¨äºè°ƒè¯•æŸä¸ªATå‘½ä»¤çš„è¿”å›å€¼
 			if(!strcmp(expected_response, "??")){
-				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // µ÷ÊÔÊä³ö
+				printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // è°ƒè¯•è¾“å‡º
 				printf("Uart3 Received data length:%d\n", uart3_rx_index);
 			}
 
-			//printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // µ÷ÊÔÊä³ö
+			//printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // è°ƒè¯•è¾“å‡º
 			//printf("Uart3 Received data length:%d\n", uart3_rx_index);
 
-			//µ÷ÊÔ»òÕß´òÓ¡¶¼ÎŞ·¨´òÓ¡ÕıÈ·Öµ£¬printfÌ«ºÄÊ±£¬»áµ¼ÖÂuart3½ÓÊÕÊ§°Ü
+			//è°ƒè¯•æˆ–è€…æ‰“å°éƒ½æ— æ³•æ‰“å°æ­£ç¡®å€¼ï¼Œprintfå¤ªè€—æ—¶ï¼Œä¼šå¯¼è‡´uart3æ¥æ”¶å¤±è´¥
 			for(uint8_t i = 0; i<10; i++){
 				printf("uart3_rx_buffer[%d]: %d\n", (uint8_t)uart3_rx_buffer[i]);
 			}
 
-			//½«ESP8266µÄÊı¾İ×ª·¢¸øUart1
+			//å°†ESP8266çš„æ•°æ®è½¬å‘ç»™Uart1
 			if(!strcmp(expected_response, (const char*)uart3_rx_buffer) || strstr((const char*)uart3_rx_buffer, expected_response)) {
 				if(!strcmp(expected_response, "OK")){
-					//½âÎöipµØÖ·
+					//è§£æipåœ°å€
 					if (extract_ip_address((const char*)uart3_rx_buffer, ip_address, MAX_IP_LENGTH) != NULL) {
 						printf("Extracted IP address: %s\n", ip_address);
 					} else {
@@ -1007,7 +1007,7 @@ static uint8_t ESP8266_WaitResponseForCIPSTART(const char* expected_response, ui
 					}			
 					//printf("identical \n");
 				}
-				//ÓÃÓÚµ÷ÊÔÄ³¸öATÃüÁîµÄ·µ»ØÖµ
+				//ç”¨äºè°ƒè¯•æŸä¸ªATå‘½ä»¤çš„è¿”å›å€¼
 				if(!strcmp(expected_response, "??")){
 					printf("identical \n");
 				}
@@ -1025,7 +1025,7 @@ static uint8_t ESP8266_WaitResponseForCIPSTART(const char* expected_response, ui
 /*
 void send_broadcast_request(void)
 {
-    // ·¢ËÍ¹ã²¥ÇëÇó
+    // å‘é€å¹¿æ’­è¯·æ±‚
 	ESP8266_SendCmd("AT+CIPSTART=\"TCP\",\"255.255.255.255\",80");
 	uint8_t res = ESP8266_WaitResponseForCIPSTART("OK", 5000);
     if (!res) {
@@ -1036,9 +1036,9 @@ void send_broadcast_request(void)
 	return res;
 	
     send_at_command("AT+CIPSTART=\"TCP\",\"255.255.255.255\",80");
-    HAL_Delay(1000); // µÈ´ıÁ¬½Ó½¨Á¢
+    HAL_Delay(1000); // ç­‰å¾…è¿æ¥å»ºç«‹
     send_at_command("AT+CIPSEND=0,35");
-    HAL_Delay(1000); // µÈ´ı·¢ËÍ×¼±¸
+    HAL_Delay(1000); // ç­‰å¾…å‘é€å‡†å¤‡
     const char* request = "GET /get_ip?msg=GET_IP HTTP/1.1\r\nHost: 255.255.255.255\r\nConnection: close\r\n";
     HAL_UART_Transmit(&huart3, (uint8_t*)request, strlen(request), HAL_MAX_DELAY);
 }

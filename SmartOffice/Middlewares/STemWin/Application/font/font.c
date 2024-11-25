@@ -14,14 +14,14 @@
 **********************************************************************
 *                                                                    *
 * Source file: font.c                                                *
-* Font:        ÀŒÃÂ                                                  *
+* Font:        ÂÆã‰Ωì                                                  *
 * Height:      33                                                    *
 *                                                                    *
 **********************************************************************
 *                                                                    *
 * Initial font height:  33                                           *
 * Range disabled:       0000 - FFFF                                  *
-* Read pattern file: E:\‘¥ø‚\SynologyDrive\synSource\—ßœ∞◊ ¡œ\«∂»Î Ω»´’ª\÷«ª€∞Ïπ´ “2\Source\patttern font\font.txt*
+* Read pattern file: E:\Ê∫êÂ∫ì\SynologyDrive\synSource\Â≠¶‰π†ËµÑÊñô\ÂµåÂÖ•ÂºèÂÖ®Ê†à\Êô∫ÊÖßÂäûÂÖ¨ÂÆ§2\Source\patttern font\font.txt*
 *                                                                    *
 **********************************************************************
 */

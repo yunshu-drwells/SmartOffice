@@ -55,9 +55,9 @@ Purpose     : Template driver, could be used as starting point for new
 
 #include "lcd.h"  //lcd_draw_point
 
-/* ¶¨ÒåLCDµÄÃüÁîºÍÊý¾ÝÎ». */
-#define UCGUI_LCD_CMD   LCD_BASE                     /* µØÖ·ÎªLCDµÄCMD */
-#define UCGUI_LCD_DATA  (((LCD_BASE >> 1) + 1) << 1) /* µØÖ·ÎªLCDµÄRAM */
+/* å®šä¹‰LCDçš„å‘½ä»¤å’Œæ•°æ®ä½. */
+#define UCGUI_LCD_CMD   LCD_BASE                     /* åœ°å€ä¸ºLCDçš„CMD */
+#define UCGUI_LCD_DATA  (((LCD_BASE >> 1) + 1) << 1) /* åœ°å€ä¸ºLCDçš„RAM */
 
 /*********************************************************************
 *
@@ -500,7 +500,7 @@ static void  _DrawBitLine8BPP(GUI_DEVICE * pDevice, int x, int y, U8 const GUI_U
 static void _DrawBitLine16BPP(GUI_DEVICE * pDevice, int x, int y, U16 const GUI_UNI_PTR * p, int xsize) {
 	LCD_PIXELINDEX pixel;
 	lcd_set_cursor(x,y);
-	*(__IO uint16_t *)(UCGUI_LCD_CMD) = lcddev.wramcmd; /* Ð´ÈëÑÕÉ«Öµ */
+	*(__IO uint16_t *)(UCGUI_LCD_CMD) = lcddev.wramcmd; /* å†™å…¥é¢œè‰²å€¼ */
   for (;xsize > 0; xsize--, x++, p++) {
 	//_SetPixelIndex(pDevice, x, y, *p);
 		pixel = *p;

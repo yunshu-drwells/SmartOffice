@@ -119,14 +119,14 @@ static TaskHandle_t xUpdateTaskHandle;
 static void UpdateTextTask(void *pvParameters) {
     WM_HWIN hItem = (WM_HWIN)pvParameters;
     while (1) {
-        // ¸ñÊ½»¯×Ö·û´®²¢ÉèÖÃÎÄ±¾
+        // æ ¼å¼åŒ–å­—ç¬¦ä¸²å¹¶è®¾ç½®æ–‡æœ¬
         sprintf((char*)str, "%02d%%", adcx);
         TEXT_SetText(hItem, (char*)str);
 
-        // Ç¿ÖÆË¢ĞÂ¿Ø¼ş
+        // å¼ºåˆ¶åˆ·æ–°æ§ä»¶
         WM_InvalidateWindow(hItem);
 
-        // ÑÓÊ±200ms
+        // å»¶æ—¶200ms
         vTaskDelay(pdMS_TO_TICKS(200));
     }
 }
@@ -164,9 +164,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "Brightnesss");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // ÉèÖÃ×ÖÌå
-    TEXT_SetText(hItem, "ÁÁ¶È");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // ÉèÖÃÎÄ±¾¶ÔÆë·½Ê½£¨¿ÉÑ¡£©
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
+    TEXT_SetText(hItem, "äº®åº¦");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     //
     // Initialization of 'Image'
@@ -183,11 +183,11 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		
 		sprintf((char*)str, "%2d%%", adcx);
     TEXT_SetText(hItem, (char*)str);
-	// ´´½¨¸üĞÂÈÎÎñ£¬´«µİText¿Ø¼ş¾ä±ú
+	// åˆ›å»ºæ›´æ–°ä»»åŠ¡ï¼Œä¼ é€’Textæ§ä»¶å¥æŸ„
     xTaskCreate(UpdateTextTask, "UpdateTextTask", 256, (void*)hItem, tskIDLE_PRIORITY + 1, &xUpdateTaskHandle);
 		
     // USER START (Optionally insert additional code for further widget initialization)
-    // ¸ù¾İ¿Õ¼äID,»ñÈ¡¿Õ¼ä¾ä±ú
+    // æ ¹æ®ç©ºé—´ID,è·å–ç©ºé—´å¥æŸ„
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_IMAGE_0);
     //
 	// Initialization of 'Image_Brightnesss'
@@ -214,10 +214,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        //·µ»ØÖ÷Ò³
-        GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
-        CreateWindowMain(); // ´´½¨WindowMain½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
-		//Ïú»ÙÈÎÎñ
+        //è¿”å›ä¸»é¡µ
+        GUI_EndDialog(pMsg->hWin, 0);  //ç»“æŸå¯¹è¯æ¡†
+        CreateWindowMain(); // åˆ›å»ºWindowMainç•Œé¢ï¼Œè°ƒç”¨å…¶å®ƒç•Œé¢çš„Createæ–¹æ³•
+		//é”€æ¯ä»»åŠ¡
 		DeleteUpdateTask();
         // USER END
         break;

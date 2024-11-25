@@ -123,13 +123,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   // USER START (Optionally insert additional variables)
 	//printf("pMsg");
 	/*
-	//Ö»ÒªÆÁÄ»ÓĞ´¥Ãş£¬ÊÂ¼ş¾Í»áÍ¨¹ı_cbDialogÀ´´¦Àí
-	cur_brightness = lcd_get_backlight_by_pwm(); //»ñÈ¡µ±Ç°±³¹âÖµ
-	//Ö»ÒªÆÁÄ»±³¹âÁÁ¶ÈÊÇ0£¬¾Í²»´¦ÀíÈÎºÎÊÂ¼ş£¬¶øÊÇ½«ÆÁÄ»±³¹âÉèÖÃµ½Ï¢ÆÁÖ®Ç°µÄÖµ
+	//åªè¦å±å¹•æœ‰è§¦æ‘¸ï¼Œäº‹ä»¶å°±ä¼šé€šè¿‡_cbDialogæ¥å¤„ç†
+	cur_brightness = lcd_get_backlight_by_pwm(); //è·å–å½“å‰èƒŒå…‰å€¼
+	//åªè¦å±å¹•èƒŒå…‰äº®åº¦æ˜¯0ï¼Œå°±ä¸å¤„ç†ä»»ä½•äº‹ä»¶ï¼Œè€Œæ˜¯å°†å±å¹•èƒŒå…‰è®¾ç½®åˆ°æ¯å±ä¹‹å‰çš„å€¼
 	if(0 == cur_brightness && DefaultProc){
-		lcd_set_backlight_by_pwm(last_brightness); // ÉèÖÃÕ¼¿Õ±ÈÎªÏ¢ÆÁÖ®Ç°µÄÖµ£¬¿ªÆô±³¹â
+		lcd_set_backlight_by_pwm(last_brightness); // è®¾ç½®å ç©ºæ¯”ä¸ºæ¯å±ä¹‹å‰çš„å€¼ï¼Œå¼€å¯èƒŒå…‰
 		printf("pMsg backlight on");
-		return ;  //²»´¦ÀíÈÎºÎ°´Å¥µÄÏìÓ¦
+		return ;  //ä¸å¤„ç†ä»»ä½•æŒ‰é’®çš„å“åº”
 	}
 	*/
   // USER END
@@ -150,20 +150,20 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "LightingMaster");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // ÉèÖÃ×ÖÌå
-    TEXT_SetText(hItem, "Ö÷µÆ");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // ÉèÖÃÎÄ±¾¶ÔÆë·½Ê½£¨¿ÉÑ¡£©
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
+    TEXT_SetText(hItem, "ä¸»ç¯");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    //WM_InvalidateWindow(hItem);  // Ç¿ÖÆË¢ĞÂ´°¿Ú
+    //WM_InvalidateWindow(hItem);  // å¼ºåˆ¶åˆ·æ–°çª—å£
     //
     // Initialization of 'Text1'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "SpotLight");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // ÉèÖÃ×ÖÌå
-    TEXT_SetText(hItem, "ÉäµÆ");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // ÉèÖÃÎÄ±¾¶ÔÆë·½Ê½£¨¿ÉÑ¡£©
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
+    TEXT_SetText(hItem, "å°„ç¯");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     //
     // Initialization of 'Text2'
@@ -171,9 +171,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "temp");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // ÉèÖÃ×ÖÌå
-    TEXT_SetText(hItem, "ÎÂ¶È");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // ÉèÖÃÎÄ±¾¶ÔÆë·½Ê½£¨¿ÉÑ¡£©
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
+    TEXT_SetText(hItem, "æ¸©åº¦");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     //
     // Initialization of 'Text3'
@@ -181,9 +181,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_3);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "humidity");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // ÉèÖÃ×ÖÌå
-    TEXT_SetText(hItem, "Êª¶È");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // ÉèÖÃÎÄ±¾¶ÔÆë·½Ê½£¨¿ÉÑ¡£©
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
+    TEXT_SetText(hItem, "æ¹¿åº¦");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
             //
     // Initialization of 'Text4'
@@ -191,9 +191,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "brightness");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // ÉèÖÃ×ÖÌå
-    TEXT_SetText(hItem, "ÁÁ¶È");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // ÉèÖÃÎÄ±¾¶ÔÆë·½Ê½£¨¿ÉÑ¡£©
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
+    TEXT_SetText(hItem, "äº®åº¦");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     //
     // Initialization of 'Text5'
@@ -201,9 +201,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_5);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "Fan");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // ÉèÖÃ×ÖÌå
-    TEXT_SetText(hItem, "·çÉÈ");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // ÉèÖÃÎÄ±¾¶ÔÆë·½Ê½£¨¿ÉÑ¡£©
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
+    TEXT_SetText(hItem, "é£æ‰‡");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
             //
     // Initialization of 'Text6'
@@ -211,9 +211,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_6);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "Alarm");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // ÉèÖÃ×ÖÌå
-    TEXT_SetText(hItem, "¾¯±¨");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // ÉèÖÃÎÄ±¾¶ÔÆë·½Ê½£¨¿ÉÑ¡£©
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
+    TEXT_SetText(hItem, "è­¦æŠ¥");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     //
     // Initialization of 'Text7'
@@ -221,13 +221,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_7);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "TurnOff");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // ÉèÖÃ×ÖÌå
-    TEXT_SetText(hItem, "±³¹â");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // ÉèÖÃÎÄ±¾¶ÔÆë·½Ê½£¨¿ÉÑ¡£©
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
+    TEXT_SetText(hItem, "èƒŒå…‰");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
 		
 		
-    // ¸ù¾İ¿Õ¼äID,»ñÈ¡¿Õ¼ä¾ä±ú
+    // æ ¹æ®ç©ºé—´ID,è·å–ç©ºé—´å¥æŸ„
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
     //
 	// Initialization of 'Button_LightingMaster'
@@ -250,9 +250,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 	// Initialization of 'Button_Humidity'
 	//
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
-    // ÉèÖÃ°´Å¥Î´°´ÏÂÊ±£¬ÏÔÊ¾ÎÂ¶ÈÍ¼Æ¬
+    // è®¾ç½®æŒ‰é’®æœªæŒ‰ä¸‹æ—¶ï¼Œæ˜¾ç¤ºæ¸©åº¦å›¾ç‰‡
 	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmHumidity);
-	// ÉèÖÃ°´¼ü°´ÏÂÊ±£¬ÏÔÊ¾À¶É«Í¼Æ¬
+	// è®¾ç½®æŒ‰é”®æŒ‰ä¸‹æ—¶ï¼Œæ˜¾ç¤ºè“è‰²å›¾ç‰‡
 	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmblue);
 	//
 	// Initialization of 'Button_Brightnesss'
@@ -294,8 +294,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
-		CreateLightingMaster(); // ´´½¨LightingMaster½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
+        GUI_EndDialog(pMsg->hWin, 0);  //ç»“æŸå¯¹è¯æ¡†
+		CreateLightingMaster(); // åˆ›å»ºLightingMasterç•Œé¢ï¼Œè°ƒç”¨å…¶å®ƒç•Œé¢çš„Createæ–¹æ³•
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -310,8 +310,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
-        CreateSpotlight(); // ´´½¨Spotlight½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
+        GUI_EndDialog(pMsg->hWin, 0);  //ç»“æŸå¯¹è¯æ¡†
+        CreateSpotlight(); // åˆ›å»ºSpotlightç•Œé¢ï¼Œè°ƒç”¨å…¶å®ƒç•Œé¢çš„Createæ–¹æ³•
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -326,8 +326,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
-        CreateTemperature(); // ´´½¨Temperature½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
+        GUI_EndDialog(pMsg->hWin, 0);  //ç»“æŸå¯¹è¯æ¡†
+        CreateTemperature(); // åˆ›å»ºTemperatureç•Œé¢ï¼Œè°ƒç”¨å…¶å®ƒç•Œé¢çš„Createæ–¹æ³•
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -342,8 +342,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
-        CreateHumidity(); // ´´½¨Humidity½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
+        GUI_EndDialog(pMsg->hWin, 0);  //ç»“æŸå¯¹è¯æ¡†
+        CreateHumidity(); // åˆ›å»ºHumidityç•Œé¢ï¼Œè°ƒç”¨å…¶å®ƒç•Œé¢çš„Createæ–¹æ³•
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -358,8 +358,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
-        CreateBrightnesss(); // ´´½¨Brightnesss½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
+        GUI_EndDialog(pMsg->hWin, 0);  //ç»“æŸå¯¹è¯æ¡†
+        CreateBrightnesss(); // åˆ›å»ºBrightnesssç•Œé¢ï¼Œè°ƒç”¨å…¶å®ƒç•Œé¢çš„Createæ–¹æ³•
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -374,8 +374,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
-		CreateFan(); // ´´½¨Fan½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
+        GUI_EndDialog(pMsg->hWin, 0);  //ç»“æŸå¯¹è¯æ¡†
+		CreateFan(); // åˆ›å»ºFanç•Œé¢ï¼Œè°ƒç”¨å…¶å®ƒç•Œé¢çš„Createæ–¹æ³•
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -390,8 +390,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
-        CreateAlarm(); // ´´½¨Alarm½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
+        GUI_EndDialog(pMsg->hWin, 0);  //ç»“æŸå¯¹è¯æ¡†
+        CreateAlarm(); // åˆ›å»ºAlarmç•Œé¢ï¼Œè°ƒç”¨å…¶å®ƒç•Œé¢çš„Createæ–¹æ³•
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -406,7 +406,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-				GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
+				GUI_EndDialog(pMsg->hWin, 0);  //ç»“æŸå¯¹è¯æ¡†
         CreateTurnOff();
 
         // USER END

@@ -52,9 +52,9 @@ extern GUI_CONST_STORAGE GUI_BITMAP bmMainPagePressed;
 extern GUI_CONST_STORAGE GUI_FONT GUI_Fontfont;
 static int status = 0;
 
-static uint16_t R_slider = 0;  //±£´æµ±Ç°R»¬¿éÖµ
-static uint16_t G_slider = 0;  //±£´æµ±Ç°G»¬¿éÖµ
-static uint16_t B_slider = 0;  //±£´æµ±Ç°B»¬¿éÖµ
+static uint16_t R_slider = 0;  //ä¿å­˜å½“å‰Ræ»‘å—å€¼
+static uint16_t G_slider = 0;  //ä¿å­˜å½“å‰Gæ»‘å—å€¼
+static uint16_t B_slider = 0;  //ä¿å­˜å½“å‰Bæ»‘å—å€¼
 static char cmd[35] = {0};
 
 static uint8_t RGBchanged = 0;
@@ -103,8 +103,8 @@ static TaskHandle_t xUpdateTaskHandle;
 static void UpdateTextTask(void *pvParameters) {
     WM_HWIN hItem = (WM_HWIN)pvParameters;
     while (1) {
-		if(RGBchanged){  //Ö»ÓÐÔÚµÆ¹â¿ØÖÆ¿ª¹ØºÍRBG»¬¿é»¬¶¯ºó²ÅÉèÖÃ²¢Ç¿ÖÆË¢ÐÂ¿Ø¼þ
-			// ¸ñÊ½»¯×Ö·û´®²¢ÉèÖÃÎÄ±¾
+		if(RGBchanged){  //åªæœ‰åœ¨ç¯å…‰æŽ§åˆ¶å¼€å…³å’ŒRBGæ»‘å—æ»‘åŠ¨åŽæ‰è®¾ç½®å¹¶å¼ºåˆ¶åˆ·æ–°æŽ§ä»¶
+			// æ ¼å¼åŒ–å­—ç¬¦ä¸²å¹¶è®¾ç½®æ–‡æœ¬
 			if(R_slider || G_slider || B_slider){
 				status = 1;
 				BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmLightingMasterOn);
@@ -112,12 +112,12 @@ static void UpdateTextTask(void *pvParameters) {
 				status = 0;
 				BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmLightingMasterOff);
 			}
-			// Ç¿ÖÆË¢ÐÂ¿Ø¼þ
+			// å¼ºåˆ¶åˆ·æ–°æŽ§ä»¶
 			WM_InvalidateWindow(hItem);
 			RGBchanged = 0;
 		}
 		
-        // ÑÓÊ±200ms
+        // å»¶æ—¶200ms
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
@@ -153,13 +153,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
     //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
     //TEXT_SetText(hItem, "LightingMaster");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // ÉèÖÃ×ÖÌå
-    TEXT_SetText(hItem, "Ö÷µÆ");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // ÉèÖÃÎÄ±¾¶ÔÆë·½Ê½£¨¿ÉÑ¡£©
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // è®¾ç½®å­—ä½“
+    TEXT_SetText(hItem, "ä¸»ç¯");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // è®¾ç½®æ–‡æœ¬å¯¹é½æ–¹å¼ï¼ˆå¯é€‰ï¼‰
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    //WM_InvalidateWindow(hItem);  // Ç¿ÖÆË¢ÐÂ´°¿Ú
+    //WM_InvalidateWindow(hItem);  // å¼ºåˆ¶åˆ·æ–°çª—å£
     // USER START (Optionally insert additional code for further widget initialization)
-	// ¸ù¾Ý¿Õ¼äID,»ñÈ¡¿Õ¼ä¾ä±ú
+	// æ ¹æ®ç©ºé—´ID,èŽ·å–ç©ºé—´å¥æŸ„
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
     //
 	// Initialization of 'Button_LightingMaster'
@@ -171,7 +171,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     }else{
         BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmLightingMasterOff);
     }
-	// ´´½¨¸üÐÂÈÎÎñ£¬´«µÝID_BUTTON_0¿Ø¼þ¾ä±ú
+	// åˆ›å»ºæ›´æ–°ä»»åŠ¡ï¼Œä¼ é€’ID_BUTTON_0æŽ§ä»¶å¥æŸ„
     xTaskCreate(UpdateTextTask, "UpdateTextTask", 256, (void*)hItem, tskIDLE_PRIORITY + 1, &xUpdateTaskHandle);
 	
 
@@ -234,7 +234,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
 		status = !status;
         if(status){
-            //BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOn); //Ìæ»»ÎªÊ¹ÓÃ¸üÐÂÈÎÎñ¸üÐÂ°´Å¥Í¼Æ¬
+            //BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOn); //æ›¿æ¢ä¸ºä½¿ç”¨æ›´æ–°ä»»åŠ¡æ›´æ–°æŒ‰é’®å›¾ç‰‡
             //light up
 			//HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
 			//ESP8266_sendBroadcastCmd("MasterLight_ON&R=255&G=255&B=255");
@@ -255,7 +255,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			SLIDER_SetValue(hItem, B_slider);
 			
         }else{
-            //BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOff); //Ìæ»»ÎªÊ¹ÓÃ¸üÐÂÈÎÎñ¸üÐÂ°´Å¥Í¼Æ¬
+            //BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOff); //æ›¿æ¢ä¸ºä½¿ç”¨æ›´æ–°ä»»åŠ¡æ›´æ–°æŒ‰é’®å›¾ç‰‡
             //light off
 			R_slider = 0;
 			G_slider = 0;
@@ -289,10 +289,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        //·µ»ØÖ÷Ò³
-        GUI_EndDialog(pMsg->hWin, 0);  //½áÊø¶Ô»°¿ò
-        CreateWindowMain(); // ´´½¨WindowMain½çÃæ£¬µ÷ÓÃÆäËü½çÃæµÄCreate·½·¨
-	  	//Ïú»ÙÈÎÎñ
+        //è¿”å›žä¸»é¡µ
+        GUI_EndDialog(pMsg->hWin, 0);  //ç»“æŸå¯¹è¯æ¡†
+        CreateWindowMain(); // åˆ›å»ºWindowMainç•Œé¢ï¼Œè°ƒç”¨å…¶å®ƒç•Œé¢çš„Createæ–¹æ³•
+	  	//é”€æ¯ä»»åŠ¡
 		DeleteUpdateTask();
         // USER END
         break;
@@ -311,7 +311,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
 		//printf("released\n");
 	  /*
-		//ÕâÖÖ·½Ê½»áµ¼ÖÂ³ÌÐò±¼À£
+		//è¿™ç§æ–¹å¼ä¼šå¯¼è‡´ç¨‹åºå¥”æºƒ
 		if(R_slider){
 			status = 1;
 			BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOn);

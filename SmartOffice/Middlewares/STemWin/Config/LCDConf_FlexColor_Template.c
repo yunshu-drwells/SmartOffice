@@ -174,44 +174,44 @@ static void LcdReadDataMultiple(U16 * pData, int NumItems) {
 */
 void LCD_X_Config(void)
 {
-	GUI_DEVICE_CreateAndLink(&GUIDRV_Template_API, GUICC_M565, 0, 0); /* ´´½¨ÏÔÊ¾Çı¶¯Æ÷¼ş */
+	GUI_DEVICE_CreateAndLink(&GUIDRV_Template_API, GUICC_M565, 0, 0); /* åˆ›å»ºæ˜¾ç¤ºé©±åŠ¨å™¨ä»¶ */
 	LCD_SetSizeEx(0, lcddev.width, lcddev.height);
 	LCD_SetVSizeEx(0, lcddev.width, lcddev.height);
 
 	
-	/* ÅĞ¶Ïµç×èÆÁ»¹ÊÇµçÈİÆÁ */
+	/* åˆ¤æ–­ç”µé˜»å±è¿˜æ˜¯ç”µå®¹å± */
 	if ((tp_dev.touchtype & 0x80) == 0)
 	{
-		/* ÆäËûÆÁÄ»È«²¿Ä¬ÈÏÎª2.8´ç 320X240 */
-		if (lcddev.dir == 0)        /* ÊúÆÁ */
+		/* å…¶ä»–å±å¹•å…¨éƒ¨é»˜è®¤ä¸º2.8å¯¸ 320X240 */
+		if (lcddev.dir == 0)        /* ç«–å± */
 		{
 			GUI_TOUCH_SetOrientation(GUI_MIRROR_X);
 			GUI_TOUCH_Calibrate(GUI_COORD_X, 0, lcddev.width, 155, 3903);
 			GUI_TOUCH_Calibrate(GUI_COORD_Y, 0, lcddev.height, 188, 3935);
 		}
-		else                        /* ºáÆÁ */
+		else                        /* æ¨ªå± */
 		{
 			GUI_TOUCH_SetOrientation(GUI_SWAP_XY);
 			GUI_TOUCH_Calibrate(GUI_COORD_X, 0, lcddev.width, 188, 3903);
 			GUI_TOUCH_Calibrate(GUI_COORD_Y, 0, lcddev.height, 155, 3935);
 		}
 	}
-	else                            /* µçÈİÆÁ */
+	else                            /* ç”µå®¹å± */
 	{
-		if (lcddev.id == 0X1963)    /* 1963Îª7´çÆÁ 800*480 */
+		if (lcddev.id == 0X1963)    /* 1963ä¸º7å¯¸å± 800*480 */
 		{
 			/* 6368 3816 */
 			/* GUI_TOUCH_SetOrientation(GUI_SWAP_XY|GUI_MIRROR_Y); */
 			GUI_TOUCH_Calibrate(GUI_COORD_X, 0, 800, 0, 799);
 			GUI_TOUCH_Calibrate(GUI_COORD_Y, 0, 480, 0, 479);
 		}
-		else if (lcddev.id == 0X5310 || lcddev.id == 0X6804) /* 0X5510 0X6804Îª3.5´ç 320x480 */
+		else if (lcddev.id == 0X5310 || lcddev.id == 0X6804) /* 0X5510 0X6804ä¸º3.5å¯¸ 320x480 */
 		{
-			if (lcddev.dir == 0)    /* ÊúÆÁ */
+			if (lcddev.dir == 0)    /* ç«–å± */
 			{
 				GUI_TOUCH_SetOrientation(GUI_MIRROR_X);
 			}
-			else                    /* ºáÆÁ*/
+			else                    /* æ¨ªå±*/
 			{
 				GUI_TOUCH_SetOrientation(GUI_SWAP_XY);
 			}

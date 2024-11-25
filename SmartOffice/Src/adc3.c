@@ -2,93 +2,93 @@
 #include "delay.h"
 
 
-ADC_HandleTypeDef g_adc3_handle;        /* ADC¾ä±ú */
+ADC_HandleTypeDef g_adc3_handle;        /* ADCå¥æŸ„ */
 
 /********************************************************************/
 /**
- * @brief       ADC3³õÊ¼»¯º¯Êı
- *   @note      ±¾º¯ÊıÖ§³ÖADC1/ADC2ÈÎÒâÍ¨µÀ, µ«ÊÇ²»Ö§³ÖADC3
- *              ÎÒÃÇÊ¹ÓÃ12Î»¾«¶È, ADC²ÉÑùÊ±ÖÓ=21M, ×ª»»Ê±¼äÎª: ²ÉÑùÖÜÆÚ + 12.5¸öADCÖÜÆÚ
- *              ÉèÖÃ×î´ó²ÉÑùÖÜÆÚ: 239.5, Ôò×ª»»Ê±¼ä = 252 ¸öADCÖÜÆÚ = 21us
- * @param       ÎŞ
- * @retval      ÎŞ
+ * @brief       ADC3åˆå§‹åŒ–å‡½æ•°
+ *   @note      æœ¬å‡½æ•°æ”¯æŒADC1/ADC2ä»»æ„é€šé“, ä½†æ˜¯ä¸æ”¯æŒADC3
+ *              æˆ‘ä»¬ä½¿ç”¨12ä½ç²¾åº¦, ADCé‡‡æ ·æ—¶é’Ÿ=21M, è½¬æ¢æ—¶é—´ä¸º: é‡‡æ ·å‘¨æœŸ + 12.5ä¸ªADCå‘¨æœŸ
+ *              è®¾ç½®æœ€å¤§é‡‡æ ·å‘¨æœŸ: 239.5, åˆ™è½¬æ¢æ—¶é—´ = 252 ä¸ªADCå‘¨æœŸ = 21us
+ * @param       æ— 
+ * @retval      æ— 
  */
 void adc3_init(void)
 {
-    ADC3_CHY_CLK_ENABLE();  /* ADCÊ±ÖÓÊ¹ÄÜ */
+    ADC3_CHY_CLK_ENABLE();  /* ADCæ—¶é’Ÿä½¿èƒ½ */
 
     g_adc3_handle.Instance = ADC_ADCX;
-    g_adc3_handle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV4;   /* 4·ÖÆµ£¬ADCCLK=PCLK2/4=84/4=21MHz */
-    g_adc3_handle.Init.Resolution = ADC_RESOLUTION12b;          /* 12Î»Ä£Ê½ */
-    g_adc3_handle.Init.DataAlign = ADC_DATAALIGN_RIGHT;         /* ÓÒ¶ÔÆë */
-    g_adc3_handle.Init.ScanConvMode = DISABLE;                  /* ·ÇÉ¨ÃèÄ£Ê½ */
-    g_adc3_handle.Init.EOCSelection = DISABLE;                  /* ¹Ø±ÕEOCÖĞ¶Ï */
+    g_adc3_handle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV4;   /* 4åˆ†é¢‘ï¼ŒADCCLK=PCLK2/4=84/4=21MHz */
+    g_adc3_handle.Init.Resolution = ADC_RESOLUTION12b;          /* 12ä½æ¨¡å¼ */
+    g_adc3_handle.Init.DataAlign = ADC_DATAALIGN_RIGHT;         /* å³å¯¹é½ */
+    g_adc3_handle.Init.ScanConvMode = DISABLE;                  /* éæ‰«ææ¨¡å¼ */
+    g_adc3_handle.Init.EOCSelection = DISABLE;                  /* å…³é—­EOCä¸­æ–­ */
 
-    g_adc3_handle.Init.ContinuousConvMode = DISABLE;            /* ¹Ø±ÕÁ¬Ğø×ª»» */
-    g_adc3_handle.Init.NbrOfConversion = 1;                     /* 1¸ö×ª»»ÔÚ¹æÔòĞòÁĞÖĞ Ò²¾ÍÊÇÖ»×ª»»¹æÔòĞòÁĞ1 */
-    g_adc3_handle.Init.DiscontinuousConvMode = DISABLE;         /* ½ûÖ¹²»Á¬Ğø²ÉÑùÄ£Ê½ */
-    g_adc3_handle.Init.NbrOfDiscConversion = 0;                 /* ²»Á¬Ğø²ÉÑùÍ¨µÀÊıÎª0 */
-    g_adc3_handle.Init.ExternalTrigConv = ADC_SOFTWARE_START;   /* Èí¼ş´¥·¢ */
-    g_adc3_handle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;    /* Ê¹ÓÃÈí¼ş´¥·¢ */
-    HAL_ADC_Init(&g_adc3_handle);   /* ³õÊ¼»¯ */
+    g_adc3_handle.Init.ContinuousConvMode = DISABLE;            /* å…³é—­è¿ç»­è½¬æ¢ */
+    g_adc3_handle.Init.NbrOfConversion = 1;                     /* 1ä¸ªè½¬æ¢åœ¨è§„åˆ™åºåˆ—ä¸­ ä¹Ÿå°±æ˜¯åªè½¬æ¢è§„åˆ™åºåˆ—1 */
+    g_adc3_handle.Init.DiscontinuousConvMode = DISABLE;         /* ç¦æ­¢ä¸è¿ç»­é‡‡æ ·æ¨¡å¼ */
+    g_adc3_handle.Init.NbrOfDiscConversion = 0;                 /* ä¸è¿ç»­é‡‡æ ·é€šé“æ•°ä¸º0 */
+    g_adc3_handle.Init.ExternalTrigConv = ADC_SOFTWARE_START;   /* è½¯ä»¶è§¦å‘ */
+    g_adc3_handle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;    /* ä½¿ç”¨è½¯ä»¶è§¦å‘ */
+    HAL_ADC_Init(&g_adc3_handle);   /* åˆå§‹åŒ– */
 }
 
 /**
- * @brief       ÉèÖÃADCÍ¨µÀ²ÉÑùÊ±¼ä
- * @param       adcx : adc¾ä±úÖ¸Õë,ADC_HandleTypeDef
- * @param       ch   : Í¨µÀºÅ, ADC_CHANNEL_0~ADC_CHANNEL_17
- * @param       stime: ²ÉÑùÊ±¼ä  0~7, ¶ÔÓ¦¹ØÏµÎª:
- *   @arg       ADC_SAMPLETIME_3CYCLES,  3¸öADCÊ±ÖÓÖÜÆÚ        ADC_SAMPLETIME_15CYCLES, 15¸öADCÊ±ÖÓÖÜÆÚ
- *   @arg       ADC_SAMPLETIME_28CYCLES, 28¸öADCÊ±ÖÓÖÜÆÚ       ADC_SAMPLETIME_56CYCLES, 56¸öADCÊ±ÖÓÖÜÆÚ
- *   @arg       ADC_SAMPLETIME_84CYCLES, 84¸öADCÊ±ÖÓÖÜÆÚ       ADC_SAMPLETIME_112CYCLES,112¸öADCÊ±ÖÓÖÜÆÚ
- *   @arg       ADC_SAMPLETIME_144CYCLES,144¸öADCÊ±ÖÓÖÜÆÚ      ADC_SAMPLETIME_480CYCLES,480¸öADCÊ±ÖÓÖÜÆÚ
- * @param       rank: ¶àÍ¨µÀ²É¼¯Ê±ĞèÒªÉèÖÃµÄ²É¼¯±àºÅ,
- *              ¼ÙÉèÄã¶¨Òåchannel1µÄrank=1£¬channel2 µÄrank=2£¬
- *              ÄÇÃ´¶ÔÓ¦ÄãÔÚDMA»º´æ¿Õ¼äµÄ±äÁ¿Êı×éAdcDMA[0] ¾ÍiÊÇchannel1µÄ×ª»»½á¹û£¬AdcDMA[1]¾ÍÊÇÍ¨µÀ2µÄ×ª»»½á¹û¡£ 
- *              µ¥Í¨µÀDMAÉèÖÃÎª ADC_REGULAR_RANK_1
- *   @arg       ±àºÅ1~16£ºADC_REGULAR_RANK_1~ADC_REGULAR_RANK_16
- * @retval      ÎŞ
+ * @brief       è®¾ç½®ADCé€šé“é‡‡æ ·æ—¶é—´
+ * @param       adcx : adcå¥æŸ„æŒ‡é’ˆ,ADC_HandleTypeDef
+ * @param       ch   : é€šé“å·, ADC_CHANNEL_0~ADC_CHANNEL_17
+ * @param       stime: é‡‡æ ·æ—¶é—´  0~7, å¯¹åº”å…³ç³»ä¸º:
+ *   @arg       ADC_SAMPLETIME_3CYCLES,  3ä¸ªADCæ—¶é’Ÿå‘¨æœŸ        ADC_SAMPLETIME_15CYCLES, 15ä¸ªADCæ—¶é’Ÿå‘¨æœŸ
+ *   @arg       ADC_SAMPLETIME_28CYCLES, 28ä¸ªADCæ—¶é’Ÿå‘¨æœŸ       ADC_SAMPLETIME_56CYCLES, 56ä¸ªADCæ—¶é’Ÿå‘¨æœŸ
+ *   @arg       ADC_SAMPLETIME_84CYCLES, 84ä¸ªADCæ—¶é’Ÿå‘¨æœŸ       ADC_SAMPLETIME_112CYCLES,112ä¸ªADCæ—¶é’Ÿå‘¨æœŸ
+ *   @arg       ADC_SAMPLETIME_144CYCLES,144ä¸ªADCæ—¶é’Ÿå‘¨æœŸ      ADC_SAMPLETIME_480CYCLES,480ä¸ªADCæ—¶é’Ÿå‘¨æœŸ
+ * @param       rank: å¤šé€šé“é‡‡é›†æ—¶éœ€è¦è®¾ç½®çš„é‡‡é›†ç¼–å·,
+ *              å‡è®¾ä½ å®šä¹‰channel1çš„rank=1ï¼Œchannel2 çš„rank=2ï¼Œ
+ *              é‚£ä¹ˆå¯¹åº”ä½ åœ¨DMAç¼“å­˜ç©ºé—´çš„å˜é‡æ•°ç»„AdcDMA[0] å°±iæ˜¯channel1çš„è½¬æ¢ç»“æœï¼ŒAdcDMA[1]å°±æ˜¯é€šé“2çš„è½¬æ¢ç»“æœã€‚ 
+ *              å•é€šé“DMAè®¾ç½®ä¸º ADC_REGULAR_RANK_1
+ *   @arg       ç¼–å·1~16ï¼šADC_REGULAR_RANK_1~ADC_REGULAR_RANK_16
+ * @retval      æ— 
  */
 void adc3_channel_set(ADC_HandleTypeDef *adc_handle, uint32_t ch,uint32_t rank, uint32_t stime)
 {
-    /* ÅäÖÃ¶ÔÓ¦ADCÍ¨µÀ */
+    /* é…ç½®å¯¹åº”ADCé€šé“ */
     ADC_ChannelConfTypeDef adc_channel;
     adc_channel.Channel = ch;
     adc_channel.Rank = rank;
     adc_channel.SamplingTime = stime;
-    HAL_ADC_ConfigChannel( adc_handle, &adc_channel);    /* ÉèÖÃADCX¶ÔÍ¨µÀ²ÉÑùÊ±¼ä */
+    HAL_ADC_ConfigChannel( adc_handle, &adc_channel);    /* è®¾ç½®ADCXå¯¹é€šé“é‡‡æ ·æ—¶é—´ */
 }
 
 /**
- * @brief       »ñµÃADC×ª»»ºóµÄ½á¹û
- * @param       ch: Í¨µÀÖµ 0~17£¬È¡Öµ·¶Î§Îª£ºADC_CHANNEL_0~ADC_CHANNEL_17
- * @retval      ÎŞ
+ * @brief       è·å¾—ADCè½¬æ¢åçš„ç»“æœ
+ * @param       ch: é€šé“å€¼ 0~17ï¼Œå–å€¼èŒƒå›´ä¸ºï¼šADC_CHANNEL_0~ADC_CHANNEL_17
+ * @retval      æ— 
  */
 uint32_t adc3_get_result(uint32_t ch)
 {
-    adc3_channel_set(&g_adc3_handle , ch, 1, ADC_SAMPLETIME_480CYCLES);    /* ÉèÖÃÍ¨µÀ£¬ĞòÁĞºÍ²ÉÑùÊ±¼ä */
-    HAL_ADC_Start(&g_adc3_handle);                            /* ¿ªÆôADC */
-    HAL_ADC_PollForConversion(&g_adc3_handle, 10);            /* ÂÖÑ¯×ª»» */
+    adc3_channel_set(&g_adc3_handle , ch, 1, ADC_SAMPLETIME_480CYCLES);    /* è®¾ç½®é€šé“ï¼Œåºåˆ—å’Œé‡‡æ ·æ—¶é—´ */
+    HAL_ADC_Start(&g_adc3_handle);                            /* å¼€å¯ADC */
+    HAL_ADC_PollForConversion(&g_adc3_handle, 10);            /* è½®è¯¢è½¬æ¢ */
 
-    return (uint16_t)HAL_ADC_GetValue(&g_adc3_handle);        /* ·µ»Ø×î½üÒ»´ÎADC1¹æÔò×éµÄ×ª»»½á¹û */
+    return (uint16_t)HAL_ADC_GetValue(&g_adc3_handle);        /* è¿”å›æœ€è¿‘ä¸€æ¬¡ADC1è§„åˆ™ç»„çš„è½¬æ¢ç»“æœ */
 }
 
 /**
- * @brief       »ñÈ¡Í¨µÀchµÄ×ª»»Öµ,È¡times´Î,È»ºóÆ½¾ù
- * @param       ch      : Í¨µÀºÅ, 0~17
- * @param       times   : »ñÈ¡´ÎÊı
- * @retval      Í¨µÀchµÄtimes´Î×ª»»½á¹ûÆ½¾ùÖµ
+ * @brief       è·å–é€šé“chçš„è½¬æ¢å€¼,å–timesæ¬¡,ç„¶åå¹³å‡
+ * @param       ch      : é€šé“å·, 0~17
+ * @param       times   : è·å–æ¬¡æ•°
+ * @retval      é€šé“chçš„timesæ¬¡è½¬æ¢ç»“æœå¹³å‡å€¼
  */
 uint32_t adc3_get_result_average(uint32_t ch, uint8_t times)
 {
     uint32_t temp_val = 0;
     uint8_t t;
 
-    for (t = 0; t < times; t++)     /* »ñÈ¡times´ÎÊı¾İ */
+    for (t = 0; t < times; t++)     /* è·å–timesæ¬¡æ•°æ® */
     {
         temp_val += adc3_get_result(ch);
         delay_ms(5);
     }
 
-    return temp_val / times;        /* ·µ»ØÆ½¾ùÖµ */
+    return temp_val / times;        /* è¿”å›å¹³å‡å€¼ */
 }

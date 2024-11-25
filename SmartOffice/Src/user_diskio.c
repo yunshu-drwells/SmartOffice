@@ -41,15 +41,15 @@
 /* Private define ------------------------------------------------------------*/
 #include "norflash.h"
 /**
- * ����25Q128 FLASHоƬ, ���ǹ涨ǰ 9M ��FATFSʹ��, 9-12MB��*.binʹ��
- * 12M�Ժ�����ֿ�, 3���ֿ� + UNIGBK.BIN, �ܴ�С3.09M, ��ռ��15.09M
- * 15.09M�Ժ�Ĵ洢�ռ��ҿ������ʹ��. 
+ * 对于25Q128 FLASH芯片, 我们规定前 9M 给FATFS使用, 9-12MB给*.bin使用
+ * 12M以后紧跟字库, 3个字库 + UNIGBK.BIN, 总大小3.09M, 共占用15.09M
+ * 15.09M以后的存储空间大家可以随便使用. 
  */
 
 #define SPI_FLASH_SECTOR_SIZE   512
-#define SPI_FLASH_SECTOR_COUNT  9 * 1024 * 2   /* 25Q128, ǰ9M�ֽڸ�FATFSռ�� */
-#define SPI_FLASH_BLOCK_SIZE    8               /* 每个BLOCK�?8个扇�? */
-#define SPI_FLASH_FATFS_BASE    0               /* FATFS 在外部FLASH的起始地�? �?0�?�? */
+#define SPI_FLASH_SECTOR_COUNT  9 * 1024 * 2   /* 25Q128, 前9M字节给FATFS占用 */
+#define SPI_FLASH_BLOCK_SIZE    8               /* 每个BLOCK 8个扇区 */
+#define SPI_FLASH_FATFS_BASE    0               /* FATFS 在外部FLASH的起始地址 */
 /* Private variables ---------------------------------------------------------*/
 /* Disk status */
 static volatile DSTATUS Stat = STA_NOINIT;
