@@ -1254,6 +1254,11 @@
               <FileType>1</FileType>
               <FilePath>..\Middlewares\STemWin\Application\Window0DLG.c</FilePath>
             </File>
+            <File>
+              <FileName>MagnetismLock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\STemWin\Application\sub\MagnetismLock.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

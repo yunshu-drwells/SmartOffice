@@ -160,7 +160,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		//
 		// Initialization of 'Text0'
 		//
-	  /*    
+  
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
 		//TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
 		//TEXT_SetText(hItem, "LightingMaster");
@@ -169,20 +169,20 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		TEXT_SetText(hItem, "门锁");
 		TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
 		TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-	  */
+
 		//WM_InvalidateWindow(hItem);  // 强制刷新窗口
 		//
 		// Initialization of 'Text1'
 		//
-		/*
+
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
 		//TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
 		//TEXT_SetText(hItem, "SpotLight");
 		TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
-		TEXT_SetText(hItem, "无线");
+		TEXT_SetText(hItem, "网络");
 		TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
 		TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-		*/
+
 		
 		// 根据空间ID,获取空间句柄
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
@@ -213,6 +213,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			break;
 		  case WM_NOTIFICATION_RELEASED:
 			// USER START (Optionally insert code for reacting on notification message)
+			GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
+	        currentDialog = 0;  //已经不是主页了，防止滑动检测误判
+		    CreateMagnetismLock(); // 创建LightingMaster界面，调用其它界面的Create方法
 			// USER END
 			break;
 		  // USER START (Optionally insert additional code for further notification handling)

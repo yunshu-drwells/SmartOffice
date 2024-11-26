@@ -168,6 +168,7 @@
 "stemwin_port_freertos\turnoffdlg.o"
 "stemwin_port_freertos\window1dlg.o"
 "stemwin_port_freertos\window0dlg.o"
+"stemwin_port_freertos\magnetismlock.o"
 "stemwin_port_freertos\diskio.o"
 "stemwin_port_freertos\ff.o"
 "stemwin_port_freertos\ff_gen_drv.o"
