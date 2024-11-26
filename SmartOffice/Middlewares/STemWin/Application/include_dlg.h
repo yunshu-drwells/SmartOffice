@@ -16,6 +16,7 @@ extern WM_HWIN CreateAlarm(void);
 extern WM_HWIN CreateTurnOff(void);
 extern WM_HWIN CreateTurnOff(void);
 extern WM_HWIN CreateMagnetismLock(void);
+extern WM_HWIN CreateNetworkWindow(void);
 
 WM_HWIN CreateWindow0Main(void);
 WM_HWIN CreateWindow1Main(void);

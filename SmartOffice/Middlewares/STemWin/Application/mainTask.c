@@ -150,6 +150,7 @@ void MainTask(void)
 	
 	//CreateWindowMain();
 	
+
 	hWin1 = CreateWindow0Main();	
     hWin2 = CreateWindow1Main();
 	WM_ShowWindow(hWin1);  //显示主页1
@@ -157,6 +158,10 @@ void MainTask(void)
 	//开启一个任务用于获取屏幕滑动状态
 	// 创建获取屏幕滑动状态的任务
     xTaskCreate(ReadTouchScreenTask, "getPositationTask", 256, 0, tskIDLE_PRIORITY + 1, &xReadTouchScreenTaskHandle);
+
+	
+	//CreateNetworkWindow();  //测试网络界面
+	
 	while(1) {
         GUI_Delay(20); //调用GUI_Delay函数延时20MS(最终目的是调用GUI_Exec()函数)
         // 读取屏幕滑动状态并改变界面

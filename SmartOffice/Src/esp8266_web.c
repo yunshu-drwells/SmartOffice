@@ -730,6 +730,8 @@ void test(){
 	//测试wifi
 	//ESP8266_Connect_New_Wifi_ALL(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);
 	ESP8266_Connect_New_Wifi_ALL("Yunshu_Drwells", "yzy@0203yzy@0203");
+	
+	
 }
 
 
