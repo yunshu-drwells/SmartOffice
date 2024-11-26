@@ -245,9 +245,7 @@ void MX_FREERTOS_Init(void) {
   */
 /* USER CODE END Header_WebServer_Task */
 void WebServer_Task(void const * argument)
-{
-    
-                 
+{         
   /* init code for LWIP */
   MX_LWIP_Init();
 

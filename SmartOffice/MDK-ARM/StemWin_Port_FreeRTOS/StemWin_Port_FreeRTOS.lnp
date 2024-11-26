@@ -169,7 +169,7 @@
 "stemwin_port_freertos\window1dlg.o"
 "stemwin_port_freertos\window0dlg.o"
 "stemwin_port_freertos\magnetismlock.o"
-"stemwin_port_freertos\networkdlg.o"
+"stemwin_port_freertos\networkinfodlg.o"
 "stemwin_port_freertos\diskio.o"
 "stemwin_port_freertos\ff.o"
 "stemwin_port_freertos\ff_gen_drv.o"

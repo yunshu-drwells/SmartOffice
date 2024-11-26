@@ -1372,7 +1372,7 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x60266494
 I (../Inc/mymalloc.h)(0x672DEF80)
 I (../Inc/norflash.h)(0x66F16B84)
 I (../Inc/spi.h)(0x673FB87D)
-F (../Src/freertos.c)(0x6746226B)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/LwIP/src/include -I ../Middlewares/Third_Party/LwIP/system -I ../Middlewares/Third_Party/LwIP/src/include/netif/ppp -I ../Middlewares/Third_Party/LwIP/src/include/lwip -I ../Middlewares/Third_Party/LwIP/src/include/lwip/apps -I ../Middlewares/Third_Party/LwIP/src/include/lwip/priv -I ../Middlewares/Third_Party/LwIP/src/include/lwip/prot -I ../Middlewares/Third_Party/LwIP/src/include/netif -I ../Middlewares/Third_Party/LwIP/system/arch -I ..\Middlewares\STemWin\Config -I ..\Middlewares\STemWin\inc -I ..\Middlewares\STemWin\Application -I ../Middlewares/Third_Party/FatFs/src-I.\RTE\_SmartOffice-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.12.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DDATA_IN_ExtSRAM-o stemwin_port_freertos\freertos.o --omf_browse stemwin_port_freertos\freertos.crf --depend stemwin_port_freertos\freertos.d)
+F (../Src/freertos.c)(0x67462BD5)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/LwIP/src/include -I ../Middlewares/Third_Party/LwIP/system -I ../Middlewares/Third_Party/LwIP/src/include/netif/ppp -I ../Middlewares/Third_Party/LwIP/src/include/lwip -I ../Middlewares/Third_Party/LwIP/src/include/lwip/apps -I ../Middlewares/Third_Party/LwIP/src/include/lwip/priv -I ../Middlewares/Third_Party/LwIP/src/include/lwip/prot -I ../Middlewares/Third_Party/LwIP/src/include/netif -I ../Middlewares/Third_Party/LwIP/system/arch -I ..\Middlewares\STemWin\Config -I ..\Middlewares\STemWin\inc -I ..\Middlewares\STemWin\Application -I ../Middlewares/Third_Party/FatFs/src-I.\RTE\_SmartOffice-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.12.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DDATA_IN_ExtSRAM-o stemwin_port_freertos\freertos.o --omf_browse stemwin_port_freertos\freertos.crf --depend stemwin_port_freertos\freertos.d)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x60266494)
 I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x57F606B8)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F606B8)
@@ -8822,7 +8822,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x602664DD)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x602664E1)
 I (../Inc/main.h)(0x673FB87E)
 I (../Inc/ft5206.h)(0x66F14349)
-F (..\Middlewares\STemWin\Application\font\font.c)(0x674624EE)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/LwIP/src/include -I ../Middlewares/Third_Party/LwIP/system -I ../Middlewares/Third_Party/LwIP/src/include/netif/ppp -I ../Middlewares/Third_Party/LwIP/src/include/lwip -I ../Middlewares/Third_Party/LwIP/src/include/lwip/apps -I ../Middlewares/Third_Party/LwIP/src/include/lwip/priv -I ../Middlewares/Third_Party/LwIP/src/include/lwip/prot -I ../Middlewares/Third_Party/LwIP/src/include/netif -I ../Middlewares/Third_Party/LwIP/system/arch -I ..\Middlewares\STemWin\Config -I ..\Middlewares\STemWin\inc -I ..\Middlewares\STemWin\Application -I ../Middlewares/Third_Party/FatFs/src-I.\RTE\_SmartOffice-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.12.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DDATA_IN_ExtSRAM-o stemwin_port_freertos\font.o --omf_browse stemwin_port_freertos\font.crf --depend stemwin_port_freertos\font.d)
+F (..\Middlewares\STemWin\Application\font\font.c)(0x67462BC0)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/LwIP/src/include -I ../Middlewares/Third_Party/LwIP/system -I ../Middlewares/Third_Party/LwIP/src/include/netif/ppp -I ../Middlewares/Third_Party/LwIP/src/include/lwip -I ../Middlewares/Third_Party/LwIP/src/include/lwip/apps -I ../Middlewares/Third_Party/LwIP/src/include/lwip/priv -I ../Middlewares/Third_Party/LwIP/src/include/lwip/prot -I ../Middlewares/Third_Party/LwIP/src/include/netif -I ../Middlewares/Third_Party/LwIP/system/arch -I ..\Middlewares\STemWin\Config -I ..\Middlewares\STemWin\inc -I ..\Middlewares\STemWin\Application -I ../Middlewares/Third_Party/FatFs/src-I.\RTE\_SmartOffice-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.12.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DDATA_IN_ExtSRAM-o stemwin_port_freertos\font.o --omf_browse stemwin_port_freertos\font.crf --depend stemwin_port_freertos\font.d)
 I (..\Middlewares\STemWin\inc\GUI.h)(0x671031C1)
 I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x57F606B8)
 I (..\Middlewares\STemWin\Config\GUIConf.h)(0x6710325A)
@@ -8876,7 +8876,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x57F606B8)
 I (../Inc/usart.h)(0x673FB87D)
 I (../Inc/main.h)(0x673FB87E)
@@ -8976,7 +8976,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (../Inc/main.h)(0x673FB87E)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x602664BA)
 I (../Inc/stm32f4xx_hal_conf.h)(0x673FB87E)
@@ -9065,7 +9065,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F606B8)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x60266494)
@@ -9122,7 +9122,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (../Inc/main.h)(0x673FB87E)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x602664BA)
 I (../Inc/stm32f4xx_hal_conf.h)(0x673FB87E)
@@ -9214,7 +9214,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F606B8)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x60266494)
@@ -9271,7 +9271,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (../Inc/main.h)(0x673FB87E)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x602664BA)
 I (../Inc/stm32f4xx_hal_conf.h)(0x673FB87E)
@@ -9372,7 +9372,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (../Inc/main.h)(0x673FB87E)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x602664BA)
 I (../Inc/stm32f4xx_hal_conf.h)(0x673FB87E)
@@ -9473,7 +9473,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F606B8)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x60266494)
@@ -9530,7 +9530,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (../Inc/lcd.h)(0x67206E0C)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x57F606B8)
 I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h)(0x60266485)
@@ -9576,7 +9576,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x602664DD)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x602664E1)
 I (../Inc/delay.h)(0x6731C13B)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
-F (..\Middlewares\STemWin\Application\Window1DLG.c)(0x674626DE)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/LwIP/src/include -I ../Middlewares/Third_Party/LwIP/system -I ../Middlewares/Third_Party/LwIP/src/include/netif/ppp -I ../Middlewares/Third_Party/LwIP/src/include/lwip -I ../Middlewares/Third_Party/LwIP/src/include/lwip/apps -I ../Middlewares/Third_Party/LwIP/src/include/lwip/priv -I ../Middlewares/Third_Party/LwIP/src/include/lwip/prot -I ../Middlewares/Third_Party/LwIP/src/include/netif -I ../Middlewares/Third_Party/LwIP/system/arch -I ..\Middlewares\STemWin\Config -I ..\Middlewares\STemWin\inc -I ..\Middlewares\STemWin\Application -I ../Middlewares/Third_Party/FatFs/src-I.\RTE\_SmartOffice-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.12.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DDATA_IN_ExtSRAM-o stemwin_port_freertos\window1dlg.o --omf_browse stemwin_port_freertos\window1dlg.crf --depend stemwin_port_freertos\window1dlg.d)
+F (..\Middlewares\STemWin\Application\Window1DLG.c)(0x67462A0F)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/LwIP/src/include -I ../Middlewares/Third_Party/LwIP/system -I ../Middlewares/Third_Party/LwIP/src/include/netif/ppp -I ../Middlewares/Third_Party/LwIP/src/include/lwip -I ../Middlewares/Third_Party/LwIP/src/include/lwip/apps -I ../Middlewares/Third_Party/LwIP/src/include/lwip/priv -I ../Middlewares/Third_Party/LwIP/src/include/lwip/prot -I ../Middlewares/Third_Party/LwIP/src/include/netif -I ../Middlewares/Third_Party/LwIP/system/arch -I ..\Middlewares\STemWin\Config -I ..\Middlewares\STemWin\inc -I ..\Middlewares\STemWin\Application -I ../Middlewares/Third_Party/FatFs/src-I.\RTE\_SmartOffice-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.12.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DDATA_IN_ExtSRAM-o stemwin_port_freertos\window1dlg.o --omf_browse stemwin_port_freertos\window1dlg.crf --depend stemwin_port_freertos\window1dlg.d)
 I (..\Middlewares\STemWin\inc\DIALOG.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\WM.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\GUI_ConfDefaults.h)(0x671031B1)
@@ -9621,7 +9621,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x60266494)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F606B8)
 I (../Inc/FreeRTOSConfig.h)(0x673FB87C)
@@ -9721,7 +9721,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x60266494)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F606B8)
 I (../Inc/FreeRTOSConfig.h)(0x673FB87C)
@@ -9821,7 +9821,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (../Inc/esp8266_web.h)(0x673FBA75)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F606B8)
@@ -9835,7 +9835,7 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x60266494)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x60266494)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x60266494)
-F (..\Middlewares\STemWin\Application\sub\NetworkDLG.c)(0x67462613)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/LwIP/src/include -I ../Middlewares/Third_Party/LwIP/system -I ../Middlewares/Third_Party/LwIP/src/include/netif/ppp -I ../Middlewares/Third_Party/LwIP/src/include/lwip -I ../Middlewares/Third_Party/LwIP/src/include/lwip/apps -I ../Middlewares/Third_Party/LwIP/src/include/lwip/priv -I ../Middlewares/Third_Party/LwIP/src/include/lwip/prot -I ../Middlewares/Third_Party/LwIP/src/include/netif -I ../Middlewares/Third_Party/LwIP/system/arch -I ..\Middlewares\STemWin\Config -I ..\Middlewares\STemWin\inc -I ..\Middlewares\STemWin\Application -I ../Middlewares/Third_Party/FatFs/src-I.\RTE\_SmartOffice-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.12.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DDATA_IN_ExtSRAM-o stemwin_port_freertos\networkdlg.o --omf_browse stemwin_port_freertos\networkdlg.crf --depend stemwin_port_freertos\networkdlg.d)
+F (..\Middlewares\STemWin\Application\sub\NetworkInfoDLG.c)(0x67462C38)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/LwIP/src/include -I ../Middlewares/Third_Party/LwIP/system -I ../Middlewares/Third_Party/LwIP/src/include/netif/ppp -I ../Middlewares/Third_Party/LwIP/src/include/lwip -I ../Middlewares/Third_Party/LwIP/src/include/lwip/apps -I ../Middlewares/Third_Party/LwIP/src/include/lwip/priv -I ../Middlewares/Third_Party/LwIP/src/include/lwip/prot -I ../Middlewares/Third_Party/LwIP/src/include/netif -I ../Middlewares/Third_Party/LwIP/system/arch -I ..\Middlewares\STemWin\Config -I ..\Middlewares\STemWin\inc -I ..\Middlewares\STemWin\Application -I ../Middlewares/Third_Party/FatFs/src-I.\RTE\_SmartOffice-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.12.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="523" -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DDATA_IN_ExtSRAM-o stemwin_port_freertos\networkinfodlg.o --omf_browse stemwin_port_freertos\networkinfodlg.crf --depend stemwin_port_freertos\networkinfodlg.d)
 I (..\Middlewares\STemWin\inc\DIALOG.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\WM.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\GUI_ConfDefaults.h)(0x671031B1)
@@ -9880,7 +9880,7 @@ I (..\Middlewares\STemWin\inc\SWIPELIST.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TEXT.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\TREEVIEW.h)(0x6026648C)
 I (..\Middlewares\STemWin\inc\KNOB.h)(0x6026648C)
-I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67461FFB)
+I (..\Middlewares\STemWin\Application\include_dlg.h)(0x67462965)
 I (../Inc/esp8266_web.h)(0x673FBA75)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F606B8)

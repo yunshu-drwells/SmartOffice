@@ -22,7 +22,6 @@
 * Initial font height:  33                                           *
 * Range disabled:       0000 - FFFF                                  *
 * Read pattern file: E:\源库\SynologyDrive\synSource\学习资料\嵌入式全栈\智慧办公室2\Source\patttern font\font.txt*
-* Read pattern file: E:\源库\SynologyDrive\synSource\学习资料\嵌入式全栈\智慧办公室2\Source\patttern font\font.txt*
 *                                                                    *
 **********************************************************************
 */
@@ -105,6 +104,40 @@ GUI_CONST_STORAGE unsigned char acGUI_Fontfont_4EAE[128] = { /* code 4EAE */
   _______X,XX______,___XXX__,___XXXX_,
   _____XXX,________,____XXXX,XXXXXX__,
   __XXX___,________,________,________,
+  ________,________,________,________};
+
+GUI_CONST_STORAGE unsigned char acGUI_Fontfont_4FE1[128] = { /* code 4FE1 */
+  ________,________,________,________,
+  ________,________,________,________,
+  ________,_X______,_X______,________,
+  ________,XXX_____,__XX____,________,
+  ________,XX______,___XX___,________,
+  ________,XX______,___XX___,________,
+  _______X,X_______,___XX___,___X____,
+  _______X,X_XXXXXX,XXXXXXXX,XXXXX___,
+  _______X,________,________,________,
+  ______XX,________,________,________,
+  ______X_,________,________,_XX_____,
+  _____XXX,X____XXX,XXXXXXXX,XXXX____,
+  _____XXX,________,________,________,
+  ____XXXX,________,________,________,
+  ____X_XX,________,________,________,
+  ___X__XX,________,________,_XX_____,
+  __X___XX,____XXXX,XXXXXXXX,XXXX____,
+  __X___XX,________,________,________,
+  ______XX,________,________,________,
+  ______XX,_____X__,________,__X_____,
+  ______XX,_____XXX,XXXXXXXX,XXXX____,
+  ______XX,_____XX_,________,_XX_____,
+  ______XX,_____XX_,________,_XX_____,
+  ______XX,_____XX_,________,_XX_____,
+  ______XX,_____XX_,________,_XX_____,
+  ______XX,_____XX_,________,_XX_____,
+  ______XX,_____XX_,________,_XX_____,
+  ______XX,_____XXX,XXXXXXXX,XXX_____,
+  ______XX,_____XX_,________,_XX_____,
+  ______XX,_____XX_,________,_XX_____,
+  ______X_,________,________,________,
   ________,________,________,________};
 
 GUI_CONST_STORAGE unsigned char acGUI_Fontfont_5149[128] = { /* code 5149 */
@@ -1127,9 +1160,10 @@ GUI_CONST_STORAGE unsigned char acGUI_Fontfont_98CE[128] = { /* code 98CE */
   _X______,________,________,________,
   ________,________,________,________};
 
-GUI_CONST_STORAGE GUI_CHARINFO GUI_Fontfont_CharInfo[32] = {
+GUI_CONST_STORAGE GUI_CHARINFO GUI_Fontfont_CharInfo[33] = {
    {  32,  32,  4, acGUI_Fontfont_4E3B } /* code 4E3B */
   ,{  32,  32,  4, acGUI_Fontfont_4EAE } /* code 4EAE */
+  ,{  32,  32,  4, acGUI_Fontfont_4FE1 } /* code 4FE1 */
   ,{  32,  32,  4, acGUI_Fontfont_5149 } /* code 5149 */
   ,{  32,  32,  4, acGUI_Fontfont_5217 } /* code 5217 */
   ,{  32,  32,  4, acGUI_Fontfont_540D } /* code 540D */
@@ -1162,212 +1196,219 @@ GUI_CONST_STORAGE GUI_CHARINFO GUI_Fontfont_CharInfo[32] = {
   ,{  32,  32,  4, acGUI_Fontfont_98CE } /* code 98CE */
 };
 
-GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop32 = {
+GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop33 = {
    0x98CE /* first character */
   ,0x98CE /* last character  */
-  ,&GUI_Fontfont_CharInfo[ 31] /* address of first character */
+  ,&GUI_Fontfont_CharInfo[ 32] /* address of first character */
   ,(GUI_CONST_STORAGE GUI_FONT_PROP *)0 /* pointer to next GUI_FONT_PROP */
 };
 
-GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop31 = {
+GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop32 = {
    0x95E8 /* first character */
   ,0x95E8 /* last character  */
+  ,&GUI_Fontfont_CharInfo[ 31] /* address of first character */
+  ,&GUI_Fontfont_Prop33 /* pointer to next GUI_FONT_PROP */
+};
+
+GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop31 = {
+   0x9501 /* first character */
+  ,0x9501 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 30] /* address of first character */
   ,&GUI_Fontfont_Prop32 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop30 = {
-   0x9501 /* first character */
-  ,0x9501 /* last character  */
+   0x8FDE /* first character */
+  ,0x8FDE /* last character  */
   ,&GUI_Fontfont_CharInfo[ 29] /* address of first character */
   ,&GUI_Fontfont_Prop31 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop29 = {
-   0x8FDE /* first character */
-  ,0x8FDE /* last character  */
+   0x8FD4 /* first character */
+  ,0x8FD4 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 28] /* address of first character */
   ,&GUI_Fontfont_Prop30 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop28 = {
-   0x8FD4 /* first character */
-  ,0x8FD4 /* last character  */
+   0x8B66 /* first character */
+  ,0x8B66 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 27] /* address of first character */
   ,&GUI_Fontfont_Prop29 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop27 = {
-   0x8B66 /* first character */
-  ,0x8B66 /* last character  */
+   0x8868 /* first character */
+  ,0x8868 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 26] /* address of first character */
   ,&GUI_Fontfont_Prop28 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop26 = {
-   0x8868 /* first character */
-  ,0x8868 /* last character  */
+   0x80CC /* first character */
+  ,0x80CC /* last character  */
   ,&GUI_Fontfont_CharInfo[ 25] /* address of first character */
   ,&GUI_Fontfont_Prop27 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop25 = {
-   0x80CC /* first character */
-  ,0x80CC /* last character  */
+   0x7F51 /* first character */
+  ,0x7F51 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 24] /* address of first character */
   ,&GUI_Fontfont_Prop26 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop24 = {
-   0x7F51 /* first character */
-  ,0x7F51 /* last character  */
+   0x7EDC /* first character */
+  ,0x7EDC /* last character  */
   ,&GUI_Fontfont_CharInfo[ 23] /* address of first character */
   ,&GUI_Fontfont_Prop25 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop23 = {
-   0x7EDC /* first character */
-  ,0x7EDC /* last character  */
+   0x7EBF /* first character */
+  ,0x7EBF /* last character  */
   ,&GUI_Fontfont_CharInfo[ 22] /* address of first character */
   ,&GUI_Fontfont_Prop24 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop22 = {
-   0x7EBF /* first character */
-  ,0x7EBF /* last character  */
+   0x79F0 /* first character */
+  ,0x79F0 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 21] /* address of first character */
   ,&GUI_Fontfont_Prop23 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop21 = {
-   0x79F0 /* first character */
-  ,0x79F0 /* last character  */
+   0x7801 /* first character */
+  ,0x7801 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 20] /* address of first character */
   ,&GUI_Fontfont_Prop22 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop20 = {
-   0x7801 /* first character */
-  ,0x7801 /* last character  */
+   0x706F /* first character */
+  ,0x706F /* last character  */
   ,&GUI_Fontfont_CharInfo[ 19] /* address of first character */
   ,&GUI_Fontfont_Prop21 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop19 = {
-   0x706F /* first character */
-  ,0x706F /* last character  */
+   0x6E7F /* first character */
+  ,0x6E7F /* last character  */
   ,&GUI_Fontfont_CharInfo[ 18] /* address of first character */
   ,&GUI_Fontfont_Prop20 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop18 = {
-   0x6E7F /* first character */
-  ,0x6E7F /* last character  */
+   0x6E29 /* first character */
+  ,0x6E29 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 17] /* address of first character */
   ,&GUI_Fontfont_Prop19 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop17 = {
-   0x6E29 /* first character */
-  ,0x6E29 /* last character  */
+   0x6709 /* first character */
+  ,0x6709 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 16] /* address of first character */
   ,&GUI_Fontfont_Prop18 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop16 = {
-   0x6709 /* first character */
-  ,0x6709 /* last character  */
+   0x65E0 /* first character */
+  ,0x65E0 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 15] /* address of first character */
   ,&GUI_Fontfont_Prop17 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop15 = {
-   0x65E0 /* first character */
-  ,0x65E0 /* last character  */
+   0x63A5 /* first character */
+  ,0x63A5 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 14] /* address of first character */
   ,&GUI_Fontfont_Prop16 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop14 = {
-   0x63A5 /* first character */
-  ,0x63A5 /* last character  */
+   0x62A5 /* first character */
+  ,0x62A5 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 13] /* address of first character */
   ,&GUI_Fontfont_Prop15 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop13 = {
-   0x62A5 /* first character */
-  ,0x62A5 /* last character  */
+   0x6247 /* first character */
+  ,0x6247 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 12] /* address of first character */
   ,&GUI_Fontfont_Prop14 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop12 = {
-   0x6247 /* first character */
-  ,0x6247 /* last character  */
+   0x606F /* first character */
+  ,0x606F /* last character  */
   ,&GUI_Fontfont_CharInfo[ 11] /* address of first character */
   ,&GUI_Fontfont_Prop13 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop11 = {
-   0x606F /* first character */
-  ,0x606F /* last character  */
+   0x5EA6 /* first character */
+  ,0x5EA6 /* last character  */
   ,&GUI_Fontfont_CharInfo[ 10] /* address of first character */
   ,&GUI_Fontfont_Prop12 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop10 = {
-   0x5EA6 /* first character */
-  ,0x5EA6 /* last character  */
+   0x5C4F /* first character */
+  ,0x5C4F /* last character  */
   ,&GUI_Fontfont_CharInfo[  9] /* address of first character */
   ,&GUI_Fontfont_Prop11 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop9 = {
-   0x5C4F /* first character */
-  ,0x5C4F /* last character  */
+   0x5C04 /* first character */
+  ,0x5C04 /* last character  */
   ,&GUI_Fontfont_CharInfo[  8] /* address of first character */
   ,&GUI_Fontfont_Prop10 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop8 = {
-   0x5C04 /* first character */
-  ,0x5C04 /* last character  */
+   0x5BC6 /* first character */
+  ,0x5BC6 /* last character  */
   ,&GUI_Fontfont_CharInfo[  7] /* address of first character */
   ,&GUI_Fontfont_Prop9 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop7 = {
-   0x5BC6 /* first character */
-  ,0x5BC6 /* last character  */
+   0x56DE /* first character */
+  ,0x56DE /* last character  */
   ,&GUI_Fontfont_CharInfo[  6] /* address of first character */
   ,&GUI_Fontfont_Prop8 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop6 = {
-   0x56DE /* first character */
-  ,0x56DE /* last character  */
+   0x540D /* first character */
+  ,0x540D /* last character  */
   ,&GUI_Fontfont_CharInfo[  5] /* address of first character */
   ,&GUI_Fontfont_Prop7 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop5 = {
-   0x540D /* first character */
-  ,0x540D /* last character  */
+   0x5217 /* first character */
+  ,0x5217 /* last character  */
   ,&GUI_Fontfont_CharInfo[  4] /* address of first character */
   ,&GUI_Fontfont_Prop6 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop4 = {
-   0x5217 /* first character */
-  ,0x5217 /* last character  */
+   0x5149 /* first character */
+  ,0x5149 /* last character  */
   ,&GUI_Fontfont_CharInfo[  3] /* address of first character */
   ,&GUI_Fontfont_Prop5 /* pointer to next GUI_FONT_PROP */
 };
 
 GUI_CONST_STORAGE GUI_FONT_PROP GUI_Fontfont_Prop3 = {
-   0x5149 /* first character */
-  ,0x5149 /* last character  */
+   0x4FE1 /* first character */
+  ,0x4FE1 /* last character  */
   ,&GUI_Fontfont_CharInfo[  2] /* address of first character */
   ,&GUI_Fontfont_Prop4 /* pointer to next GUI_FONT_PROP */
 };

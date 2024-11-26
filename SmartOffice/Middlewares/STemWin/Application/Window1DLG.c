@@ -231,9 +231,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		  case WM_NOTIFICATION_RELEASED:
 			// USER START (Optionally insert code for reacting on notification message)
 		    //添加网络界面程序就奔溃，单独使用这个界面没有问题，说明系统资源不够了
-		  	//GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
-	        //currentDialog = 0;  //已经不是主页了，防止滑动检测误判
-		    //CreateNetworkWindow(); // 创建NetworkWindow界面，调用其它界面的Create方法
+		    //因此只添加一个网络信息展示界面
+		  	GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
+	        currentDialog = 0;  //已经不是主页了，防止滑动检测误判
+		    CreateNetworkInfoWindow(); // 创建NetworkWindow界面，调用其它界面的Create方法
 			// USER END
 			break;
 		  // USER START (Optionally insert additional code for further notification handling)
