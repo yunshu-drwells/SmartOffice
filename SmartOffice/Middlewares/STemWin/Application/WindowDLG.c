@@ -23,45 +23,16 @@
 
 #include "DIALOG.h"
 #include "include_dlg.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "usart.h"
-
 /*********************************************************************
 *
 *       Defines
 *
 **********************************************************************
 */
-#define ID_WINDOW_0    (GUI_ID_USER + 0x00)
-#define ID_BUTTON_0    (GUI_ID_USER + 0x01)
-#define ID_BUTTON_1    (GUI_ID_USER + 0x03)
-#define ID_BUTTON_2    (GUI_ID_USER + 0x04)
-#define ID_BUTTON_3    (GUI_ID_USER + 0x05)
-#define ID_BUTTON_4    (GUI_ID_USER + 0x06)
-#define ID_BUTTON_5    (GUI_ID_USER + 0x07)
-#define ID_BUTTON_6    (GUI_ID_USER + 0x08)
-#define ID_BUTTON_7    (GUI_ID_USER + 0x09)
-#define ID_TEXT_0  (GUI_ID_USER + 0x0a)
-#define ID_TEXT_1  (GUI_ID_USER + 0x0b)
-#define ID_TEXT_2  (GUI_ID_USER + 0x0c)
-#define ID_TEXT_3  (GUI_ID_USER + 0x0d)
-#define ID_TEXT_4  (GUI_ID_USER + 0x0e)
-#define ID_TEXT_5  (GUI_ID_USER + 0x0f)
-#define ID_TEXT_6  (GUI_ID_USER + 0x10)
-#define ID_TEXT_7  (GUI_ID_USER + 0x11)
+
 
 // USER START (Optionally insert additional defines)
-extern GUI_CONST_STORAGE GUI_BITMAP bmLightingMasterOn;
-extern GUI_CONST_STORAGE GUI_BITMAP bmSpotlightOn;
-extern GUI_CONST_STORAGE GUI_BITMAP bmTemperature;
-extern GUI_CONST_STORAGE GUI_BITMAP bmHumidity;
-extern GUI_CONST_STORAGE GUI_BITMAP bmBrightnesss;
-extern GUI_CONST_STORAGE GUI_BITMAP bmFanOn;
-extern GUI_CONST_STORAGE GUI_BITMAP bmAlarm;
-extern GUI_CONST_STORAGE GUI_BITMAP bmTurnOff;
-extern GUI_CONST_STORAGE GUI_BITMAP bmblue;
-extern GUI_CONST_STORAGE GUI_FONT GUI_Fontfont;
+
 
 // USER END
 
@@ -79,27 +50,7 @@ extern GUI_CONST_STORAGE GUI_FONT GUI_Fontfont;
 *
 *       _aDialogCreate
 */
-static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-  { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 800, 480, 0, 0x0, 4 },
-  { BUTTON_CreateIndirect, "", ID_BUTTON_0, 40, 60, 150, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "", ID_BUTTON_1, 230, 60, 150, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "", ID_BUTTON_2, 420, 60, 150, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "", ID_BUTTON_3, 610, 60, 150, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "", ID_BUTTON_4, 40, 270, 150, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "", ID_BUTTON_5, 230, 270, 150, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "", ID_BUTTON_6, 420, 270, 150, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "", ID_BUTTON_7, 610, 270, 150, 150, 0, 0x0, 0 },
-  // USER START (Optionally insert additional widgets)
-      { TEXT_CreateIndirect, "Text", ID_TEXT_0, 40, 210, 150, 32, 0, 0x64, 0 },
-      { TEXT_CreateIndirect, "Text", ID_TEXT_1, 230, 210, 150, 32, 0, 0x64, 0 },
-      { TEXT_CreateIndirect, "Text", ID_TEXT_2, 420, 210, 150, 32, 0, 0x64, 0 },
-      { TEXT_CreateIndirect, "Text", ID_TEXT_3, 610, 210, 150, 32, 0, 0x64, 0 },
-      { TEXT_CreateIndirect, "Text", ID_TEXT_4, 40, 420, 150, 32, 0, 0x64, 0 },
-      { TEXT_CreateIndirect, "Text", ID_TEXT_5, 230, 420, 150, 32, 0, 0x64, 0 },
-      { TEXT_CreateIndirect, "Text", ID_TEXT_6, 420, 420, 150, 32, 0, 0x64, 0 },
-      { TEXT_CreateIndirect, "Text", ID_TEXT_7, 610, 420, 150, 32, 0, 0x64, 0 },
-  // USER END
-};
+
 
 /*********************************************************************
 *
@@ -112,323 +63,39 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 
 // USER END
 
+
+
 /*********************************************************************
 *
-*       _cbDialog
+*       _cbWindow
+*
+* Function description
+*   The callback moves the edit-fiels when a notification message was send.
 */
-static void _cbDialog(WM_MESSAGE * pMsg) {
-  WM_HWIN hItem;
-  int     NCode;
-  int     Id;
-  // USER START (Optionally insert additional variables)
-	//printf("pMsg");
-	/*
-	//只要屏幕有触摸，事件就会通过_cbDialog来处理
-	cur_brightness = lcd_get_backlight_by_pwm(); //获取当前背光值
-	//只要屏幕背光亮度是0，就不处理任何事件，而是将屏幕背光设置到息屏之前的值
-	if(0 == cur_brightness && DefaultProc){
-		lcd_set_backlight_by_pwm(last_brightness); // 设置占空比为息屏之前的值，开启背光
-		printf("pMsg backlight on");
-		return ;  //不处理任何按钮的响应
+//清屏
+/*
+static void _cbWindow(WM_MESSAGE * pMsg) {
+	WM_SCROLL_STATE stScrollState;
+	int             x;
+	int             y;
+ 
+	switch (pMsg->MsgId) {
+	case WM_NOTIFY_PARENT:
+ 
+		break;
+	case WM_PAINT:
+		GUI_SetBkColor(GUI_WHITE);
+		GUI_Clear();
+		break;
+	default:
+		WM_DefaultProc(pMsg);
 	}
-	*/
-  // USER END
-
-  switch (pMsg->MsgId) {
-  case WM_INIT_DIALOG:
-		//DefaultProc = 0;
-		//printf("WM_INIT_DIALOG\n");
-    //
-    // Initialization of 'Window'
-    //
-    hItem = pMsg->hWin;
-    WINDOW_SetBkColor(hItem, GUI_MAKE_COLOR(0x00973F04));
-    // USER START (Optionally insert additional code for further widget initialization)
-	//
-    // Initialization of 'Text0'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
-    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    //TEXT_SetText(hItem, "LightingMaster");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
-    TEXT_SetText(hItem, "主灯");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    //WM_InvalidateWindow(hItem);  // 强制刷新窗口
-    //
-    // Initialization of 'Text1'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
-    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    //TEXT_SetText(hItem, "SpotLight");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
-    TEXT_SetText(hItem, "射灯");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    //
-    // Initialization of 'Text2'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
-    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    //TEXT_SetText(hItem, "temp");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
-    TEXT_SetText(hItem, "温度");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    //
-    // Initialization of 'Text3'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_3);
-    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    //TEXT_SetText(hItem, "humidity");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
-    TEXT_SetText(hItem, "湿度");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-            //
-    // Initialization of 'Text4'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
-    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    //TEXT_SetText(hItem, "brightness");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
-    TEXT_SetText(hItem, "亮度");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    //
-    // Initialization of 'Text5'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_5);
-    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    //TEXT_SetText(hItem, "Fan");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
-    TEXT_SetText(hItem, "风扇");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-            //
-    // Initialization of 'Text6'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_6);
-    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    //TEXT_SetText(hItem, "Alarm");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
-    TEXT_SetText(hItem, "警报");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    //
-    // Initialization of 'Text7'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_7);
-    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    //TEXT_SetText(hItem, "TurnOff");
-    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
-    TEXT_SetText(hItem, "背光");
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-		
-		
-    // 根据空间ID,获取空间句柄
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
-    //
-	// Initialization of 'Button_LightingMaster'
-	//
-	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmLightingMasterOn);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmblue);
-	//
-	// Initialization of 'Button_Spotlight'
-	//
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmSpotlightOn);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmblue);
-	//
-	// Initialization of 'Button_Temperature'
-	//
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmTemperature);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmblue);
-	//
-	// Initialization of 'Button_Humidity'
-	//
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
-    // 设置按钮未按下时，显示温度图片
-	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmHumidity);
-	// 设置按键按下时，显示蓝色图片
-	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmblue);
-	//
-	// Initialization of 'Button_Brightnesss'
-	//
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmBrightnesss);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmblue);
-	//
-	// Initialization of 'Button_Fan'
-	//
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_5);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmFanOn);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmblue);
-		//
-	// Initialization of 'Button_Alarm'
-	//
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_6);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmAlarm);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmblue);
-    //
-	// Initialization of 'Button_TurnOff'
-	//
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_7);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmTurnOff);
-	BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmblue);
-    // USER END
-    break;
-  case WM_NOTIFY_PARENT:
-		//printf("WM_NOTIFY_PARENT\n");
-		//DefaultProc = !DefaultProc;
-    Id    = WM_GetId(pMsg->hWinSrc);
-    NCode = pMsg->Data.v;
-    switch(Id) {
-    case ID_BUTTON_0: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
-		CreateLightingMaster(); // 创建LightingMaster界面，调用其它界面的Create方法
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_1: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
-        CreateSpotlight(); // 创建Spotlight界面，调用其它界面的Create方法
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_2: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
-        CreateTemperature(); // 创建Temperature界面，调用其它界面的Create方法
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_3: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
-        CreateHumidity(); // 创建Humidity界面，调用其它界面的Create方法
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_4: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
-        CreateBrightnesss(); // 创建Brightnesss界面，调用其它界面的Create方法
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_5: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
-		CreateFan(); // 创建Fan界面，调用其它界面的Create方法
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_6: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
-        CreateAlarm(); // 创建Alarm界面，调用其它界面的Create方法
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_7: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-				GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
-        CreateTurnOff();
-
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    // USER START (Optionally insert additional code for further Ids)
-    // USER END
-    }
-    break;
-  // USER START (Optionally insert additional message handling)
-  // USER END
-  default:
-		//printf("default\n");
-		//DefaultProc = 1;
-    WM_DefaultProc(pMsg);
-    break;
-  }
 }
-
+*/
+#define ID_WINDOW_0 100
+#define ID_WINDOW_1 101
+WM_HWIN hWin1;
+WM_HWIN hWin2;
 /*********************************************************************
 *
 *       Public code
@@ -441,13 +108,33 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 */
 WM_HWIN CreateWindowMain(void);
 WM_HWIN CreateWindowMain(void) {
-  WM_HWIN hWin;
+  //WM_HWIN hWin;
+  //hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+  hWin1 = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), Window0_Callback, WM_HBKWIN, 0, 0);	
+  hWin2 = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), Window1_Callback, WM_HBKWIN, 0, 0);
+  // Initially show Dialog1 and hide Dialog2
+  WM_ShowWindow(hWin1);  //显示主页1
+  WM_HideWindow(hWin2);	//隐藏主页2
+  return hWin1;
+  //WM_HWIN g_stNetSetPageHWin;	
+  //g_stNetSetPageHWin = WM_CreateWindow(0, 0, 800, 480, WM_CF_SHOW, _cbWindow, 0);  //WM_CF_SHOW窗口创建后立即显示 0窗口的唯一标识符
+ 
+  //WM_HWIN g_stNetSetPageHWinChild = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, g_stNetSetPageHWin, 0, 0);
+  //return g_stNetSetPageHWin;
+	
+  //hWin = WM_CreateWindowAsChild(0, 0, 800, 480, WM_HBKWIN, ID_WINDOW_0, Window0_Callback, 0);
+  //WM_CreateWindowAsChild(800, 0, 800, 480, WM_HBKWIN, ID_WINDOW_1, &Window1_Callback, 0);
+  //return hWin;
 
-  hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
-  return hWin;
+  //WM_HWIN hWin;
+  //hWin = WM_CreateWindow(0, 0, 800, 480, WM_CF_SHOW, Window0_Callback, ID_WINDOW_0);
+  //WM_HWIN g_stNetSetPageHWin;	
+  //g_stNetSetPageHWin = WM_CreateWindow(800, 0, 800, 480, WM_CF_SHOW, Window1_Callback, ID_WINDOW_1);  //WM_CF_SHOW窗口创建后立即显示 0窗口的唯一标识符	
+  return hWin; 	
 }
 
 // USER START (Optionally insert additional public code)
+
 // USER END
 
 /*************************** End of file ****************************/

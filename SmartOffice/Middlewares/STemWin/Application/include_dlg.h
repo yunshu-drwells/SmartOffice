@@ -14,5 +14,13 @@ extern WM_HWIN CreateBrightnesss(void);
 extern WM_HWIN CreateFan(void);
 extern WM_HWIN CreateAlarm(void);
 extern WM_HWIN CreateTurnOff(void);
+extern WM_HWIN CreateTurnOff(void);
+
+WM_HWIN CreateWindow0Main(void);
+WM_HWIN CreateWindow1Main(void);
+
+extern WM_HWIN hWin1;
+extern WM_HWIN hWin2;
+extern int currentDialog;
 
 #endif

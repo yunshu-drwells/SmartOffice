@@ -181,7 +181,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //TEXT_SetText(hItem, "Text");
     TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
 		
-		sprintf((char*)str, "%2d%%", adcx);
+	sprintf((char*)str, "%2d%%", adcx);
     TEXT_SetText(hItem, (char*)str);
 	// 创建更新任务，传递Text控件句柄
     xTaskCreate(UpdateTextTask, "UpdateTextTask", 256, (void*)hItem, tskIDLE_PRIORITY + 1, &xUpdateTaskHandle);
@@ -216,7 +216,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
         //返回主页
         GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
-        CreateWindowMain(); // 创建WindowMain界面，调用其它界面的Create方法
+	    currentDialog = 1;	  
+        hWin1 = CreateWindow0Main(); // 创建WindowMain界面，调用其它界面的Create方法
 		//销毁任务
 		DeleteUpdateTask();
         // USER END

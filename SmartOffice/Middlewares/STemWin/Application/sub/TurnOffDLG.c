@@ -218,7 +218,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                 if(0 != cur_brightness)      {
                     //返回主页
                     GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
-                    CreateWindowMain(); // 创建WindowMain界面，调用其它界面的Create方法
+					currentDialog = 1;					
+                    hWin1 = CreateWindow0Main(); // 创建WindowMain界面，调用其它界面的Create方法
                 }else{
                      //backlight on
                     //printf("backlight on\n");

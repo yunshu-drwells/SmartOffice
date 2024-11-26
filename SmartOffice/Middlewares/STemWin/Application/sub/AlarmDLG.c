@@ -167,7 +167,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
         //返回主页
         GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
-        CreateWindowMain(); // 创建WindowMain界面，调用其它界面的Create方法
+	    currentDialog = 1;
+        hWin1 = CreateWindow0Main(); // 创建WindowMain界面，调用其它界面的Create方法
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)

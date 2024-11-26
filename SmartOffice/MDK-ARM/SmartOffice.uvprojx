@@ -1195,11 +1195,6 @@
               <FilePath>..\Src\GUI_X_Touch_Analog.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\Application\WindowDLG.c</FilePath>
-            </File>
-            <File>
               <FileName>font.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Middlewares\STemWin\Application\font\font.c</FilePath>
@@ -1248,6 +1243,16 @@
               <FileName>TurnOffDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Middlewares\STemWin\Application\sub\TurnOffDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>Window1DLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\STemWin\Application\Window1DLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>Window0DLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\STemWin\Application\Window0DLG.c</FilePath>
             </File>
           </Files>
         </Group>

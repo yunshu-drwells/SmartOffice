@@ -38,13 +38,16 @@ GUI_BITMAP bmFanOn;
 GUI_BITMAP bmHumidity;
 GUI_BITMAP bmLightingMasterOn;
 //LoRaOn
+GUI_BITMAP bmLoRaOn;
 GUI_BITMAP bmSpotlightOn;
 GUI_BITMAP bmTemperature;
 //Wifi
+GUI_BITMAP bmWifi;
 GUI_BITMAP bmAlarmOff;
 GUI_BITMAP bmFanOff;
 GUI_BITMAP bmLightingMasterOff;  //重新启用
 //LoRaOff
+GUI_BITMAP bmLoRaOff;
 GUI_BITMAP bmMainPage;
 GUI_BITMAP bmMainPagePressed;
 GUI_BITMAP bmSpotlightOff;
@@ -201,6 +204,7 @@ void read_icons(){
 
 void InitDynamicImage(void) {
     // 初始化位图结构体
+	//初始化AlarmOn.bin结构体
     bmAlarm.XSize = 144;
     bmAlarm.YSize = 144;
     bmAlarm.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -209,6 +213,7 @@ void InitDynamicImage(void) {
     bmAlarm.pPal = NULL;
     bmAlarm.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化BackLight.bin结构体
 	bmTurnOff.XSize = 150;
     bmTurnOff.YSize = 132;
     bmTurnOff.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -217,6 +222,7 @@ void InitDynamicImage(void) {
     bmTurnOff.pPal = NULL;
     bmTurnOff.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化blue.bin结构体
 	bmblue.XSize = 144;
     bmblue.YSize = 144;
     bmblue.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -225,6 +231,7 @@ void InitDynamicImage(void) {
     bmblue.pPal = NULL;
     bmblue.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化Brightnesss.bin结构体
 	bmBrightnesss.XSize = 150;
     bmBrightnesss.YSize = 150;
     bmBrightnesss.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -233,6 +240,7 @@ void InitDynamicImage(void) {
     bmBrightnesss.pPal = NULL;
     bmBrightnesss.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化FanOn.bin结构体
 	bmFanOn.XSize = 150;
     bmFanOn.YSize = 150;
     bmFanOn.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -241,6 +249,7 @@ void InitDynamicImage(void) {
     bmFanOn.pPal = NULL;
     bmFanOn.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化Humidity.bin结构体
 	bmHumidity.XSize = 144;
     bmHumidity.YSize = 144;
     bmHumidity.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -249,6 +258,7 @@ void InitDynamicImage(void) {
     bmHumidity.pPal = NULL;
     bmHumidity.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化LightingMasterOn.bin结构体
 	bmLightingMasterOn.XSize = 150;
     bmLightingMasterOn.YSize = 150;
     bmLightingMasterOn.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -257,6 +267,16 @@ void InitDynamicImage(void) {
     bmLightingMasterOn.pPal = NULL;
     bmLightingMasterOn.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化LoRaOn.bin结构体
+	bmLoRaOn.XSize = 150;
+    bmLoRaOn.YSize = 150;
+    bmLoRaOn.BytesPerLine = 288; // 144像素 * 2字节/像素
+    bmLoRaOn.BitsPerPixel = 16;
+    bmLoRaOn.pData = _LoRaOn;
+    bmLoRaOn.pPal = NULL;
+    bmLoRaOn.pMethods = GUI_DRAW_BMP565;
+	
+	//初始化SpotlightOn.bin结构体
 	bmSpotlightOn.XSize = 144;
     bmSpotlightOn.YSize = 144;
     bmSpotlightOn.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -265,6 +285,7 @@ void InitDynamicImage(void) {
     bmSpotlightOn.pPal = NULL;
     bmSpotlightOn.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化Temperature.bin结构体
 	bmTemperature.XSize = 144;
     bmTemperature.YSize = 144;
     bmTemperature.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -272,7 +293,17 @@ void InitDynamicImage(void) {
     bmTemperature.pData = _Temperature;
     bmTemperature.pPal = NULL;
     bmTemperature.pMethods = GUI_DRAW_BMP565;
+
+	//初始化Wifi.bin结构体
+	bmWifi.XSize = 150;
+    bmWifi.YSize = 152;
+    bmWifi.BytesPerLine = 288; // 144像素 * 2字节/像素
+    bmWifi.BitsPerPixel = 16;
+    bmWifi.pData = _Wifi;
+    bmWifi.pPal = NULL;
+    bmWifi.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化AlarmOff.bin结构体
 	bmAlarmOff.XSize = 150;
     bmAlarmOff.YSize = 150;
     bmAlarmOff.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -281,6 +312,7 @@ void InitDynamicImage(void) {
     bmAlarmOff.pPal = NULL;
     bmAlarmOff.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化FanOff.bin结构体
 	bmFanOff.XSize = 150;
     bmFanOff.YSize = 150;
     bmFanOff.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -289,6 +321,7 @@ void InitDynamicImage(void) {
     bmFanOff.pPal = NULL;
     bmFanOff.pMethods = GUI_DRAW_BMP565;
 
+	//初始化LightingMasterOff.bin结构体
 	bmLightingMasterOff.XSize = 150;
     bmLightingMasterOff.YSize = 150;
     bmLightingMasterOff.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -297,6 +330,16 @@ void InitDynamicImage(void) {
     bmLightingMasterOff.pPal = NULL;
     bmLightingMasterOff.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化LoRaOff.bin结构体
+	bmLoRaOff.XSize = 150;
+    bmLoRaOff.YSize = 150;
+    bmLoRaOff.BytesPerLine = 288; // 144像素 * 2字节/像素
+    bmLoRaOff.BitsPerPixel = 16;
+    bmLoRaOff.pData = _LoRaOff;
+    bmLoRaOff.pPal = NULL;
+    bmLoRaOff.pMethods = GUI_DRAW_BMP565;
+
+	//初始化MainPage.bin结构体
 	bmMainPage.XSize = 150;
     bmMainPage.YSize = 150;
     bmMainPage.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -305,6 +348,7 @@ void InitDynamicImage(void) {
     bmMainPage.pPal = NULL;
     bmMainPage.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化MainPagePressed.bin结构体
 	bmMainPagePressed.XSize = 150;
     bmMainPagePressed.YSize = 150;
     bmMainPagePressed.BytesPerLine = 288; // 144像素 * 2字节/像素
@@ -313,6 +357,7 @@ void InitDynamicImage(void) {
     bmMainPagePressed.pPal = NULL;
     bmMainPagePressed.pMethods = GUI_DRAW_BMP565;
 	
+	//初始化SpotlightOff.bin结构体
 	bmSpotlightOff.XSize = 144;
     bmSpotlightOff.YSize = 144;
     bmSpotlightOff.BytesPerLine = 288; // 144像素 * 2字节/像素
