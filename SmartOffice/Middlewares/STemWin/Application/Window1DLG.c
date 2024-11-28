@@ -235,6 +235,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		  	GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
 	        currentDialog = 0;  //已经不是主页了，防止滑动检测误判
 		    CreateNetworkInfoWindow(); // 创建NetworkWindow界面，调用其它界面的Create方法
+		    //CreateNetworkWindow();
 			// USER END
 			break;
 		  // USER START (Optionally insert additional code for further notification handling)

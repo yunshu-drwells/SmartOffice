@@ -122,8 +122,11 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'network'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
-    TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    //TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+    TEXT_SetFont(hItem, &GUI_Fontfont);  // 设置字体
+    TEXT_SetText(hItem, "网络");
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);  // 设置文本对齐方式（可选）
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     //
     // Initialization of 'IP:'
     //
@@ -176,6 +179,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_6);
     TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+	TEXT_SetText(hItem, ip_address);  //无线网络ip
     //
     // Initialization of 'Text'
     //

@@ -110,6 +110,11 @@ stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/p
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/etharp.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/netif/ethernet.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/dhcp.h
+stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/udp.h
+stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/ip.h
+stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/ip6.h
+stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ip.h
+stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/udp.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/timeouts.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/sys.h
 stemwin_port_freertos\main.o: ../Middlewares/Third_Party/LwIP/system/arch/sys_arch.h

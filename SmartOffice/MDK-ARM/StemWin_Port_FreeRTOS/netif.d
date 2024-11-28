@@ -108,3 +108,4 @@ stemwin_port_freertos\netif.o: ../Middlewares/Third_Party/FreeRTOS/Source/includ
 stemwin_port_freertos\netif.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 stemwin_port_freertos\netif.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 stemwin_port_freertos\netif.o: ../Middlewares/Third_Party/LwIP/src/include/netif/ethernet.h
+stemwin_port_freertos\netif.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/dhcp.h

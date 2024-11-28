@@ -188,15 +188,17 @@ extern uint8_t* uart3_rx_buffer;
 
 #define MAX_IP_LENGTH 16
 
-#define macUser_ESP8266_ApSsid "DUOBAO"        //要连接的热点名称（只支持2.4G网络）
-#define macUser_ESP8266_ApPwd  "yunshu666"  //要连接的热点密钥
+#define macUser_ESP8266_ApSsid "DUOBAO"        //瑕佽繛鎺ョ殑鐑偣鍚嶇О锛堝彧鏀寔2.4G缃戠粶锛?
+#define macUser_ESP8266_ApPwd  "yunshu666"  //瑕佽繛鎺ョ殑鐑偣瀵嗛挜
 
-#define macUser_ESP8266_TcpServer_IP   "192.168.3.3" //要连接的服务器的IP
-#define macUser_ESP8266_TcpServer_Port 8000        //要连接的服务器的端口
+#define macUser_ESP8266_TcpServer_IP   "192.168.3.3" //瑕佽繛鎺ョ殑鏈嶅姟鍣ㄧ殑IP
+#define macUser_ESP8266_TcpServer_Port 8000        //瑕佽繛鎺ョ殑鏈嶅姟鍣ㄧ殑绔彛
 
-extern char FAN_ip_address[];  //风扇模块ip地址
-extern char MasterLight_ip_address[];  //主灯模块ip地址
-extern char SpotLight_ip_address[];  //射灯模块ip地址
+//extern char FAN_ip_address[];  //椋庢墖妯″潡ip鍦板潃
+//extern char MasterLight_ip_address[];  //涓荤伅妯″潡ip鍦板潃
+//extern char SpotLight_ip_address[];  //灏勭伅妯″潡ip鍦板潃
+
+extern char ETH_ip_address[];  //鏈夌嚎缃戠粶ip鍦板潃
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

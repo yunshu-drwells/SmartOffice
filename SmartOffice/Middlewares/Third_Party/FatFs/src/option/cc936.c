@@ -10938,17 +10938,17 @@ WCHAR ff_convert (	/* Converted code, 0 means conversion error */
 	if (chr < 0x80) {	/* ASCII */
 		c = chr;
 	} else {
-		hi = ftinfo->ugbksize / 2; /* å¯¹åŠå¼€ */
+		hi = ftinfo->ugbksize / 2; /* ¶Ô°ë¿ª */
         hi = hi / 4 - 1;
         li = 0;
 	
 		if (dir) {		/* OEM code to unicode */
 			//p = oem2uni;
 			//hi = sizeof oem2uni / 4 - 1;
-			for (n = 16; n; n--)    /* äºŒåˆ†æ³•æŸ¥æ‰¾ */
+			for (n = 16; n; n--)    /* ¶þ·Ö·¨²éÕÒ */
 			{
 				i = li + (hi - li) / 2;
-				norflash_read((uint8_t *)&t, ftinfo->ugbkaddr + i * 4 + gbk2uni_offset, 4);  /* è¯»å‡º4ä¸ªå­—èŠ‚ */
+				norflash_read((uint8_t *)&t, ftinfo->ugbkaddr + i * 4 + gbk2uni_offset, 4);  /* ¶Á³ö4¸ö×Ö½Ú */
 
 				if (chr == t[0]) break;
 
@@ -10964,10 +10964,10 @@ WCHAR ff_convert (	/* Converted code, 0 means conversion error */
 		} else {		/* Unicode to OEM code */
 			//p = uni2oem;
 			//hi = sizeof uni2oem / 4 - 1;
-			for (n = 16; n; n--)    /* äºŒåˆ†æ³•æŸ¥æ‰¾ */
+			for (n = 16; n; n--)    /* ¶þ·Ö·¨²éÕÒ */
 			{
 				i = li + (hi - li) / 2;
-				norflash_read((uint8_t *)&t, ftinfo->ugbkaddr + i * 4 + gbk2uni_offset, 4);  /* è¯»å‡º4ä¸ªå­—èŠ‚ */
+				norflash_read((uint8_t *)&t, ftinfo->ugbkaddr + i * 4 + gbk2uni_offset, 4);  /* ¶Á³ö4¸ö×Ö½Ú */
 
 				if (chr == t[0]) break;
 

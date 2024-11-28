@@ -24,6 +24,7 @@
 #include "DIALOG.h"
 #include "include_dlg.h"
 #include "esp8266_web.h"  //ip_address
+#include "main.h"  //ETH_ip_address
 /*********************************************************************
 *
 *       Defines
@@ -138,6 +139,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
     TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+	TEXT_SetText(hItem, ETH_ip_address);  //有线网络ip
     // USER START (Optionally insert additional code for further widget initialization)
 	
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);

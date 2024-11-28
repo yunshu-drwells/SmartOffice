@@ -70,20 +70,20 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-// 定义堆区域数组
+// 定义堆区域数�?
 HeapRegion_t xHeapRegions[] = {
-    { ( uint8_t * ) 0x68020000, 0xa000 },  // 定义从0x68000000开始的40K字节内存块
+    { ( uint8_t * ) 0x68020000, 0xa000 },  // 定义�?0x68000000�?始的40K字节内存�?
     { NULL, 0 }                            // 终止数组
 };
 
 void configureHeapRegions(void)
 {
-    vPortDefineHeapRegions(xHeapRegions);  // 定义堆区域
+    vPortDefineHeapRegions(xHeapRegions);  // 定义堆区�?
 }
 
-//uint8_t paddr[20] = {0};                  /* 存放内存EXSRAM使用率 */
+//uint8_t paddr[20] = {0};                  /* 存放内存EXSRAM使用�? */
 uint8_t* paddr;
-uint16_t memused = 0;                     /* 内存使用百分比 */
+uint16_t memused = 0;                     /* 内存使用百分�? */
 
 //uint8_t lcd_id[12];
 uint8_t* lcd_id;
@@ -98,9 +98,10 @@ _font_info* ftinfo;
 _icon_info* iconftinfo;
 uint8_t* uart3_rx_buffer;
 
-char FAN_ip_address[MAX_IP_LENGTH] = {0};  //风扇模块ip地址
-char MasterLight_ip_address[MAX_IP_LENGTH] = {0};  //主灯模块ip地址
-char SpotLight_ip_address[MAX_IP_LENGTH] = {0};  //射灯模块ip地址
+//char FAN_ip_address[MAX_IP_LENGTH] = {0};  //风扇模块ip地址
+//char MasterLight_ip_address[MAX_IP_LENGTH] = {0};  //主灯模块ip地址
+//char SpotLight_ip_address[MAX_IP_LENGTH] = {0};  //射灯模块ip地址
+char ETH_ip_address[MAX_IP_LENGTH] = {0};  //有线网络ip地址
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -156,25 +157,25 @@ int main(void)
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
 	// 调用配置堆区域的函数
-	configureHeapRegions();  //FreeRTOS定义heap5的堆区地址范围
+	configureHeapRegions();  //FreeRTOS定义heap5的堆区地�?范围
 	
-	sram_init();                        /* 外扩SRAM初始化 */
+	sram_init();                        /* 外扩SRAM初始�? */
 
-	//my_mem_init(SRAMIN);                /* 初始化内部SRAM内存池 */
-	my_mem_init(SRAMEX);                /* 初始化外部SRAM内存池 */
-	my_mem_init(SRAMCCM);               /* 初始化内部CCM内存池 */
+	//my_mem_init(SRAMIN);                /* 初始化内部SRAM内存�? */
+	my_mem_init(SRAMEX);                /* 初始化外部SRAM内存�? */
+	my_mem_init(SRAMCCM);               /* 初始化内部CCM内存�? */
 	
 	paddr = (uint8_t *)mymalloc(0, 20);
 	memset(paddr, 0, 20);	
 	
-	//因为将外扩SRAM的头部40KB给FreeRTOS使用，所以要将这部分在内存管理表中对应的表项赋值为非零，表示已经被占用了，防止影响FreeRTOS的堆区
+	//因为将外扩SRAM的头�?40KB给FreeRTOS使用，所以要将这部分在内存管理表中对应的表项赋�?�为非零，表示已经被占用了，防止影响FreeRTOS的堆�?
 	my_mem_occupy(SRAMEX, 40*1024);
 	
 	memused = my_mem_perused(SRAMEX);
 	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
 	printf("SRAMEX   USED: %s\n", (char *)paddr);
 	
-	//因为在外扩SRAM紧跟着FreeRTOS的空间后面给LWIP分配MEM_SIZE大小的空间，所以要将这部分在内存管理表中对应的表项赋值为非零
+	//因为在外扩SRAM紧跟�?FreeRTOS的空间后面给LWIP分配MEM_SIZE大小的空间，�?以要将这部分在内存管理表中对应的表项赋�?�为非零
 	my_mem_occupy_from(SRAMEX, 40*1024, MEM_SIZE);
 	memused = my_mem_perused(SRAMEX);
 	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
@@ -270,13 +271,13 @@ void emwin_test_touch(void){
 	GUI_SetColor(GUI_YELLOW);
 	GUI_Clear();
 	while(1){
-		//执行触摸笔检测
+		//执行触摸笔检�?
 		GUI_TOUCH_Exec();
-		//获取触摸笔状态值
+		//获取触摸笔状态�??
 		GUI_TOUCH_GetState(&State);
 		//是否按下
 		if(State.Pressed){
-			//打印触摸笔坐标信息
+			//打印触摸笔坐标信�?
 			GUI_DispStringAt("X:", 0, 0);
 			GUI_DispDecAt(State.x, 32, 0, 4);
 			GUI_DispStringAt("Y:", 0, 24);
@@ -290,7 +291,7 @@ void emwin_test_touch(void){
 		{
 				GUI_SetBkColor(GUI_WHITE);
 				GUI_Clear();
-				return;  //退出测试死循环
+				return;  //�?出测试死循环
 		}
 	}
 }

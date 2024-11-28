@@ -9,7 +9,7 @@
 
 WM_HWIN hWin1;
 WM_HWIN hWin2;
-int currentDialog = 1; // 1 for Dialog1, 2 for Dialog2
+int currentDialog = 2; // 1 for Dialog1, 2 for Dialog2
 
 static int startX = 0;
 static int startY = 0;
@@ -155,6 +155,8 @@ void MainTask(void)
     hWin2 = CreateWindow1Main();
 	WM_ShowWindow(hWin1);  //显示主页1
     WM_HideWindow(hWin2);	//隐藏主页2
+	//WM_ShowWindow(hWin2);  //显示主页2
+    //WM_HideWindow(hWin1);	//隐藏主页1
 	//开启一个任务用于获取屏幕滑动状态
 	// 创建获取屏幕滑动状态的任务
     xTaskCreate(ReadTouchScreenTask, "getPositationTask", 256, 0, tskIDLE_PRIORITY + 1, &xReadTouchScreenTaskHandle);

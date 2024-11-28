@@ -51,6 +51,18 @@
 #include "esp8266.h"
 #include <string.h>
 #include "esp8266_web.h"
+
+#include "ip4_addr.h"  //ip4_addr_t
+#include "lwip/netif.h"  //struct netif
+#include "ip4_addr.h"  //ip4_addr_isvalid
+
+//#include "init.h"
+//#include "tcp.h"
+//#include "dhcp.h"
+//#include "api.h"
+//#include "httpd.h"
+
+#include "eth_web.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -65,7 +77,8 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+// 手动声明 ip4_addr_isvalid 函数
+int ip4_addr_isvalid(const ip4_addr_t *addr);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -102,8 +115,10 @@ SemaphoreHandle_t xBinarySemaphoreICON;
 volatile uint16_t uart3_rx_index = 0;
 uint8_t Uart3FramFinishFlag = 0;
 
-// 创建互斥信号量句柄 
+// 创建互斥信号量句柄
 SemaphoreHandle_t xMutexEsp8266;
+
+extern struct netif gnetif;  //lwip.c
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
 osThreadId TouchHandle;
@@ -177,6 +192,35 @@ void fmout_disks(uint8_t opt){
 	}
 	myfree(2, work_buff);
 }
+
+// 定义一个任务来获取 IP 地址
+void vGetIPTask(void *pvParameters) {
+    struct netif *netif;
+    ip4_addr_t ip_addr;
+
+    // 等待网络接口准备就绪
+    while (1) {
+        netif = &gnetif; // 获取网络接口指针
+        if (netif != NULL && netif_is_up(netif)) {
+            // 获取 IP 地址
+            ip_addr = netif->ip_addr;
+			//使用 ip4addr_ntoa 函数，它将 ip4_addr_t 结构体转换为字符串形式的 IP 地址，如果转换成功则表示 IP 地址是有效的
+            if (ip4addr_ntoa(&ip_addr)) { //验证 IP 地址是否有效
+				// 打印 IP 地址(成功获取到有线ip地址)
+				//printf("IP Address: %s\n", ip4addr_ntoa(&ip_addr));
+				strcpy(ETH_ip_address, ip4addr_ntoa(&ip_addr));
+				printf("ETH ip address:%s\n", (char*)ETH_ip_address);
+				break;
+            }
+        }
+
+        // 延迟一段时间后再次检测
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+
+    // 任务完成，删除自己
+    vTaskDelete(NULL);
+}
 /* USER CODE END FunctionPrototypes */
 
 void WebServer_Task(void const * argument);
@@ -245,7 +289,9 @@ void MX_FREERTOS_Init(void) {
   */
 /* USER CODE END Header_WebServer_Task */
 void WebServer_Task(void const * argument)
-{         
+{
+    
+                 
   /* init code for LWIP */
   MX_LWIP_Init();
 
@@ -295,13 +341,39 @@ void WebServer_Task(void const * argument)
 	//HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, RX_BUFFER_SIZE);
 	HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, MAX_RX_BUFFER_SIZE);
 	
+	//获取有线网络ip地址
+	//创建一个FreeRTOS任务来获取 IP 地址
+    xTaskCreate(vGetIPTask, "GetIP", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
 
+	/*
+	// 等待网络接口准备就绪
+	ip4_addr_t ip_addr;
+    while (1) {
+        if (netif_is_up(&gnetif)) {  //检查网络接口是否已经启动并准备获取ip
+            // 获取 IP 地址
+            ip_addr = gnetif.ip_addr;
+			// 打印 IP 地址
+			printf("IP Address: %s\n", ip4addr_ntoa(&ip_addr));
+			break;
+        }
+
+        // 延迟一段时间后再次检测
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+	*/
+
+	/* Initialize HTTP server */
+	//httpd_init();
+	
 	taskEXIT_CRITICAL();            /* 出临界段 */
 	//vTaskDelete(xMountDisksTaskHandle);
     //xMountDisksTaskHandle = NULL;
   /* Infinite loop */
   for(;;)
   {
+	/* Poll the HTTP server to handle incoming requests */
+    //httpd_poll();
+	  
     osDelay(1);
   }
   /* USER CODE END WebServer_Task */
@@ -396,6 +468,7 @@ void Touch_Task(void const * argument)
   /* USER CODE END Touch_Task */
 }
 
+
 /* USER CODE BEGIN Header_IOT_Task */
 /**
 * @brief Function implementing the IOT thread.
@@ -460,7 +533,6 @@ void GUI_Task(void const * argument)
 	*/
   /* USER CODE END GUI_Task */
 }
-
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
      

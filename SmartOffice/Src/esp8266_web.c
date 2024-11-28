@@ -459,11 +459,33 @@ void ESP8266_CheckRecvData(void)
 			printf("FAN_ip_address:%s\n", FAN_ip_address);
 		}
 		*/
-
+		/*
+		//解析web请求
+		//POST /CMD/MasterLight_On HTTP/1.1
+		//解析POST命令请求
+		char cmd[16] = {0};
+		char* POST = strstr((char*)uart3_rx_buffer, "POST /CMD/");
+		char* end = strstr((char*)uart3_rx_buffer, "HTTP/");
+		char* cmd_start = POST+10;
+		char* cmd_end = strstr(cmd_start, " ");
+		strncpy(cmd, POST+10, cmd_end-cmd_start);
+		printf("cmd:%s", cmd);
+		*/
 
 		ClearUart3ReceiveBuff();
 	 }
 }
+
+/*
+FAN_ON
+FAN_OFF
+
+MasterLight_ON&R=<>&G=<>&B=<> (MasterLight_ON&R=255&G=255&B=255)
+MasterLight_OFF
+
+SpotLight_ON&R=<>&G=<>&B=<> (SpotLight_ON&R=255&G=255&B=255)
+SpotLight_OFF
+*/
 
 /*
 AT+CWMODE=1  //设置ESP8266为STA模式 

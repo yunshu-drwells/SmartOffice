@@ -106,6 +106,8 @@ stemwin_port_freertos\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lw
 stemwin_port_freertos\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ieee.h
 stemwin_port_freertos\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/etharp.h
 stemwin_port_freertos\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/dhcp.h
+stemwin_port_freertos\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/udp.h
+stemwin_port_freertos\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/prot/udp.h
 stemwin_port_freertos\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/autoip.h
 stemwin_port_freertos\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/igmp.h
 stemwin_port_freertos\timeouts.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/dns.h
