@@ -365,6 +365,7 @@ void WebServer_Task(void const * argument)
 	/* Initialize HTTP server */
 	//httpd_init();
 	
+	WebServer();  //创建一个 TCP 套接字
 	taskEXIT_CRITICAL();            /* 出临界段 */
 	//vTaskDelete(xMountDisksTaskHandle);
     //xMountDisksTaskHandle = NULL;
@@ -373,7 +374,7 @@ void WebServer_Task(void const * argument)
   {
 	/* Poll the HTTP server to handle incoming requests */
     //httpd_poll();
-	  
+	Listen_Thread();  
     osDelay(1);
   }
   /* USER CODE END WebServer_Task */
