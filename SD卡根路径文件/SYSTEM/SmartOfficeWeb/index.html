@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>智慧办公室管理系统</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0964;
+            <!-- font-family: '微软雅黑', '黑体', '宋体', serif; -->
+			font-family: 'FZYaoTi', 'FZYaoTi', 'FZYaoTi', serif;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #020220;
+        }
+
+        h1 {
+            padding: 0; 
+            margin: 0 0 0 15px;
+            font-size: 24px;
+            color: #fff;
+            line-height: 3em;
+            font-weight: 100;
+        }
+
+        h1 small {
+            font-size: 12px;
+            color: #fff;
+            margin-left: 10px;
+        }
+
+        h1 span {
+            float: right;
+            font-size: 14px;
+        }
+
+        .content {
+            width: 1900px;
+            margin: 0 auto;
+        }
+
+        .body-left {
+            float: left;
+            width: 500px;
+            margin-right: 10px;
+            text-align: center;
+            color: #fff;
+        }
+		
+		.body-left .left-menu{
+			display: flex;
+			flex-direction: row; /* 横向排列 */
+		}
+
+        .body-left .left-menu .left-nav {
+            float: left;
+            width: 311px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+        }
+        .body-left .left-menu .left-nav .line {
+            background: #010146;
+        }
+        .body-left .left-nav .active {
+            background: #020220;
+        }
+
+        .body-left .left-menu .left-nav a {
+            position: relative;
+            display: block;
+            line-height: 98px;
+            text-decoration: none;
+            color: #fff;
+            padding-left: 100px;
+        }
+
+        .body-left .left-menu .left-nav a img {
+            position: absolute;
+            top: 7px;
+            left: 10px;
+        }
+
+        .body-left .left-menu .content {
+            width: 131px;
+            background: #020220;
+            height: 403px;
+			margin-right: 311px;
+        }
+
+        .body-left .left-menu .content .box {
+            position: absolute;
+            margin: 20px 10px;
+            width: 111px;
+        }
+
+        .body-left .left-menu .content .box h3 {
+            font-size: 16px;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .body-left .left-menu .content .box p {
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .body-left .left-menu .content .box p span {
+            font-size: 20px;
+            color: #FFFF00;
+        }
+
+        .body-left .left-menu .content .active {
+            z-index: 10;
+        }
+
+        #button {
+            width: 80px;
+        }
+
+        .body-right {
+            position: relative;
+            float: left;
+            width: 1320px;
+        }
+
+        .body-right .sgbj {
+            position: absolute;
+            top: 255px;
+            left: 12px;
+            width: 100px;
+			height: auto; /* 保持宽高比 */
+        }
+
+        .body-right .fan {
+            position: absolute;
+            top: 344px;
+            left: 703px;
+            width: 80px;
+			height: auto; /* 保持宽高比 */
+        }
+		
+		.body-right #bg {
+			top: 0;
+			left: 0;
+			width: 100%; /* 使背景图充满整个 .body-right */
+			height: 100%;
+			object-fit: cover; /* 保持图片比例并填充容器 */
+		}
+		
+		.body-right #spotlight0 {
+			position: absolute;
+            top: 70px;
+            left: 100px;
+            width: 400px;
+			height: auto; /* 保持宽高比 */
+		}
+		
+		.body-right #spotlight1 {
+			position: absolute;
+            top: 70px;
+            left: 500px;
+            width: 400px;
+			height: auto; /* 保持宽高比 */
+		}
+		
+		.body-right #spotlight2 {
+			position: absolute;
+            top: 70px;
+            left: 900px;
+            width: 400px;
+			height: auto; /* 保持宽高比 */
+		}
+    </style>
+
+</head>
+
+<body>
+    <div class="header">
+        <div class="content">
+            <h1>智能办公室管理系统
+                <small>温度、湿度、风扇、报警，光照、灯光、门锁
+                </small>
+            </h1>
+        </div>
+    </div>
+    <div class="content">
+        <div class="body-left">
+            <img src="images/left-title.png" style="margin:26px 0;">
+            <div class="left-menu">
+				<div>
+                <ul class="left-nav">
+                    <li class="line active">
+                        <a href="#title1" data-toggle="tab">
+                            <img src="images/01Temperature.jpg" width="54px">温度传感器
+                        </a>
+                    </li>
+                    <li class="line">
+                        <a href="#title2" data-toggle="tab">
+                            <img src="images/02Humidity.jpg" width="54px">湿度传感器
+                        </a>
+                    </li>
+                    <li class="line">
+                        <a href="#title3" data-toggle="tab">
+                            <img src="images/03Brightnesss.jpg" width="54px">光照传感器
+                        </a>
+                    </li>
+                    <li class="line">
+                        <a href="#title4" data-toggle="tab">
+                            <img src="images/04LightingMasterOn.jpg" width="54px">主灯
+                        </a>
+                    </li>
+					<li class="line">
+                        <a href="#title5" data-toggle="tab">
+                            <img src="images/05SpotlightOn.jpg" width="54px">射灯
+                        </a>
+                    </li>
+                    <li class="line">
+                        <a href="#title6" data-toggle="tab">
+                            <img src="images/06FanOn.jpg" width="54px">风扇
+                        </a>
+                    </li>
+                    <li class="line">
+                        <a href="#title7" data-toggle="tab">
+                            <img src="images/07AlarmOn.jpg" width="54px">警报
+                        </a>
+                    </li>
+					<li class="line">
+                        <a href="#title8" data-toggle="tab">
+                            <img src="images/08LoRaOn.jpg" width="54px">门锁
+                        </a>
+                    </li>
+                </ul>
+				</div>
+                <div class="content">
+                    <div class="box fade in active" id="title1">
+                        <p>温度值<br /><span>
+                                <lable id="temperature"></lable>
+                            </span></p>
+                    </div>
+                    <div class="box fade" id="title2">
+                        <p>湿度值<br /><span>
+                                <lable id="humidity"></lable>
+                            </span></p>
+                    </div>
+                    <div class="box fade" id="title3">
+                        <p>光照值<br /><span>
+                                <lable id="light"></lable>
+                            </span></p>
+                    </div>
+                    <div class="box fade" id="title4">
+                        <h3>开关</h3>
+                        <img id="button01" src="images/an-off.png" onclick="MasterLight()" />
+                    </div>
+                    <div class="box fade" id="title5">
+                        <h3>开关</h3>
+                        <img id="button02" src="images/an-off.png" onclick="SpotLight()" />
+                    </div>
+                    <div class="box fade" id="title6">
+                        <h3>开关</h3>
+                        <img id="button03" src="images/an-off.png" onclick="Fan()" />
+                    </div>
+					<div class="box fade" id="title7">
+                        <h3>开关</h3>
+                        <img id="button04" src="images/an-off.png" onclick="Alarm()" />
+                    </div>
+					<div class="box fade" id="title8">
+                        <h3>开锁</h3>
+                        <img id="button05" src="images/an-off.png" onclick="MagnetismLock()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+        <div class="body-right">
+			<img src="" style="margin:38px 0;">
+			<img id="spotlight0" src="images/null.png"></img>
+			<img id="spotlight1" src="images/null.png"></img>
+			<img id="spotlight2" src="images/null.png"></img>
+			
+            <img id="sgbj" class="sgbj" src="images/sgbj-off.png" />
+            <img id="fan" class="fan" src="images/fan-off.png" />
+            <img id="bg" src="images/sys-bg-off.jpg" />
+            <audio id="alarm" src="music/alarm.mp3"></audio>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+	
+		// 定义请求静态资源的方法
+        function requestStaticResources() {
+            //const baseUrl = "http://example.com";  // 替换为实际的服务器地址
+			// 从当前页面URL中提取服务器地址
+            const baseUrl = new URL(window.location.href).origin;
+
+            // 获取所有静态资源链接
+            const links = document.querySelectorAll('link[rel="stylesheet"]');
+            const scripts = document.querySelectorAll('script[src]');
+            const images = document.querySelectorAll('img[src]');
+
+            const resources = Array.from(links).map(link => link.href)
+                .concat(Array.from(scripts).map(script => script.src))
+                .concat(Array.from(images).map(img => img.src));
+
+            // 发送请求
+            resources.forEach(resource => {
+                fetch(resource)
+                    .then(response => {
+                        if (response.ok) {
+                            console.log(`成功请求: ${resource}`);
+                        } else {
+                            console.error(`请求失败: ${resource}`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(`请求出错: ${resource}`, error);
+                    });
+            });
+        }
+
+        // 页面加载完成后调用请求静态资源的方法
+        window.addEventListener('load', requestStaticResources);
+
+        var MasterLightStatus = false;                //主灯光状态
+        var SpotLightStatus = false;              //射灯状态
+		var FanStatus = false;              //风扇状态
+        var AlarmStatus = false;            //报警状态
+		var MagnetismLockStatus = false;            //报警状态
+		
+		/*
+		//获取主题图片对象
+        var bG = $("#bg")[0];
+		//在开启主灯光的情况下，需要修改主灯图片
+        bG.src = ("images/sys-bg.jpg");
+		//通过jQuery获取按钮1图标的对象
+        var anNiu = $("#button01")[0];
+		anNiu.src = ("images/an-on.png");
+		*/
+		var bG = $("#fan")[0];
+		if (MasterLightStatus) {
+			bG.src = ("images/bg-fan-off.png");
+		}
+		else {
+			bG.src = ("images/bg-fan-off.png");
+		}
+		
+		//用于测试
+		//var ip = 'http://192.168.2.38';
+		var ip = "";
+		
+        //命令交互
+		/*
+		Ajax 请求中的 URL 是相对路径 "/CMD/" + type + '_' + cmd
+		浏览器会自动将相对路径与当前页面的基础 URL (http://192.168.2.38/) 组合
+		*/
+        function SendCmd(type, cmd) {
+            $.ajax({
+                url: ip + "/CMD/" + type + '_' + cmd,//通过URL区分不同命令，内容是字符串
+                type: "post",//post，一般下发到服务器就用post
+                cache: false,
+                timeout: 2000,
+                data: cmd,  //命令需要执行的动作  开还是关
+                success: function (data) {
+                    //打印日志
+                    console.log(data);
+                }
+            })
+
+
+        }
+        //获取传感器数据
+		//当 cache: false 被设置时，jQuery 会自动在 URL 后面附加一个时间戳参数，例如 ?_=1732725403088。
+		//这个时间戳参数使得每次请求的 URL 都是唯一的，从而强制浏览器每次都向服务器发送请求，而不是从缓存中读取数据。
+        function ReadData() {
+            $.ajax({ // 使用jQuery对象调用ajax
+                url: ip + "/DATA/Sensor",//访问服务器端的URL
+                type: "get",//定义http协议交互的方法
+                cache: false,
+                timeout: 2000,//前后台交互超时时间
+                dataType: "json",//json格式
+                //当服务器返回数据时，在ajax对象内会有个回调函数success
+                success: function (data) {
+                    //打印接收的数据值，用于调试
+                    console.log(data);
+                    //把服务器返回的数据更新到DOM中
+                    $("#temperature").text(data.temperature + "℃");
+                    $("#humidity").text(data.humidity + "%");
+                    $("#light").text(data.light + "lux");
+                }
+            })
+
+
+        }
+        //创建5秒的定时器，定时读取传感器数据
+        //setInterval(ReadData, 5000);
+
+        $("#temperature").text("35℃");
+        $("#humidity").text("55.5%");
+        $("#light").text("10%");
+        //循环播放报警音乐
+        function loop() {
+            var AS = $("#alarm")[0];
+            // 200ms调用一次MP3音频播放
+            setTimeout(function () { AS.play(); }, 200);
+        }
+        function MasterLight() {
+            //通过jQuery获取按钮1图标的对象
+            var anNiu = $("#button01")[0];
+            //获取主题图片对象
+            var bG = $("#bg")[0];
+            if (MasterLightStatus) {
+                //发送关闭主灯光命令
+                SendCmd("MasterLight", "Off");
+                anNiu.src = ("images/an-off.png");
+				//在关闭主灯光的情况下，需要修改主灯图片
+                bG.src = ("images/sys-bg-off.jpg");
+
+				bG = $("#fan")[0];
+				//设置风扇图案
+				if(FanStatus){
+					bG.src = ("images/bg-fan-on.png");
+				}else{
+					bG.src = ("images/bg-fan-off.png");
+				}
+                MasterLightStatus = false;
+            } else {
+                //发送开启主灯光命令
+                SendCmd("MasterLight", "On");
+                anNiu.src = ("images/an-on.png");
+				//在开启主灯光的情况下，需要修改主灯图片
+                bG.src = ("images/sys-bg.jpg");
+				//设置风扇图案
+				bG = $("#fan")[0];
+				if(FanStatus){
+					bG.src = ("images/fan-on.png");
+				}else{
+					bG.src = ("images/fan-off.png");
+				}
+                MasterLightStatus = true;
+
+            }
+        }
+        function SpotLight() {
+            var anNiu = $("#button02")[0];
+			
+			var Spotlight0 = $("#spotlight0")[0];
+			var Spotlight1 = $("#spotlight1")[0];
+			var Spotlight2 = $("#spotlight2")[0];
+            if (SpotLightStatus) {
+                //发送关闭射灯命令
+                SendCmd("SpotLight", "Off");
+                anNiu.src = ("images/an-off.png");
+                //根据灯光状态切换不同的射灯图片
+				Spotlight0.src = ("images/null.png");
+				Spotlight1.src = ("images/null.png");
+				Spotlight2.src = ("images/null.png");
+
+                SpotLightStatus = false;
+            }
+            else {
+                //发送开启射灯命令
+                SendCmd("SpotLight", "On");
+                anNiu.src = ("images/an-on.png");
+				
+				Spotlight0.src = ("images/spotlight.png");
+				Spotlight1.src = ("images/spotlight.png");
+				Spotlight2.src = ("images/spotlight.png");
+                SpotLightStatus = true;
+            }
+        }
+        function Fan() {
+            var anNiu = $("#button03")[0];
+            var bG = $("#fan")[0];
+            if (FanStatus) {
+                //发送关闭风扇命令
+                SendCmd("Fan", "Off");
+				anNiu.src = ("images/an-off.png");
+                //风扇在关闭的情况下，需要根据灯光颜色修改风扇图片
+                if (MasterLightStatus) {
+                    bG.src = ("images/fan-off.png");
+                }
+                else {
+                    bG.src = ("images/bg-fan-off.png");
+                }
+                FanStatus = false;
+            }
+            else {
+                //发送开启风扇命令
+                SendCmd("Fan", "On");
+                anNiu.src = ("images/an-on.png");
+				//风扇在开启的情况下，需要根据灯光颜色修改风扇图片
+                if (MasterLightStatus) {
+                    bG.src = ("images/fan-on.png");
+                }
+                else {
+                    bG.src = ("images/bg-fan-on.png");
+                }
+                FanStatus = true;
+            }
+        }
+		function Alarm() {
+            var anNiu = $("#button04")[0];
+            var bG = $("#sgbj")[0];
+            var AS = $("#alarm")[0];
+            if (AlarmStatus) {
+                //发送关闭警报命令
+                SendCmd("Alarm", "Off");
+                anNiu.src = ("images/an-off.png");
+                bG.src = ("images/sgbj-off.png");
+                AS.removeEventListener('ended', loop, false);
+                AS.pause();
+                AlarmStatus = false;
+            }
+            else {
+                //发送开启警报命令
+                SendCmd("Alarm", "On");
+                anNiu.src = ("images/an-on.png");
+                bG.src = ("images/sgbj-on.gif");
+                //保证报警音效，在触发的状态下能够循环播放
+                AS.addEventListener('ended', loop, false);
+                AS.play();
+                AlarmStatus = true;
+            }
+        }
+		
+		var isLocking = false; // 新增一个标志变量，用于控制是否在锁定期间
+		
+		function MagnetismLock() {
+            var anNiu = $("#button05")[0];
+            if (!MagnetismLockStatus && !isLocking) {
+				// 设置锁定标志
+				isLocking = true;
+				
+                //发送开启门锁命令
+                SendCmd("MagnetismLock", "On");
+                anNiu.src = ("images/an-on.png");
+				// 设置按钮不可点击
+				//anNiu.disabled = true;
+				
+				// 移除点击事件监听器
+				//anNiu.removeEventListener('click', MagnetismLock);
+				
+				// 延时10秒，关闭
+				setTimeout(function() {
+					anNiu.src = "images/an-off.png";
+					MagnetismLockStatus = true;
+					
+					// 重新绑定点击事件监听器
+					//anNiu.addEventListener('click', MagnetismLock);
+					
+					// 设置按钮可点击
+					//anNiu.disabled = false;
+					
+					isLocking = false; // 解除锁定标志
+				}, 10000); // 10000毫秒 = 10秒
+            }
+        }
+    </script>
+</body>
+
+</html>
