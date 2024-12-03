@@ -150,12 +150,11 @@ void init_disks(){
 	//printf("noflash sector count: %d\n", (int)recv);
 }
 
-//void fmout_disks(void *pvParameters){
-void fmout_disks(uint8_t opt){
+void fmout_sd(uint8_t opt){
 	//uint8_t work_buff[512] = {0};  //缓冲区
 	uint8_t * work_buff = (uint8_t *)mymalloc(2, 512);
 	uint8_t res = 0;
-	res = f_mount(SDFatFS, "0:", 0);        // 挂载SD卡
+	res = f_mount(SDFatFS, "0:", opt);        // 挂载SD卡
 	printf("f_mount sd res:%u\n", res);
 	if(FR_OK == res){
 		//printf("SD Disk Mount Successed!\n");     //SD卡成功挂载
@@ -172,7 +171,12 @@ void fmout_disks(uint8_t opt){
 					//printf("SD Disk Format Error\n");     // 格式化失败
 			}
 	}
-	
+	myfree(2, work_buff);
+}
+
+void fmout_norflash(uint8_t opt){
+	uint8_t * work_buff = (uint8_t *)mymalloc(2, 512);
+	uint8_t res = 0;
 	res = f_mount(USERFatFS, "1:", opt);  // 挂载NORFlash
 	printf("f_mount flash res:%u\n", res);
 	if(FR_OK == res){
@@ -191,6 +195,12 @@ void fmout_disks(uint8_t opt){
 			}
 	}
 	myfree(2, work_buff);
+}
+
+//void fmout_disks(void *pvParameters){
+void fmout_disks(uint8_t opt){
+	fmout_sd(0);
+	fmout_norflash(1);
 }
 
 // 定义一个任务来获取 IP 地址
@@ -376,6 +386,27 @@ void WebServer_Task(void const * argument)
     //httpd_poll();
 	Listen_Thread();  
     osDelay(1);
+	  
+    //测试打开文件
+    /*
+	if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
+		taskENTER_CRITICAL();           // 进入临界段
+		FIL *fftemp;
+		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符开辟空间
+		if(NULL == fftemp){
+			printf("fftemp is NULL\n");
+		}
+		uint8_t res = 0;  
+		res = f_open(fftemp, "1:SmartOfficeWeb/index.html", FA_READ);
+		printf("NORFlash f_open return :%d\n", res);
+		f_close(fftemp);
+		myfree(SRAMEX, fftemp);	
+		// 释放信号量
+		xSemaphoreGive(xBinarySemaphoreFont);
+		taskEXIT_CRITICAL();            // 出临界区 
+	}
+	osDelay(1000);
+	*/
   }
   /* USER CODE END WebServer_Task */
 }
@@ -409,21 +440,37 @@ void Touch_Task(void const * argument)
 		//测试NORFlash打开文件
 		FIL *fftemp;
 		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符开辟空间
-		uint8_t res = f_open(fftemp, "1:AlarmOn.bin", FA_READ);
-		printf("NORFlash f_open return :%d\n", res);
+		uint8_t res = 0;
+		//res = f_open(fftemp, "1:AlarmOn.bin", FA_READ);
+		//printf("NORFlash f_open return :%d\n", res);
+		//f_close(fftemp);
 
-		res = f_open(fftemp, "1:/img.jpg", FA_READ);
-		printf("NORFlash f_open return :%d\n", res);
+		//res = f_open(fftemp, "1:/img.jpg", FA_READ);
+		//printf("NORFlash f_open return :%d\n", res);
+		//f_close(fftemp);
+		
+
 		
 		//测试SD打开文件
-		/*
-		res = f_open(fftemp, "0:AlarmOn.bin", FA_READ);
-		printf("SD f_open return :%d\n", res);
+		//res = f_open(fftemp, "0:/SYSTEM/SmartOfficeWeb/index.html", FA_READ);
+		//printf("SD f_open return :%d\n", res);
+		//f_close(fftemp);
 		
-		res = f_open(fftemp, "0:/img.jpg", FA_READ);
-		printf("SD f_open return :%d\n", res);
-		*/
-				
+		//res = f_open(fftemp, "0:/img.jpg", FA_READ);
+		//printf("SD f_open return :%d\n", res);
+
+		res = f_open(fftemp, "1:SmartOfficeWeb/index.html", FA_READ);
+		printf("NORFlash f_open return :%d\n", res);
+		f_close(fftemp);
+		
+		myfree(SRAMEX, fftemp);
+		
+		//在WebServer_Task中完成磁盘初始化及挂载之后，只有Touch_Task中可以打开文件
+		//也就是在GUI启动之后f_open都会失败(很扯淡)
+		//因此也像字库和图库那样维护网页文件
+		
+		
+		
 		// 创建二值信号量 
 		xBinarySemaphoreICON = xSemaphoreCreateBinary();
 		//将图库加载到外扩SRAM中
@@ -445,11 +492,31 @@ void Touch_Task(void const * argument)
 		xSemaphoreGive(xBinarySemaphoreICON); 	
 		//emwin_test_touch();  //emWin坐标获取
 		
+		// 释放信号量
+		xSemaphoreGive(xBinarySemaphoreFont);
 		taskEXIT_CRITICAL();            /* 出临界区 */
 	}
   /* Infinite loop */
   for(;;)
   {
+	  /*
+		if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
+			taskENTER_CRITICAL();           // 进入临界段
+			FIL *fftemp;
+			fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符开辟空间
+			if(NULL == fftemp){
+				printf("fftemp is NULL\n");
+			}
+			uint8_t res = 0;  
+			res = f_open(fftemp, "1:SmartOfficeWeb/index.html", FA_READ);
+			printf("NORFlash f_open return :%d\n", res);
+			f_close(fftemp);
+			myfree(SRAMEX, fftemp);	
+			// 释放信号量
+			xSemaphoreGive(xBinarySemaphoreFont);
+			taskEXIT_CRITICAL();            // 出临界区 
+	    }
+	  */
 		if (t % 5 == 0) /* 每200ms读取一次 */ { 
 			dht11_read_data(&temperature, &humidity); /* 读取温湿度值 */
 			
@@ -487,9 +554,27 @@ void IOT_Task(void const * argument)
 	//发起udp广播，所有在线的物联网子设备会主动连接过来从而获取它们的ip地址(废弃)
 	ESP8266_startBroadCastCmd();  
 	//test();
-	//扫描所有wifi列表
+	//扫描所有wifi列表...
 	xSemaphoreGive(xMutexEsp8266);
   }
+  /*
+  if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
+		taskENTER_CRITICAL();           // 进入临界段
+		FIL *fftemp;
+		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符开辟空间
+		if(NULL == fftemp){
+			printf("fftemp is NULL\n");
+		}
+		uint8_t res = 0;  
+		res = f_open(fftemp, "1:SmartOfficeWeb/index.html", FA_READ);
+		printf("NORFlash f_open return :%d\n", res);
+		f_close(fftemp);
+		myfree(SRAMEX, fftemp);	
+		// 释放信号量
+		xSemaphoreGive(xBinarySemaphoreFont);
+		taskEXIT_CRITICAL();            // 出临界区 
+  }
+  */
   /* Infinite loop */
   for(;;)
   {
@@ -523,6 +608,26 @@ void GUI_Task(void const * argument)
 	*/
 	printf("GUI_Task\n");
 	if (xSemaphoreTake(xBinarySemaphoreICON, portMAX_DELAY) == pdTRUE) {
+		/*
+		//在WebServer_Task中完成磁盘初始化及挂载之后，只有Touch_Task中可以打开文件
+		if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
+			taskENTER_CRITICAL();           // 进入临界段
+			FIL *fftemp;
+			fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符开辟空间
+			if(NULL == fftemp){
+				printf("fftemp is NULL\n");
+			}
+			uint8_t res = 0;  
+			res = f_open(fftemp, "1:SmartOfficeWeb/index.html", FA_READ);
+			printf("NORFlash f_open return :%d\n", res);
+			f_close(fftemp);
+			myfree(SRAMEX, fftemp);	
+			// 释放信号量
+			xSemaphoreGive(xBinarySemaphoreFont);
+			taskEXIT_CRITICAL();            // 出临界区 
+		}
+		*/
+		
 		MainTask();
 	}
   /* Infinite loop */

@@ -4,6 +4,10 @@
 
 #include "lwip/sockets.h"
 
+#include "fatfs.h"  //SDFatFS、USERFatFS
+#include "mymalloc.h"  //mymalloc
+#include "main.h"  //fmout_sd fmout_norflash
+
 int server_socket;
 struct sockaddr_in server_addr;
   
@@ -51,8 +55,73 @@ const char* handle_request(const char* request, int client_socket)
         // 处理 GET 请求
         if (strstr(request, "GET / HTTP/1.1") != NULL) {
             // 根目录请求
-            const char* response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Welcome to the Root Directory!</h1></body></html>";
-            send(client_socket, response, strlen(response), 0);
+            //const char* response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Welcome to the Root Directory!</h1></body></html>";
+            //send(client_socket, response, strlen(response), 0);
+			
+			//fmout_norflash(1); //挂载norflash
+			//挂载之后程序直接奔溃
+			
+			//taskENTER_CRITICAL();           // 进入临界段
+			//uint8_t res = 0;
+			// 检查文件状态
+			/*
+			FILINFO fno;
+			res = f_stat("1:AlarmOn.bin", &fno);
+			if (res != FR_OK) {
+				printf("f_stat return for index.html: %d (", res);
+				printf(")\n");
+			} else {
+				printf("File exists and is accessible\n");
+			}
+			*/			
+			//FIL *fftemp;
+			//fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符开辟空间
+			//res = f_open(fftemp, "1:SmartOfficeWeb/index.html", FA_READ);
+			//printf("NORFlash f_open return :%d\n", res);
+			//taskEXIT_CRITICAL();            // 出临界区 
+			/*
+			// 读取文件内容
+			UINT bytes_read;
+			//char buffer[1024];
+			char* buffer = mymalloc(SRAMEX, 1024);
+			//char response_header[256];
+			char* response_header = mymalloc(SRAMEX, 256);
+			//char response[1024 * 25];  // 假设文件内容不超过25KB
+			char* response = mymalloc(SRAMEX, 25*1024);
+			int total_bytes_read = 0;
+
+			while (1) {
+				res = f_read(fftemp, buffer, sizeof(buffer), &bytes_read);
+				if (res != FR_OK || bytes_read == 0) {
+					break;
+				}
+				memcpy(response + total_bytes_read, buffer, bytes_read);
+				total_bytes_read += bytes_read;
+			}
+
+			//f_close(fftemp);
+			//myfree(SRAMEX, fftemp);
+
+			// 构建响应头
+			snprintf(response_header, sizeof(response_header),
+					 "HTTP/1.1 200 OK\r\n"
+					 "Content-Type: text/html\r\n"
+					 "Content-Length: %d\r\n"
+					 "\r\n",
+					 total_bytes_read);
+
+			// 将响应头和文件内容拼接在一起
+			memcpy(response + total_bytes_read, response_header, strlen(response_header));
+			total_bytes_read += strlen(response_header);
+
+			// 发送响应
+			send(client_socket, response, total_bytes_read, 0);
+			
+			myfree(SRAMEX, buffer);
+			myfree(SRAMEX, response_header);
+			myfree(SRAMEX, response);
+			*/
+			
             return NULL;
         } else if (strstr(request, "GET /image.jpg HTTP/1.1") != NULL) {
             // 图片资源请求
@@ -167,6 +236,9 @@ static void handle_client(void *pvParameters) {
         buffer[bytes_received] = '\0';
         // 处理接收到的请求
         printf("Received request: %s\n", buffer);
+		
+		//fmout_norflash(1); //挂载norflash
+		//挂载之后程序直接奔溃
 
         // 处理接收到的请求
         const char* response = handle_request(buffer, client_socket);
@@ -205,7 +277,7 @@ void Listen_Thread(){
         xTaskCreate(
             handle_client,          // 任务处理函数
             "ClientHandler",        // 任务名称
-            1024,                   // 任务堆栈大小
+            4096,                   // 任务堆栈大小
             (void *)client_socket,  // 任务参数
             1,                      // 任务优先级
             NULL                    // 任务句柄

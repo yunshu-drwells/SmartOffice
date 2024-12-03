@@ -199,6 +199,9 @@ extern uint8_t* uart3_rx_buffer;
 //extern char SpotLight_ip_address[];  //射灯模块ip地址
 
 extern char ETH_ip_address[];  //有线网络ip地址
+
+void fmout_sd(uint8_t opt);
+void fmout_norflash(uint8_t opt);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
