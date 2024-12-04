@@ -422,8 +422,8 @@ void ESP8266_Connect_Wifi(const char* ssid, const char* password)
 	//等待AT命令成功
 	while( ! ESP8266_AT_Test() );
 	
-	printf("webstinfo:%p\n", webstinfo);
-	printf("webstinfo->index_html_size:%u\n", webstinfo->index_html_size);
+	//printf("webstinfo:%p\n", webstinfo);
+	//printf("webstinfo->index_html_size:%u\n", webstinfo->index_html_size);
 	//等待设置WiFi模式为STA成功
 	while( ! ESP8266_SetSTAMode() );
 	//等待断开可能存在的WiFi连接成功

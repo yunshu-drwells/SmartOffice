@@ -190,6 +190,8 @@ int main(void)
 	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
 	printf("SRAMEX   USED: %s\n", (char *)paddr);
 	
+	printf("Allocate some space for LWIP in EXSRAM\n");
+	
 	//因为在外扩SRAM紧跟40KBFreeRTOS的空间后面给LWIP分配MEM_SIZE大小的空间，所以要将这部分在内存管理表中对应的表项赋值为非零
 	my_mem_occupy_from(SRAMEX, FreeRTOS_Heap5_ExRAM_SIZE, MEM_SIZE);  //40*1024， 1600
 	memused = my_mem_perused(SRAMEX);
@@ -219,7 +221,7 @@ int main(void)
 	uart3_rx_buffer = (uint8_t *)mymalloc(2, BUFFER_WINDOW*sizeof(uint8_t));  //不能移动到CCM中，否则串口中断会卡死
 	memset(uart3_rx_buffer, 0, BUFFER_WINDOW*sizeof(uint8_t));
 	
-	printf("Allocated struct and variable in EXSRAM\n");
+	printf("Allocated some struct and variables in EXSRAM\n");
 
 	//在CCM中分配
 	lcd_id = (uint8_t *)mymalloc(1, 12);
@@ -240,7 +242,7 @@ int main(void)
 	webstinfo = (_webs_info *)mymalloc(1, sizeof(_webs_info));
 	memset(webstinfo, 0, sizeof(_webs_info));
 	
-	printf("Allocated struct and variable in SRAM CCM\n");
+	printf("Allocated some struct and variables in SRAM CCM\n");
 	
 	memused = my_mem_perused(SRAMCCM);
 	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);

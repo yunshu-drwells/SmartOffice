@@ -61,7 +61,7 @@
 
         .body-left .left-menu .left-nav {
             float: left;
-            width: 311px;
+            width: 240px;
             list-style: none;
             margin: 0;
             padding: 0;
@@ -77,10 +77,10 @@
         .body-left .left-menu .left-nav a {
             position: relative;
             display: block;
-            line-height: 98px;
+            line-height: 100px;
             text-decoration: none;
             color: #fff;
-            padding-left: 100px;
+            padding-left: 120px;
         }
 
         .body-left .left-menu .left-nav a img {
@@ -90,16 +90,29 @@
         }
 
         .body-left .left-menu .content {
-            width: 131px;
+			/*
+            width: 260px;
             background: #020220;
-            height: 403px;
+            height: 800px;
 			margin-right: 311px;
+			list-style: none;
+			*/
+			float: left;
+            width: 260px;
+			background: #010136;
+            height: 800px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+			display: flex; /* 使用 Flexbox 布局 */
+			flex-direction: column; /* 设置为纵向布局 */
         }
 
         .body-left .left-menu .content .box {
             position: absolute;
             margin: 20px 10px;
-            width: 111px;
+            width: 240px;
         }
 
         .body-left .left-menu .content .box h3 {
@@ -121,7 +134,96 @@
         .body-left .left-menu .content .active {
             z-index: 10;
         }
-
+		.body-left .left-menu .content .box fade{
+			position: relative;
+			height: 100px; /* 设置 div 的高度为 100px */
+		}
+		
+		.body-left .left-menu .content #title1{
+			height: 100px; /* 设置 div 的高度为 100px */
+			//background: #020220;
+			margin-top: 0px;
+			//text-align: center; /*文字居中*/
+			
+			display: flex; /* 使用 Flexbox 布局 */
+			flex-direction: column; /* 设置为纵向布局 */
+			justify-content: center; /* 垂直居中对齐 */
+			align-items: center; /* 水平居中对齐 */
+		}
+		
+		.body-left .left-menu .content #title2{
+			height: 100px; /* 设置 div 的高度为 100px */
+			//background: #020220;
+			margin-top: 100px;
+			//text-align: center; /*文字居中*/
+			
+			display: flex; /* 使用 Flexbox 布局 */
+			flex-direction: column; /* 设置为纵向布局 */
+			justify-content: center; /* 垂直居中对齐 */
+			align-items: center; /* 水平居中对齐 */
+		}
+		.body-left .left-menu .content #title3{
+			height: 100px; /* 设置 div 的高度为 100px */
+			//background: #020220;
+			margin-top: 200px;
+			//text-align: center; /*文字居中*/
+			
+			display: flex; /* 使用 Flexbox 布局 */
+			flex-direction: column; /* 设置为纵向布局 */
+			justify-content: center; /* 垂直居中对齐 */
+			align-items: center; /* 水平居中对齐 */
+		}
+		.body-left .left-menu .content #title4{
+			height: 100px; /* 设置 div 的高度为 100px */
+			//background: #020220;
+			margin-top: 300px;
+			
+			display: flex; /* 使用 Flexbox 布局 */
+			flex-direction: column; /* 设置为纵向布局 */
+			justify-content: center; /* 垂直居中对齐 */
+			align-items: center; /* 水平居中对齐 */
+		}
+		.body-left .left-menu .content #title5{
+			height: 100px; /* 设置 div 的高度为 100px */
+			//background: #020220;
+			margin-top: 400px;
+			
+			display: flex; /* 使用 Flexbox 布局 */
+			flex-direction: column; /* 设置为纵向布局 */
+			justify-content: center; /* 垂直居中对齐 */
+			align-items: center; /* 水平居中对齐 */
+		}
+		.body-left .left-menu .content #title6{
+			height: 100px; /* 设置 div 的高度为 100px */
+			//background: #020220;
+			margin-top: 500px;
+			
+			display: flex; /* 使用 Flexbox 布局 */
+			flex-direction: column; /* 设置为纵向布局 */
+			justify-content: center; /* 垂直居中对齐 */
+			align-items: center; /* 水平居中对齐 */
+		}
+		.body-left .left-menu .content #title7{
+			height: 100px; /* 设置 div 的高度为 100px */
+			//background: #020220;
+			margin-top: 600px;
+			
+			display: flex; /* 使用 Flexbox 布局 */
+			flex-direction: column; /* 设置为纵向布局 */
+			justify-content: center; /* 垂直居中对齐 */
+			align-items: center; /* 水平居中对齐 */
+		}
+		.body-left .left-menu .content #title8{
+			height: 100px; /* 设置 div 的高度为 100px */
+			//background: #020220;
+			margin-top: 700px;
+			
+			display: flex; /* 使用 Flexbox 布局 */
+			flex-direction: column; /* 设置为纵向布局 */
+			justify-content: center; /* 垂直居中对齐 */
+			align-items: center; /* 水平居中对齐 */
+		}
+		
         #button {
             width: 80px;
         }
@@ -200,48 +302,48 @@
                 <ul class="left-nav">
                     <li class="line active">
                         <a href="#title1" data-toggle="tab">
-                            <img src="images/01Temperature.jpg" width="54px">温度传感器
+                            <img src="images/01Temperature.jpg" width="84px">温度传感器
                         </a>
                     </li>
                     <li class="line">
                         <a href="#title2" data-toggle="tab">
-                            <img src="images/02Humidity.jpg" width="54px">湿度传感器
+                            <img src="images/02Humidity.jpg" width="84px">湿度传感器
                         </a>
                     </li>
                     <li class="line">
                         <a href="#title3" data-toggle="tab">
-                            <img src="images/03Brightnesss.jpg" width="54px">光照传感器
+                            <img src="images/03Brightnesss.jpg" width="84px">光照传感器
                         </a>
                     </li>
                     <li class="line">
                         <a href="#title4" data-toggle="tab">
-                            <img src="images/04LightingMasterOn.jpg" width="54px">主灯
+                            <img src="images/04LightingMasterOn.jpg" width="84px">主灯
                         </a>
                     </li>
 					<li class="line">
                         <a href="#title5" data-toggle="tab">
-                            <img src="images/05SpotlightOn.jpg" width="54px">射灯
+                            <img src="images/05SpotlightOn.jpg" width="84px">射灯
                         </a>
                     </li>
                     <li class="line">
                         <a href="#title6" data-toggle="tab">
-                            <img src="images/06FanOn.jpg" width="54px">风扇
+                            <img src="images/06FanOn.jpg" width="84px">风扇
                         </a>
                     </li>
                     <li class="line">
                         <a href="#title7" data-toggle="tab">
-                            <img src="images/07AlarmOn.jpg" width="54px">警报
+                            <img src="images/07AlarmOn.jpg" width="84px">警报
                         </a>
                     </li>
 					<li class="line">
                         <a href="#title8" data-toggle="tab">
-                            <img src="images/08LoRaOn.jpg" width="54px">门锁
+                            <img src="images/08LoRaOn.jpg" width="84px">门锁
                         </a>
                     </li>
                 </ul>
 				</div>
                 <div class="content">
-                    <div class="box fade in active" id="title1">
+                    <div class="box fade" id="title1">
                         <p>温度值<br /><span>
                                 <lable id="temperature"></lable>
                             </span></p>
@@ -294,7 +396,34 @@
         </div>
     </div>
     <script type="text/javascript">
+		//实现 left-nav 默认选中第一个，并且只有 left-nav 选中哪个项时 content 中对应的元素才显示
+		/*
+		document.addEventListener('DOMContentLoaded', function() {
+			const navItems = document.querySelectorAll('.left-nav li');
+			const contentBoxes = document.querySelectorAll('.content .box');
+
+			navItems.forEach(item => {
+				item.addEventListener('click', function() {
+					// Remove active class from all nav items
+					navItems.forEach(navItem => navItem.classList.remove('active'));
+					// Add active class to the clicked nav item
+					this.classList.add('active');
+
+					// Hide all content boxes
+					contentBoxes.forEach(box => box.classList.remove('in', 'active'));
+					// Show the corresponding content box
+					const targetId = this.querySelector('a').getAttribute('href').substring(1);
+					document.getElementById(targetId).classList.add('in', 'active');
+				});
+			});
+
+			// Ensure the first item is active and its content is shown
+			navItems[0].classList.add('active');
+			contentBoxes[0].classList.add('in', 'active');
+		});
+		*/
 	
+	/*
 		// 定义请求静态资源的方法
         function requestStaticResources() {
             //const baseUrl = "http://example.com";  // 替换为实际的服务器地址
@@ -328,6 +457,61 @@
 
         // 页面加载完成后调用请求静态资源的方法
         window.addEventListener('load', requestStaticResources);
+		*/
+		
+		//实现请求静态资源并在请求失败后每隔3秒重试直到成功，使用递归函数来处理每次请求的失败情况。
+		// 定义请求静态资源的方法
+		function requestStaticResources() {
+			// 从当前页面URL中提取服务器地址
+			const baseUrl = new URL(window.location.href).origin;
+
+			// 获取所有静态资源链接
+			const links = document.querySelectorAll('link[rel="stylesheet"]');
+			const scripts = document.querySelectorAll('script[src]');
+			const images = document.querySelectorAll('img[src]');
+
+			const resources = Array.from(links).map(link => link.href)
+				.concat(Array.from(scripts).map(script => script.src))
+				.concat(Array.from(images).map(img => img.src));
+
+			// 发送请求
+			resources.forEach(resource => {
+				requestResourceWithRetry(resource);
+			});
+		}
+
+		// 定义带有重试机制的请求函数
+		function requestResourceWithRetry(resource, retryCount = 0) {
+			fetch(resource)
+				.then(response => {
+					if (response.ok) {
+						console.log(`成功请求: ${resource}`);
+					} else {
+						console.error(`请求失败: ${resource}`);
+						retryRequest(resource, retryCount);
+					}
+				})
+				.catch(error => {
+					console.error(`请求出错: ${resource}`, error);
+					retryRequest(resource, retryCount);
+				});
+		}
+
+		// 定义重试函数
+		function retryRequest(resource, retryCount) {
+			const maxRetries = 10; // 设置最大重试次数，防止无限重试
+			if (retryCount < maxRetries) {
+				setTimeout(() => {
+					console.log(`重试请求: ${resource}, 重试次数: ${retryCount + 1}`);
+					requestResourceWithRetry(resource, retryCount + 1);
+				}, 3000); // 3秒后重试
+			} else {
+				console.error(`达到最大重试次数，放弃请求: ${resource}`);
+			}
+		}
+
+		// 调用请求静态资源的方法
+		requestStaticResources();
 
         var MasterLightStatus = false;                //主灯光状态
         var SpotLightStatus = false;              //射灯状态
@@ -382,7 +566,7 @@
         function ReadData() {
             $.ajax({ // 使用jQuery对象调用ajax
                 url: ip + "/DATA/Sensor",//访问服务器端的URL
-                type: "get",//定义http协议交互的方法
+                type: "post",//定义http协议交互的方法
                 cache: false,
                 timeout: 2000,//前后台交互超时时间
                 dataType: "json",//json格式
@@ -393,14 +577,14 @@
                     //把服务器返回的数据更新到DOM中
                     $("#temperature").text(data.temperature + "℃");
                     $("#humidity").text(data.humidity + "%");
-                    $("#light").text(data.light + "lux");
+                    $("#light").text(data.light + "%");
                 }
             })
 
 
         }
         //创建5秒的定时器，定时读取传感器数据
-        //setInterval(ReadData, 5000);
+        setInterval(ReadData, 5000);
 
         $("#temperature").text("35℃");
         $("#humidity").text("55.5%");

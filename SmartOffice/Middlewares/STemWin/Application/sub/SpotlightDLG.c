@@ -52,12 +52,12 @@ extern GUI_CONST_STORAGE GUI_BITMAP bmMainPagePressed;
 extern GUI_CONST_STORAGE GUI_FONT GUI_Fontfont;
 static int status = 0;
 
-static uint16_t R_slider = 0;  //保存当前R滑块值
-static uint16_t G_slider = 0;  //保存当前G滑块值
-static uint16_t B_slider = 0;  //保存当前B滑块值
+uint16_t SpolightLight_R_slider = 0;  //保存当前R滑块值
+uint16_t SpolightLight_G_slider = 0;  //保存当前G滑块值
+uint16_t SpolightLight_B_slider = 0;  //保存当前B滑块值
 static char cmd[35] = {0};
 
-static uint8_t RGBchanged = 0;
+uint8_t SpolightLight_RGBchanged = 0;
 // USER END
 
 /*********************************************************************
@@ -101,11 +101,24 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 #include "task.h"
 static TaskHandle_t xUpdateTaskHandle;
 static void UpdateTextTask(void *pvParameters) {
-    WM_HWIN hItem = (WM_HWIN)pvParameters;
+    //WM_HWIN hItem = (WM_HWIN)pvParameters;
+	WM_HWIN HWIN = (WM_HWIN)pvParameters;
+	WM_HWIN hItem;
     while (1) {
-		if(RGBchanged){  //只有在灯光控制开关和RBG滑块滑动后才设置并强制刷新控件
+		if(SpolightLight_RGBchanged){  //只有在灯光控制开关和RBG滑块滑动后才设置并强制刷新控件
+			//web方式开关灯需要更新滑块
+			hItem = WM_GetDialogItem(HWIN, ID_SLIDER_0);
+			SLIDER_SetValue(hItem, SpolightLight_R_slider);
+			
+			hItem = WM_GetDialogItem(HWIN, ID_SLIDER_1);
+			SLIDER_SetValue(hItem, SpolightLight_G_slider);
+			
+			hItem = WM_GetDialogItem(HWIN, ID_SLIDER_2);
+			SLIDER_SetValue(hItem, SpolightLight_B_slider);
+			
+			hItem = WM_GetDialogItem(HWIN, ID_BUTTON_0);
 			// 格式化字符串并设置文本
-			if(R_slider || G_slider || B_slider){
+			if(SpolightLight_R_slider || SpolightLight_G_slider || SpolightLight_B_slider){
 				status = 1;
 				BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmSpotlightOn);
 			}else{
@@ -114,7 +127,7 @@ static void UpdateTextTask(void *pvParameters) {
 			}
 			// 强制刷新控件
 			WM_InvalidateWindow(hItem);
-			RGBchanged = 0;
+			SpolightLight_RGBchanged = 0;
 		}
 		
         // 延时200ms
@@ -171,7 +184,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmSpotlightOff);
 	}
 	// 创建更新任务，传递ID_BUTTON_0控件句柄
-    xTaskCreate(UpdateTextTask, "UpdateTextTask", 256, (void*)hItem, tskIDLE_PRIORITY + 1, &xUpdateTaskHandle);
+    xTaskCreate(UpdateTextTask, "UpdateTextTask", 256, (void*)pMsg->hWin, tskIDLE_PRIORITY + 1, &xUpdateTaskHandle);
 	
 
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
@@ -239,45 +252,45 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			//HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
 			//ESP8266_sendBroadcastCmd("SpotLight_ON&R=255&G=255&B=255");
 			
-			R_slider = 255;
-			G_slider = 255;
-			B_slider = 255;
-			sprintf(cmd, "SpotLight_ON&R=%d&G=%d&B=%d", R_slider, G_slider, B_slider);
+			SpolightLight_R_slider = 255;
+			SpolightLight_G_slider = 255;
+			SpolightLight_B_slider = 255;
+			sprintf(cmd, "SpotLight_ON&R=%d&G=%d&B=%d", SpolightLight_R_slider, SpolightLight_G_slider, SpolightLight_B_slider);
 			//printf("%s", cmd);
 			ESP8266_sendBroadcastCmd(cmd);
 			
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_0);
-			SLIDER_SetValue(hItem, R_slider);
+			SLIDER_SetValue(hItem, SpolightLight_R_slider);
 			
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_1);
-			SLIDER_SetValue(hItem, G_slider);
+			SLIDER_SetValue(hItem, SpolightLight_G_slider);
 			
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_2);
-			SLIDER_SetValue(hItem, B_slider);
+			SLIDER_SetValue(hItem, SpolightLight_B_slider);
         }else{
             //BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmSpotlightOff);
             //light off
 			//HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
 			//ESP8266_sendBroadcastCmd("SpotLight_OFF");
 			
-			R_slider = 0;
-			G_slider = 0;
-			B_slider = 0;
+			SpolightLight_R_slider = 0;
+			SpolightLight_G_slider = 0;
+			SpolightLight_B_slider = 0;
 			
 			
-			HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
+			//HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
 			ESP8266_sendBroadcastCmd("SpotLight_OFF");
 			
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_0);
-			SLIDER_SetValue(hItem, R_slider);
+			SLIDER_SetValue(hItem, SpolightLight_R_slider);
 			
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_1);
-			SLIDER_SetValue(hItem, G_slider);
+			SLIDER_SetValue(hItem, SpolightLight_G_slider);
 			
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_2);
-			SLIDER_SetValue(hItem, B_slider);
+			SLIDER_SetValue(hItem, SpolightLight_B_slider);
         }
-		RGBchanged = 1;
+		SpolightLight_RGBchanged = 1;
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -317,12 +330,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		//printf("released\n");
 	  /*
 		//这种方式会导致程序奔溃
-		if(R_slider){
+		if(SpolightLight_R_slider){
 			status = 1;
 			BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOn);
 		}
 	  */
-		sprintf(cmd, "SpotLight_ON&R=%d&G=%d&B=%d", R_slider, G_slider, B_slider);
+		sprintf(cmd, "SpotLight_ON&R=%d&G=%d&B=%d", SpolightLight_R_slider, SpolightLight_G_slider, SpolightLight_B_slider);
 		//printf("%s\n", cmd);
 		ESP8266_sendBroadcastCmd(cmd);
         // USER END
@@ -331,9 +344,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
 		//printf("value changed\n");
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_0);
-		R_slider = SLIDER_GetValue(hItem);
-		RGBchanged = 1;
-		//printf("%d\n", R_slider);
+		SpolightLight_R_slider = SLIDER_GetValue(hItem);
+		SpolightLight_RGBchanged = 1;
+		//printf("%d\n", SpolightLight_R_slider);
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -349,20 +362,20 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
 	  /*
-		if(G_slider){
+		if(SpolightLight_G_slider){
 			status = 1;
 			BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOn);
 		}
 	  */
-		sprintf(cmd, "SpotLight_ON&R=%d&G=%d&B=%d", R_slider, G_slider, B_slider);
+		sprintf(cmd, "SpotLight_ON&R=%d&G=%d&B=%d", SpolightLight_R_slider, SpolightLight_G_slider, SpolightLight_B_slider);
 		ESP8266_sendBroadcastCmd(cmd);
         // USER END
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
         // USER START (Optionally insert code for reacting on notification message)
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_1);
-		G_slider = SLIDER_GetValue(hItem);
-		RGBchanged = 1;
+		SpolightLight_G_slider = SLIDER_GetValue(hItem);
+		SpolightLight_RGBchanged = 1;
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -378,20 +391,20 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
 	  /*
-	  	if(B_slider){
+	  	if(SpolightLight_B_slider){
 			status = 1;
 			BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLightingMasterOn);
 		}
 	  */
-		sprintf(cmd, "SpotLight_ON&R=%d&G=%d&B=%d", R_slider, G_slider, B_slider);
+		sprintf(cmd, "SpotLight_ON&R=%d&G=%d&B=%d", SpolightLight_R_slider, SpolightLight_G_slider, SpolightLight_B_slider);
 		ESP8266_sendBroadcastCmd(cmd);
         // USER END
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
         // USER START (Optionally insert code for reacting on notification message)
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_SLIDER_2);
-		B_slider = SLIDER_GetValue(hItem);
-		RGBchanged = 1;
+		SpolightLight_B_slider = SLIDER_GetValue(hItem);
+		SpolightLight_RGBchanged = 1;
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)

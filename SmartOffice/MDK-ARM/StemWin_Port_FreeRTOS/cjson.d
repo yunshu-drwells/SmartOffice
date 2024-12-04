@@ -1,0 +1,10 @@
+stemwin_port_freertos\cjson.o: ..\Middlewares\cJSON\cJSON.c
+stemwin_port_freertos\cjson.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+stemwin_port_freertos\cjson.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+stemwin_port_freertos\cjson.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+stemwin_port_freertos\cjson.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+stemwin_port_freertos\cjson.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\limits.h
+stemwin_port_freertos\cjson.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h
+stemwin_port_freertos\cjson.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\float.h
+stemwin_port_freertos\cjson.o: ..\Middlewares\cJSON\cJSON.h
+stemwin_port_freertos\cjson.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h

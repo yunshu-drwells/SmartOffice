@@ -92,10 +92,9 @@ extern uint8_t lcd_id[12]; //main.c
 uint16_t id;  //norflash id
 
 uint8_t t = 0; 
-uint16_t temperature; 
-uint16_t humidity;
-
-uint16_t adcx;
+uint16_t temperature;  //温度
+uint16_t humidity;  //湿度
+uint16_t adcx;  //亮度
 
 unsigned long recv = 0;
 

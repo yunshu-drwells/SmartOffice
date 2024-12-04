@@ -37,6 +37,7 @@
 "stemwin_port_freertos\stm32f4xx_hal_msp.o"
 "stemwin_port_freertos\stm32f4xx_hal_timebase_tim.o"
 "stemwin_port_freertos\web.o"
+"stemwin_port_freertos\cjson.o"
 "stemwin_port_freertos\stm32f4xx_hal_eth.o"
 "stemwin_port_freertos\stm32f4xx_hal_adc.o"
 "stemwin_port_freertos\stm32f4xx_hal_adc_ex.o"
