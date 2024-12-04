@@ -143,3 +143,5 @@ stemwin_port_freertos\main.o: ../Inc/fonts.h
 stemwin_port_freertos\main.o: ../Drivers/CMSIS/Include/core_cm4.h
 stemwin_port_freertos\main.o: ../Inc/icon.h
 stemwin_port_freertos\main.o: ../Drivers/CMSIS/Include/core_cm4.h
+stemwin_port_freertos\main.o: ../Inc/web.h
+stemwin_port_freertos\main.o: ../Drivers/CMSIS/Include/core_cm4.h

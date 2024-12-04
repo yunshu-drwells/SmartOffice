@@ -365,7 +365,7 @@ uint8_t webs_update_files(uint16_t x, uint16_t y, uint8_t size, uint8_t *src, ui
 			strcat((char *)pname, (char *)WEB_FILE_NAME[i]);    // 追加具体文件名
 			printf("updating pname: %s; ", pname);
 			lcd_fill(20, y, 200 + 20, 90 + 16, WHITE);
-			lcd_show_string(30, y, 200, 16, 16, "Updating: ", RED);
+			lcd_show_string(30, y, 450, 16, 16, "Updating: ", RED);
 			lcd_show_string(30+70, y, 200, 16, 16, (char *)WEB_FILE_NAME[i], RED);
 			lcd_show_string(30+275, y, 20, 16, 16, "; ", RED);
 			
@@ -437,4 +437,59 @@ void erase_web_sector(){
 			}
 	}
 	myfree(SRAMIN, buf);
+}
+
+void show_webs_info(_webs_info* wi){
+	printf("index_html_addr:%u, ", wi->index_html_addr);
+	printf("index_html_size:%u\n", wi->index_html_size);
+	printf("alarm_mp3_addr:%u, ", wi->alarm_mp3_addr);
+	printf("alarm_mp3_size:%u\n", wi->alarm_mp3_size);
+	printf("abootstrap_min_js_addr:%u, ", wi->abootstrap_min_js_addr);
+	printf("abootstrap_min_js_size:%u\n", wi->abootstrap_min_js_size);
+	printf("jquery_js_addr:%u, ", wi->jquery_js_addr);
+	printf("jquery_js_size:%u\n", wi->jquery_js_size);
+	printf("_01Temperature_jpg_addr:%u, ", wi->_01Temperature_jpg_addr);
+	printf("_01Temperature_jpg_size:%u\n", wi->_01Temperature_jpg_size);
+	printf("_02Humidity_jpg_addr:%u, ", wi->_02Humidity_jpg_addr);
+	printf("_02Humidity_jpg_size:%u\n", wi->_02Humidity_jpg_size);
+	printf("_03Brightnesss_jpg_addr:%u, ", wi->_03Brightnesss_jpg_addr);
+	printf("_03Brightnesss_jpg_size:%u\n", wi->_03Brightnesss_jpg_size);
+	printf("_04LightingMasterOn_jpg_addr:%u, ", wi->_04LightingMasterOn_jpg_addr);
+	printf("_04LightingMasterOn_jpg_size:%u\n", wi->_04LightingMasterOn_jpg_size);
+	printf("_05SpotlightOn_jpg_addr:%u, ", wi->_05SpotlightOn_jpg_addr);
+	printf("_05SpotlightOn_jpg_size:%u\n", wi->_05SpotlightOn_jpg_size);
+	printf("_06FanOn_jpg_addr:%u, ", wi->_06FanOn_jpg_addr);
+	printf("_06FanOn_jpg_size:%u\n", wi->_06FanOn_jpg_size);
+	printf("_07AlarmOn_jpg_addr:%u, ", wi->_07AlarmOn_jpg_addr);
+	printf("_07AlarmOn_jpg_size:%u\n", wi->_07AlarmOn_jpg_size);
+	printf("_08LoRaOn_jpg_addr:%u, ", wi->_08LoRaOn_jpg_addr);
+	printf("_08LoRaOn_jpg_size:%u\n", wi->_08LoRaOn_jpg_size);
+	printf("an_off_png_addr:%u, ", wi->an_off_png_addr);
+	printf("an_off_png_size:%u\n", wi->an_off_png_size);
+	printf("an_on_png_addr:%u, ", wi->an_on_png_addr);
+	printf("an_on_png_size:%u\n", wi->an_on_png_size);
+	printf("bg_fan_off_png_addr:%u, ", wi->bg_fan_off_png_addr);
+	printf("bg_fan_off_png_size:%u\n", wi->bg_fan_off_png_size);	
+	printf("bg_fan_on_png_addr:%u, ", wi->bg_fan_on_png_addr);
+	printf("bg_fan_on_png_size:%u\n", wi->bg_fan_on_png_size);
+	printf("fan_off_png_addr:%u, ", wi->fan_off_png_addr);
+	printf("fan_off_png_size:%u\n", wi->fan_off_png_size);
+	printf("fan_on_png_addr:%u, ", wi->fan_on_png_addr);
+	printf("fan_on_png_size:%u\n", wi->fan_on_png_size);
+	printf("favicon_ico_addr:%u, ", wi->favicon_ico_addr);
+	printf("favicon_ico_size:%u\n", wi->favicon_ico_size);
+	printf("left_title_png_addr:%u, ", wi->left_title_png_addr);
+	printf("left_title_png_size:%u\n", wi->left_title_png_size);
+	printf("null_png_addr:%u, ", wi->null_png_addr);
+	printf("null_png_size:%u\n", wi->null_png_size);
+	printf("sgbj_off_png_addr:%u, ", wi->sgbj_off_png_addr);
+	printf("sgbj_off_png_size:%u\n", wi->sgbj_off_png_size);
+	printf("sgbj_on_gif_addr:%u, ", wi->sgbj_on_gif_addr);
+	printf("sgbj_on_gif_size:%u\n", wi->sgbj_on_gif_size);
+	printf("spotlight_png_addr:%u, ", wi->spotlight_png_addr);
+	printf("spotlight_png_size:%u\n", wi->spotlight_png_size);
+	printf("sys_bg_jpg_addr:%u, ", wi->sys_bg_jpg_addr);
+	printf("sys_bg_jpg_size:%u\n", wi->sys_bg_jpg_size);
+	printf("sys_bg_off_jpg_addr:%u, ", wi->sys_bg_off_jpg_addr);
+	printf("sys_bg_off_jpg_size:%u\n", wi->sys_bg_off_jpg_size);	
 }

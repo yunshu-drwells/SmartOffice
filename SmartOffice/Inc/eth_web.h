@@ -7,6 +7,8 @@
 #include "fatfs.h"  //SDFatFS、USERFatFS
 #include "mymalloc.h"  //mymalloc
 #include "main.h"  //fmout_sd fmout_norflash
+#include "web.h"  //webstinfo
+#include "norflash.h"  //norflash_read
 
 int server_socket;
 struct sockaddr_in server_addr;
@@ -54,6 +56,11 @@ const char* handle_request(const char* request, int client_socket)
     if (strncmp(request, "GET", 3) == 0) {
         // 处理 GET 请求
         if (strstr(request, "GET / HTTP/1.1") != NULL) {
+			//之前使用fatfs读写挂载的磁盘失败是因为FATFS描述符被内存覆写，同样使用norflash_read失败的原因同样是文件信息结构体内存被覆写
+			//在Touch_Task任务执行之后，外扩内存池占用率激增至SRAMEX   USED: 98.0% (约826KB),我的FreeRTOS采用了heap5的堆管理算法
+			//而在定义xHeapRegions数组时只预分配了40KB的空间，因此猜测堆空间不够时，会使用pvPortMalloc来向外扩SRAM申请，但是覆写了一些其它的在外扩SRAM中申请的结构体或变量
+			//内存覆写的原因是FreeRTOS采用heap5堆管理算法时，我并没有找到重定向pvPortMalloc的方法，这应该就是核心原因，最终解决办法是，将这些重要的结构体或变量分配在CCM空间
+			
             // 根目录请求
             //const char* response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Welcome to the Root Directory!</h1></body></html>";
             //send(client_socket, response, strlen(response), 0);
@@ -79,48 +86,51 @@ const char* handle_request(const char* request, int client_socket)
 			//res = f_open(fftemp, "1:SmartOfficeWeb/index.html", FA_READ);
 			//printf("NORFlash f_open return :%d\n", res);
 			//taskEXIT_CRITICAL();            // 出临界区 
-			/*
+			
+
 			// 读取文件内容
-			UINT bytes_read;
-			//char buffer[1024];
-			char* buffer = mymalloc(SRAMEX, 1024);
-			//char response_header[256];
+			//int total_bytes_read = webstinfo->index_html_size;
+			//norflash_read((uint8_t *)response, webstinfo->index_html_addr, webstinfo->index_html_size);
+			
+			taskENTER_CRITICAL();           // 进入临界段
+			// 读取文件内容
 			char* response_header = mymalloc(SRAMEX, 256);
-			//char response[1024 * 25];  // 假设文件内容不超过25KB
-			char* response = mymalloc(SRAMEX, 25*1024);
-			int total_bytes_read = 0;
-
-			while (1) {
-				res = f_read(fftemp, buffer, sizeof(buffer), &bytes_read);
-				if (res != FR_OK || bytes_read == 0) {
-					break;
-				}
-				memcpy(response + total_bytes_read, buffer, bytes_read);
-				total_bytes_read += bytes_read;
-			}
-
-			//f_close(fftemp);
-			//myfree(SRAMEX, fftemp);
+			uint32_t total_bytes_read = webstinfo->index_html_size;
+			//char* response_body = mymalloc(SRAMEX, total_bytes_read+1024);
+			
+			//norflash_read((uint8_t *)response_body, webstinfo->index_html_addr, total_bytes_read);
+			
+			printf("webstinfo:%p\n", webstinfo);
+			printf("webstinfo->index_html_size:%u\n", (uint32_t)webstinfo->index_html_size);
+			//for(uint16_t i = 0; i<1024; i++){
+			//	printf("%c", response_body[i]);
+			//}
+			
+			/*
+			char* response_header = mymalloc(SRAMEX, 256);
+			char* response_body = "<html><body><h1>Welcome to the Root Directory!</h1></body></html>";
+			int total_bytes_read = 65;
+			*/
 
 			// 构建响应头
-			snprintf(response_header, sizeof(response_header),
+			snprintf(response_header, 256,
 					 "HTTP/1.1 200 OK\r\n"
 					 "Content-Type: text/html\r\n"
 					 "Content-Length: %d\r\n"
+					 "Connection: keep-alive\r\n"
 					 "\r\n",
 					 total_bytes_read);
 
-			// 将响应头和文件内容拼接在一起
-			memcpy(response + total_bytes_read, response_header, strlen(response_header));
-			total_bytes_read += strlen(response_header);
+			// 发送响应头
+			send(client_socket, response_header, strlen(response_header), 0);
 
-			// 发送响应
-			send(client_socket, response, total_bytes_read, 0);
-			
-			myfree(SRAMEX, buffer);
+			// 发送响应正文
+			//send(client_socket, response_body, total_bytes_read, 0);
+
+			// 释放内存
 			myfree(SRAMEX, response_header);
-			myfree(SRAMEX, response);
-			*/
+			//myfree(SRAMEX, response_body);
+			taskEXIT_CRITICAL();            // 出临界区 
 			
             return NULL;
         } else if (strstr(request, "GET /image.jpg HTTP/1.1") != NULL) {
@@ -148,19 +158,19 @@ const char* handle_request(const char* request, int client_socket)
             return NULL;
         } else {
             // 其他 GET 请求
-            const char* response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Other GET Request</h1></body></html>";
-            send(client_socket, response, strlen(response), 0);
+            //const char* response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Other GET Request</h1></body></html>";
+            //send(client_socket, response, strlen(response), 0);
             return NULL;
         }
     } else if (strncmp(request, "POST", 4) == 0) {
         // 处理 POST 请求
-        const char* response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>POST Request Received</h1></body></html>";
-        send(client_socket, response, strlen(response), 0);
+        //const char* response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>POST Request Received</h1></body></html>";
+        //send(client_socket, response, strlen(response), 0);
         return NULL;
     } else {
         // 其他请求
-        const char* response = "HTTP/1.1 400 Bad Request\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Bad Request</h1></body></html>";
-        send(client_socket, response, strlen(response), 0);
+        //const char* response = "HTTP/1.1 400 Bad Request\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Bad Request</h1></body></html>";
+        //send(client_socket, response, strlen(response), 0);
         return NULL;
     }
 }
@@ -239,6 +249,8 @@ static void handle_client(void *pvParameters) {
 		
 		//fmout_norflash(1); //挂载norflash
 		//挂载之后程序直接奔溃
+		
+		//printf("total_bytes_read:%u\n", webstinfo->index_html_size);
 
         // 处理接收到的请求
         const char* response = handle_request(buffer, client_socket);

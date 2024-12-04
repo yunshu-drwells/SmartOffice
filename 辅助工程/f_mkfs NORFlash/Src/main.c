@@ -229,7 +229,7 @@ int main(void)
 
 	//lcd_fill(30, 150, 240, 150 + 16, WHITE);    /* 清除显示 */
 	//格式化FLASH
-	//f_mkfs("1:", 0, 0, FF_MAX_SS);                                            /* 格式化FLASH,1:,盘符;1,使用默认格式化参数 */
+	f_mkfs("1:", 0, 0, FF_MAX_SS);                                            /* 格式化FLASH,1:,盘符;1,使用默认格式化参数 */
 	
 	res = f_mount(fs[1], "1:", 1);  /* 挂载FLASH */
 	printf("f_mount flash res:%u\n", res);

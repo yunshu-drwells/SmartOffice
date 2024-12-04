@@ -142,7 +142,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			case  KEY_UP_Pin:
 				printf("Key_up press, update font!\n");
 				//更新字库
-				//printf("Start erase norflash charactor lib!\n");
+				printf("Start erase norflash charactor lib!\n");
 				lcd_show_string(30, 510, 280, 16, 16, "Start erase norflash charactor lib!", RED);
 				//erase_gbk_sector();  //清空norflash已有的字库
 				printf("Erased norflash charactor lib!\n");
@@ -173,7 +173,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 						lcd_show_string(30, 570, 200, 16, 16, "Font Update Success!   ", RED);
 						//lcd_clear(WHITE);   // 清屏 
 				}
-				
+				printf("Start erase norflash icons lib!\n");
 				//erase_icon_sector();  //清空norflash已有的图库
 				printf("Erased norflash icons lib!\n");
 				lcd_fill(20, 510, 200 + 20, 90 + 16, WHITE);
@@ -203,7 +203,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 						lcd_show_string(30, 630, 200, 16, 16, "Icon Update Success!   ", RED);
 						//lcd_clear(WHITE);   // 清屏 
 				}
-				erase_web_sector(); //清空norflash已有的web文件
+				printf("Start erase norflash web files!\n");
+				//erase_web_sector(); //清空norflash已有的web文件
 				printf("Erased norflash web files!\n");
 				lcd_fill(20, 510, 200 + 20, 90 + 16, WHITE);
 				lcd_show_string(30, 510, 200, 16, 16, "Erased norflash web files!", RED);
@@ -232,6 +233,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 						lcd_show_string(30, 690, 200, 16, 16, "Web files Update Success!   ", RED);
 						//lcd_clear(WHITE);   // 清屏 
 				}
+				show_webs_info(webstinfo);
 				/*
 				text_show_string(30, 550, 200, 16, "正点原子STM32开发板", 16, 0, RED);
 				text_show_string(30, 570, 200, 16, "GBK字库测试程序", 16, 0, RED);

@@ -50,6 +50,8 @@
 #include <string.h>
 #include "fonts.h"
 #include "icon.h"
+
+#include "web.h"  //_webs_info
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -71,8 +73,9 @@
 
 /* USER CODE BEGIN PV */
 // 定义堆区域数�?
+// Freertos heap5
 HeapRegion_t xHeapRegions[] = {
-    { ( uint8_t * ) 0x68020000, 0xa000 },  // 定义�?0x68000000�?始的40K字节内存�?
+    { ( uint8_t * ) FreeRTOS_Heap5_ExRAM_ADDR, FreeRTOS_Heap5_ExRAM_SIZE },  // 定义�?0x68000000�?始的40K字节内存�?
     { NULL, 0 }                            // 终止数组
 };
 
@@ -96,6 +99,8 @@ FATFS* USERFatFS; /* File system object for USER logical drive */
 
 _font_info* ftinfo;
 _icon_info* iconftinfo;
+_webs_info* webstinfo;
+
 uint8_t* uart3_rx_buffer;
 
 //char FAN_ip_address[MAX_IP_LENGTH] = {0};  //风扇模块ip地址
@@ -157,33 +162,43 @@ int main(void)
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
 	// 调用配置堆区域的函数
-	configureHeapRegions();  //FreeRTOS定义heap5的堆区地�?范围
+	//configureHeapRegions();  //FreeRTOS定义heap5的堆区地址范围
+	//移动到SRAM和自定义内存池初始化完成之后
+	printf("main.c---------------------------->\n");
 	
-	sram_init();                        /* 外扩SRAM初始�? */
-
-	//my_mem_init(SRAMIN);                /* 初始化内部SRAM内存�? */
-	my_mem_init(SRAMEX);                /* 初始化外部SRAM内存�? */
-	my_mem_init(SRAMCCM);               /* 初始化内部CCM内存�? */
+	sram_init();                        /* 外扩SRAM初始化 */
 	
-	paddr = (uint8_t *)mymalloc(0, 20);
+	//my_mem_init(SRAMIN);                /* 初始化内部SRAM内存池 */
+	my_mem_init(SRAMEX);                /* 初始化外部SRAM内存池 */
+	my_mem_init(SRAMCCM);               /* 初始化内部CCM内存池 */
+	
+	printf("Init EXSRAM\n");
+	printf("Init SRAM CCM\n");
+	
+	configureHeapRegions();  //FreeRTOS定义heap5的堆区地址范围
+	
+	printf("Asigned FreeRTOS heap5 Range\n");
+	
+	//paddr = (uint8_t *)mymalloc(0, 20);
+	paddr = (uint8_t *)mymalloc(1, 20);
 	memset(paddr, 0, 20);	
 	
-	//因为将外扩SRAM的头�?40KB给FreeRTOS使用，所以要将这部分在内存管理表中对应的表项赋�?�为非零，表示已经被占用了，防止影响FreeRTOS的堆�?
-	my_mem_occupy(SRAMEX, 40*1024);
+	//因为将外扩SRAM的开始40KB给FreeRTOS使用，所以要将这部分在内存管理表中对应的表项赋值为非零，表示已经被占用了，防止影响FreeRTOS的堆空间
+	my_mem_occupy(SRAMEX, FreeRTOS_Heap5_ExRAM_SIZE);  //40*1024
 	
 	memused = my_mem_perused(SRAMEX);
 	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
 	printf("SRAMEX   USED: %s\n", (char *)paddr);
 	
-	//因为在外扩SRAM紧跟�?FreeRTOS的空间后面给LWIP分配MEM_SIZE大小的空间，�?以要将这部分在内存管理表中对应的表项赋�?�为非零
-	my_mem_occupy_from(SRAMEX, 40*1024, MEM_SIZE);
+	//因为在外扩SRAM紧跟40KBFreeRTOS的空间后面给LWIP分配MEM_SIZE大小的空间，所以要将这部分在内存管理表中对应的表项赋值为非零
+	my_mem_occupy_from(SRAMEX, FreeRTOS_Heap5_ExRAM_SIZE, MEM_SIZE);  //40*1024， 1600
 	memused = my_mem_perused(SRAMEX);
 	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
 	printf("SRAMEX   USED: %s\n", (char *)paddr);
-	
+	/*	
 	lcd_id = (uint8_t *)mymalloc(2, 12);
 	memset(lcd_id, 0, 12);
-	
+
 	SDFatFS = (FATFS *)mymalloc(2, sizeof(FATFS));
 	memset(SDFatFS, 0, sizeof(FATFS));
 	
@@ -196,8 +211,42 @@ int main(void)
 	iconftinfo = (_icon_info *)mymalloc(2, sizeof(_icon_info));
 	memset(iconftinfo, 0, sizeof(_icon_info));
 	
-	uart3_rx_buffer = (uint8_t *)mymalloc(2, BUFFER_WINDOW*sizeof(uint8_t));
+	webstinfo = (_webs_info *)mymalloc(2, sizeof(_webs_info));
+	memset(webstinfo, 0, sizeof(_webs_info));
+	*/	
+	//上面结构体及变量从外扩SRAM移动到CCM中
+	
+	uart3_rx_buffer = (uint8_t *)mymalloc(2, BUFFER_WINDOW*sizeof(uint8_t));  //不能移动到CCM中，否则串口中断会卡死
 	memset(uart3_rx_buffer, 0, BUFFER_WINDOW*sizeof(uint8_t));
+	
+	printf("Allocated struct and variable in EXSRAM\n");
+
+	//在CCM中分配
+	lcd_id = (uint8_t *)mymalloc(1, 12);
+	memset(lcd_id, 0, 12);
+
+	SDFatFS = (FATFS *)mymalloc(1, sizeof(FATFS));
+	memset(SDFatFS, 0, sizeof(FATFS));
+	
+	USERFatFS = (FATFS *)mymalloc(1, sizeof(FATFS));
+	memset(USERFatFS, 0, sizeof(FATFS));
+	
+	ftinfo = (_font_info *)mymalloc(1, sizeof(_font_info));
+	memset(ftinfo, 0, sizeof(_font_info));
+	
+	iconftinfo = (_icon_info *)mymalloc(1, sizeof(_icon_info));
+	memset(iconftinfo, 0, sizeof(_icon_info));
+	
+	webstinfo = (_webs_info *)mymalloc(1, sizeof(_webs_info));
+	memset(webstinfo, 0, sizeof(_webs_info));
+	
+	printf("Allocated struct and variable in SRAM CCM\n");
+	
+	memused = my_mem_perused(SRAMCCM);
+	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
+	printf("SRAMCCM   USED: %s\n", (char *)paddr);
+	
+	printf("----------------------------------|\n\n");
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

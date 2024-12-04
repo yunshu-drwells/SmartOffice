@@ -77,7 +77,6 @@ typedef __PACKED_STRUCT
 extern _webs_info* webstinfo;
 
 uint8_t webs_init(void);
-uint8_t webs_update_files(uint16_t x, uint16_t y, uint8_t size, uint8_t *src, uint16_t color);
-void erase_web_sector(void);
 void show_webs_info(_webs_info* wi);
+
 #endif

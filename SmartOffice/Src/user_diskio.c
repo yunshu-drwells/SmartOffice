@@ -41,13 +41,16 @@
 /* Private define ------------------------------------------------------------*/
 #include "norflash.h"
 /**
- * 对于25Q128 FLASH芯片, 我们规定�? 9M 给FATFS使用, 9-12MB�?*.bin使用
- * 12M以后紧跟字库, 3个字�? + UNIGBK.BIN, 总大�?3.09M, 共占�?15.09M
- * 15.09M以后的存储空间大家可以随便使�?. 
+ * 对于25Q128 FLASH芯片, 规定
+ * 6MB后紧跟web相关文件
+ * 10MB后紧跟18个**.bin,总大小762KB, 190个扇区,被图库占用了,不能动!
+ * 12MB后紧跟3个字库+UNIGBK.BIN+asc**.bin,总大小3.11M, 791+5个扇区,被字库占用了,不能动!
+ * 以及15.09M以后, 用户可以自由使用. 建议用最后的100K字节比较好
+ * 15.09M以后, 用户可以自由使用. 建议用最后的100K字节比较好. 
  */
 
 #define SPI_FLASH_SECTOR_SIZE   512
-#define SPI_FLASH_SECTOR_COUNT  9 * 1024 * 2   /* 25Q128, �?9M字节给FATFS占用 */
+#define SPI_FLASH_SECTOR_COUNT  6 * 1024 * 2   /* 25Q128, �?6M字节给FATFS占用 */
 #define SPI_FLASH_BLOCK_SIZE    8               /* 每个BLOCK 8个扇�? */
 #define SPI_FLASH_FATFS_BASE    0               /* FATFS 在外部FLASH的起始地�? */
 /* Private variables ---------------------------------------------------------*/

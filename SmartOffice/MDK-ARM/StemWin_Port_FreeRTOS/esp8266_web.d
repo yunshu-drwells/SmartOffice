@@ -60,3 +60,5 @@ stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/
 stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 stemwin_port_freertos\esp8266_web.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 stemwin_port_freertos\esp8266_web.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+stemwin_port_freertos\esp8266_web.o: ../Inc/web.h
+stemwin_port_freertos\esp8266_web.o: ../Drivers/CMSIS/Include/core_cm4.h

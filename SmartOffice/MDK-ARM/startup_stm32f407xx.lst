@@ -835,13 +835,13 @@ ARM Macro Assembler    Page 13
   424 0000001C                 END
               00000000 
               00000000 
-Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
-erwork --depend=stemwin_port_freertos\startup_stm32f407xx.d -ostemwin_port_free
-rtos\startup_stm32f407xx.o -I..\\Inc -I.\RTE\_SmartOffice -IC:\Keil_v5\ARM\PACK
-\Keil\STM32F4xx_DFP\2.12.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include -IC:\Keil_
-v5\ARM\CMSIS\Include --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VER
-SION SETA 523" --predefine="STM32F407xx SETA 1" --list=startup_stm32f407xx.lst 
-startup_stm32f407xx.s
+Command Line: --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=interwork -
+-depend=stemwin_port_freertos\startup_stm32f407xx.d -ostemwin_port_freertos\sta
+rtup_stm32f407xx.o -I..\\Inc -I.\RTE\_SmartOffice -IC:\Keil_v5\ARM\PACK\Keil\ST
+M32F4xx_DFP\2.12.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include -IC:\Keil_v5\ARM\C
+MSIS\Include --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SET
+A 523" --predefine="STM32F407xx SETA 1" --list=startup_stm32f407xx.lst startup_
+stm32f407xx.s
 
 
 

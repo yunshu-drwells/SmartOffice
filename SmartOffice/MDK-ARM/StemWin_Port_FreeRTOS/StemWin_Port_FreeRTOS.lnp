@@ -36,6 +36,7 @@
 "stemwin_port_freertos\stm32f4xx_it.o"
 "stemwin_port_freertos\stm32f4xx_hal_msp.o"
 "stemwin_port_freertos\stm32f4xx_hal_timebase_tim.o"
+"stemwin_port_freertos\web.o"
 "stemwin_port_freertos\stm32f4xx_hal_eth.o"
 "stemwin_port_freertos\stm32f4xx_hal_adc.o"
 "stemwin_port_freertos\stm32f4xx_hal_adc_ex.o"
@@ -175,7 +176,7 @@
 "stemwin_port_freertos\ff_gen_drv.o"
 "stemwin_port_freertos\syscall.o"
 "stemwin_port_freertos\cc936.o"
---library_type=microlib --strict --scatter "StemWin_Port_FreeRTOS\StemWin_Port_FreeRTOS.sct"
+--library_type=microlib --nodebug --strict --scatter "StemWin_Port_FreeRTOS\StemWin_Port_FreeRTOS.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "StemWin_Port_FreeRTOS.map" -o StemWin_Port_FreeRTOS\StemWin_Port_FreeRTOS.axf

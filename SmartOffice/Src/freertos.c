@@ -63,6 +63,7 @@
 //#include "httpd.h"
 
 #include "eth_web.h"
+#include "web.h"  //webs_init
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -119,6 +120,9 @@ uint8_t Uart3FramFinishFlag = 0;
 SemaphoreHandle_t xMutexEsp8266;
 
 extern struct netif gnetif;  //lwip.c
+
+extern uint8_t* paddr;
+extern uint16_t memused;                     /* 内存使用百分比 */
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
 osThreadId TouchHandle;
@@ -157,7 +161,7 @@ void fmout_sd(uint8_t opt){
 	res = f_mount(SDFatFS, "0:", opt);        // 挂载SD卡
 	printf("f_mount sd res:%u\n", res);
 	if(FR_OK == res){
-		//printf("SD Disk Mount Successed!\n");     //SD卡成功挂载
+		printf("SD Disk Mount Successed!\n");     //SD卡成功挂载
 	}
 	if (res == 0X0D) {               // SD卡挂载失败 文件系统错误
 			//printf("sd fs error!\n");
@@ -180,7 +184,7 @@ void fmout_norflash(uint8_t opt){
 	res = f_mount(USERFatFS, "1:", opt);  // 挂载NORFlash
 	printf("f_mount flash res:%u\n", res);
 	if(FR_OK == res){
-		//printf("Flash Disk Mount Successed!\n");     // 挂载NORFlash成功
+		printf("Flash Disk Mount Successed!\n");     // 挂载NORFlash成功
 	}
 	if (res == 0X0D) {                // NORFlash文件系统损坏
 			//printf("flash fs error!\n");
@@ -311,27 +315,36 @@ void WebServer_Task(void const * argument)
   /* USER CODE BEGIN WebServer_Task */
 	taskENTER_CRITICAL();           /* 进入临界段 */
 	
+	printf("WebServer_Task-------------------->\n");
+	
+	printf("MX_LWIP_Init!\n");
+	printf("MX_FATFS_Init!\n");
+	
 	// 创建二值信号量 
 	xBinarySemaphoreFont = xSemaphoreCreateBinary();
 	
 	//初始化norflash和SD卡
 	init_disks();
+	printf("Init NORFlash and SD cards!\n");
 
 	//挂载norflash和SD卡
 	fmout_disks(1);
+	
+	printf("Mout NORFlash and SD cards!\n");
 
 	delay_init(168);                    // 初始化自定义延时函数
 	lcd_init();                             // 初始化LCD
+	printf("Init lcd screen!\n");
 	sprintf((char *)lcd_id, "LCD ID:%04X", lcddev.id);
 	
 	while (dht11_init())    /* DHT11初始化* */
 	{
-			printf("DHT11 Error !\n");
+			printf("DHT11 Error!\n");
 			delay_ms(200);
 	}
 	printf("DHT11 init successed!\n");
 	lsens_init();                           /* 初始化光敏传感器 */
-	printf("lsens init down!\n");
+	printf("Lighter lsens init down!\n");
 	
 	// 释放信号量，通知任务2可以执行了 
 	xSemaphoreGive(xBinarySemaphoreFont);
@@ -342,6 +355,7 @@ void WebServer_Task(void const * argument)
 	//使能esp8266并开启中断接收
 	ESP8266_Enable();  //CH使能
 	ESP8266_Reset();  //复位引脚拉高
+	printf("Enable ESP8266 and Reset!\n");
 	 
 	//启用串口1和串口3中断接收
 	/*
@@ -376,6 +390,12 @@ void WebServer_Task(void const * argument)
 	//httpd_init();
 	
 	WebServer();  //创建一个 TCP 套接字
+	
+	memused = my_mem_perused(SRAMEX);
+	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
+	printf("SRAMEX   USED: %s\n", (char *)paddr);
+	
+	printf("----------------------------------|\n\n");
 	taskEXIT_CRITICAL();            /* 出临界段 */
 	//vTaskDelete(xMountDisksTaskHandle);
     //xMountDisksTaskHandle = NULL;
@@ -421,6 +441,7 @@ void WebServer_Task(void const * argument)
 void Touch_Task(void const * argument)
 {
   /* USER CODE BEGIN Touch_Task */
+	printf("Touch_Task------------------------>\n");
 	// 等待任务1完成 
 	if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
 		taskENTER_CRITICAL();           /* 进入临界段 */
@@ -437,10 +458,20 @@ void Touch_Task(void const * argument)
 			printf("Init icons successed!\n");
 		}
 		
-		//测试NORFlash打开文件
-		FIL *fftemp;
-		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符开辟空间
+		if(webs_init()){  //初始化图库
+			printf("Init web files failed!\n");
+		}else{
+			printf("Init web files successed!\n");
+		}
+		//show_webs_info(webstinfo);
+
 		uint8_t res = 0;
+		
+		//测试NORFlash打开文件
+
+		FIL *fftemp;
+		fftemp = (FIL *)mymalloc(SRAMCCM, sizeof(FIL));  // 给文件描述符开辟空间
+
 		//res = f_open(fftemp, "1:AlarmOn.bin", FA_READ);
 		//printf("NORFlash f_open return :%d\n", res);
 		//f_close(fftemp);
@@ -452,18 +483,21 @@ void Touch_Task(void const * argument)
 
 		
 		//测试SD打开文件
-		//res = f_open(fftemp, "0:/SYSTEM/SmartOfficeWeb/index.html", FA_READ);
-		//printf("SD f_open return :%d\n", res);
-		//f_close(fftemp);
+		/*
+		res = f_open(fftemp, "0:/SYSTEM/SmartOfficeWeb/index.html", FA_READ);
+		printf("SD f_open return :%d\n", res);
+		f_close(fftemp);
+		*/
 		
 		//res = f_open(fftemp, "0:/img.jpg", FA_READ);
 		//printf("SD f_open return :%d\n", res);
 
+
 		res = f_open(fftemp, "1:SmartOfficeWeb/index.html", FA_READ);
 		printf("NORFlash f_open return :%d\n", res);
 		f_close(fftemp);
-		
-		myfree(SRAMEX, fftemp);
+
+		myfree(SRAMCCM, fftemp);
 		
 		//在WebServer_Task中完成磁盘初始化及挂载之后，只有Touch_Task中可以打开文件
 		//也就是在GUI启动之后f_open都会失败(很扯淡)
@@ -494,6 +528,17 @@ void Touch_Task(void const * argument)
 		
 		// 释放信号量
 		xSemaphoreGive(xBinarySemaphoreFont);
+		
+		/*
+		printf("webstinfo:%p\n", webstinfo);
+		printf("webstinfo->index_html_size:%u\n", webstinfo->index_html_size);
+		*/
+		
+		memused = my_mem_perused(SRAMEX);
+		sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
+		printf("SRAMEX   USED: %s\n", (char *)paddr);
+		
+		printf("----------------------------------|\n\n");
 		taskEXIT_CRITICAL();            /* 出临界区 */
 	}
   /* Infinite loop */
@@ -547,15 +592,35 @@ void Touch_Task(void const * argument)
 void IOT_Task(void const * argument)
 {
   /* USER CODE BEGIN IOT_Task */
+  printf("IOT_Task-------------------------->\n");
   //使用互斥信号量保护esp8266的初始化及配置过程
   if (xSemaphoreTake(xMutexEsp8266, portMAX_DELAY) == pdTRUE) {
+	/*
+	printf("webstinfo:%p\n", webstinfo);
+	printf("webstinfo->index_html_size:%u\n", webstinfo->index_html_size);
+	*/
+	  
+
+	//taskENTER_CRITICAL();           // 进入临界段
 	ESP8266_Connect_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);  //"DUOBAO", "yunshu666"
 	//ESP8266_Connect_Wifi("Yunshu_Drwells", "yzy@0203yzy@0203");    //对ESP8266进行配置并连接到指定wifi
 	//发起udp广播，所有在线的物联网子设备会主动连接过来从而获取它们的ip地址(废弃)
 	ESP8266_startBroadCastCmd();  
 	//test();
 	//扫描所有wifi列表...
+	  
 	xSemaphoreGive(xMutexEsp8266);
+	
+	/*  
+	printf("webstinfo:%p\n", webstinfo);
+	printf("webstinfo->index_html_size:%u\n", webstinfo->index_html_size);
+	*/
+	  
+	memused = my_mem_perused(SRAMEX);
+	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
+	printf("SRAMEX   USED: %s\n", (char *)paddr);
+	printf("----------------------------------|\n\n");
+	//taskEXIT_CRITICAL();            // 出临界区   
   }
   /*
   if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
@@ -579,9 +644,9 @@ void IOT_Task(void const * argument)
   for(;;)
   {
 	osDelay(10);
-	taskENTER_CRITICAL();           /* 进入临界段 */
+	//taskENTER_CRITICAL();           /* 进入临界段 */
 	ESP8266_CheckRecvData(); // 处理网络请求 (可以成功收到)
-	taskEXIT_CRITICAL();            /* 出临界区 */
+	//taskEXIT_CRITICAL();            /* 出临界区 */
   }
   /* USER CODE END IOT_Task */
 }
@@ -606,7 +671,7 @@ void GUI_Task(void const * argument)
 	}
 	taskEXIT_CRITICAL();            // 退出临界段
 	*/
-	printf("GUI_Task\n");
+	printf("GUI_Task-------------------------->\n");
 	if (xSemaphoreTake(xBinarySemaphoreICON, portMAX_DELAY) == pdTRUE) {
 		/*
 		//在WebServer_Task中完成磁盘初始化及挂载之后，只有Touch_Task中可以打开文件
@@ -626,6 +691,10 @@ void GUI_Task(void const * argument)
 			xSemaphoreGive(xBinarySemaphoreFont);
 			taskEXIT_CRITICAL();            // 出临界区 
 		}
+		*/
+		/*
+		printf("webstinfo:%p\n", webstinfo);
+		printf("webstinfo->index_html_size:%u\n", webstinfo->index_html_size);
 		*/
 		
 		MainTask();

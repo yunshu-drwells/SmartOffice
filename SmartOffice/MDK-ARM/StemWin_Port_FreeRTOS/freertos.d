@@ -129,3 +129,5 @@ stemwin_port_freertos\freertos.o: ../Inc/eth_web.h
 stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/sockets.h
 stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/inet.h
 stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/errno.h
+stemwin_port_freertos\freertos.o: ../Inc/web.h
+stemwin_port_freertos\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h

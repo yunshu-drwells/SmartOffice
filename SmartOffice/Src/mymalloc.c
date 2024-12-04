@@ -1,16 +1,17 @@
 #include "mymalloc.h"
+#include "main.h"  //FreeRTOS_Heap5_ExRAM_ADDR
 
 
 #if !(__ARMCC_VERSION >= 6010050)   /* 不是AC6编译器，即使用AC5编译器时 */
 /* 内存池(64字节对齐) */
 static __align(64) uint8_t mem1base[MEM1_MAX_SIZE];                                     /* 内部SRAM内存池 */
 static __align(64) uint8_t mem2base[MEM2_MAX_SIZE] __attribute__((at(0x10000000)));     /* 内部CCM内存池 */
-static __align(64) uint8_t mem3base[MEM3_MAX_SIZE] __attribute__((at(0x68020000)));     /* 外部SRAM内存池 */
+static __align(64) uint8_t mem3base[MEM3_MAX_SIZE] __attribute__((at(FreeRTOS_Heap5_ExRAM_ADDR)));     /* 外部SRAM内存池 0x68020000*/
 
 /* 内存管理表 */
 static MT_TYPE mem1mapbase[MEM1_ALLOC_TABLE_SIZE];                                                  /* 内部SRAM内存池MAP */
 static MT_TYPE mem2mapbase[MEM2_ALLOC_TABLE_SIZE] __attribute__((at(0x10000000 + MEM2_MAX_SIZE)));  /* 内部CCM内存池MAP */
-static MT_TYPE mem3mapbase[MEM3_ALLOC_TABLE_SIZE] __attribute__((at(0x68020000 + MEM3_MAX_SIZE)));  /* 外部SRAM内存池MAP */
+static MT_TYPE mem3mapbase[MEM3_ALLOC_TABLE_SIZE] __attribute__((at(FreeRTOS_Heap5_ExRAM_ADDR + MEM3_MAX_SIZE)));  /* 外部SRAM内存池MAP 0x68020000*/
 #else      /* 使用AC6编译器时 */
 /* 内存池(64字节对齐) */
 static __ALIGNED(64) uint8_t mem1base[MEM1_MAX_SIZE];                                                           /* 内部SRAM内存池 */
