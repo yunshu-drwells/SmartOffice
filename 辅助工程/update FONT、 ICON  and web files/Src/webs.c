@@ -25,7 +25,7 @@
  */
 #define WEBINFOADDR        7 * 1024 * 1024
 
-char *const WEB_FILE_NAME[27] =
+char *const WEB_FILE_NAME[29] =
 {
 	//html
     "index.html",     /* index.html*/
@@ -55,8 +55,12 @@ char *const WEB_FILE_NAME[27] =
 	"sgbj-off.png",     /* sgbj-off.png*/
 	"sgbj-on.gif",      /* sgbj-on.gif*/
 	"spotlight.png",    /* spotlight.png*/
+	//"sys-bg.jpg",       /* sys-bg.jpg*/
+	//"sys-bg-off.jpg",   /* sys-bg-off.jpg*/
+	"sys-sp.jpg",       /* sys-sp.jpg*/
 	"sys-bg.jpg",       /* sys-bg.jpg*/
-	"sys-bg-off.jpg",   /* sys-bg-off.jpg*/
+	"sys-bg-sp.jpg",       /* sys-bg-sp.jpg*/
+	"sys-bg-sp-off.jpg",       /* sys-bg-sp-off.jpg*/
 	//css
 	"bootstrap.css",    /* bootstrap.css*/
 
@@ -239,19 +243,30 @@ static uint8_t webs_update_filex(uint16_t x, uint16_t y, uint8_t size, uint8_t *
                 webstinfo->spotlight_png_addr = webstinfo->sgbj_on_gif_addr + webstinfo->sgbj_on_gif_size; /* sgbj-on.gif 之后，紧跟 spotlight.png */
                 webstinfo->spotlight_png_size = fftemp->obj.objsize;             /* spotlight.png的大小 */
                 flashaddr = webstinfo->spotlight_png_addr;                         /* spotlight.png起始地址 */
+                break;
+			case 24: /* sys-sp.jpg */
+                webstinfo->sys_sp_jpg_addr = webstinfo->spotlight_png_addr + webstinfo->spotlight_png_size; /* sys-bg.jpg 之后，紧跟 sys-bg-off.jpg */
+                webstinfo->sys_sp_jpg_size = fftemp->obj.objsize;             /* sys-bg-off.jpg的大小 */
+                flashaddr = webstinfo->sys_sp_jpg_addr;                         /* sys-bg-off.jpg起始地址 */
                 break;			
-			case 24: /* sys-bg.jpg */
-                webstinfo->sys_bg_jpg_addr = webstinfo->spotlight_png_addr + webstinfo->spotlight_png_size; /* spotlight.png 之后，紧跟 sys-bg.jpg */
+			case 25: /* sys-bg.jpg */
+                webstinfo->sys_bg_jpg_addr = webstinfo->sys_sp_jpg_addr + webstinfo->sys_sp_jpg_size; /* spotlight.png 之后，紧跟 sys-bg.jpg */
                 webstinfo->sys_bg_jpg_size = fftemp->obj.objsize;             /* sys-bg.jpg的大小 */
                 flashaddr = webstinfo->sys_bg_jpg_addr;                         /* sys-bg.jpg起始地址 */
                 break;
-			case 25: /* sys-bg-off.jpg */
-                webstinfo->sys_bg_off_jpg_addr = webstinfo->sys_bg_jpg_addr + webstinfo->sys_bg_jpg_size; /* sys-bg.jpg 之后，紧跟 sys-bg-off.jpg */
-                webstinfo->sys_bg_off_jpg_size = fftemp->obj.objsize;             /* sys-bg-off.jpg的大小 */
-                flashaddr = webstinfo->sys_bg_off_jpg_addr;                         /* sys-bg-off.jpg起始地址 */
+
+			case 26: /* sys-bg-off.jpg */
+                webstinfo->sys_bg_sp_jpg_addr = webstinfo->sys_bg_jpg_addr + webstinfo->sys_bg_jpg_size; /* sys-bg.jpg 之后，紧跟 sys-bg-off.jpg */
+                webstinfo->sys_bg_sp_jpg_size = fftemp->obj.objsize;             /* sys-bg-off.jpg的大小 */
+                flashaddr = webstinfo->sys_bg_sp_jpg_addr;                         /* sys-bg-off.jpg起始地址 */
                 break;
-			case 26: /* bootstrap.css */
-                webstinfo->bootstrap_css_addr = webstinfo->sys_bg_off_jpg_addr + webstinfo->sys_bg_off_jpg_size; /* sys-bg-off.jpg 之后，紧跟 bootstrap.css */
+			case 27: /* sys-bg-off.jpg */
+                webstinfo->sys_bg_sp_off_jpg_addr = webstinfo->sys_bg_sp_jpg_addr + webstinfo->sys_bg_sp_jpg_size; /* sys-bg.jpg 之后，紧跟 sys-bg-off.jpg */
+                webstinfo->sys_bg_sp_off_jpg_size = fftemp->obj.objsize;             /* sys-bg-off.jpg的大小 */
+                flashaddr = webstinfo->sys_bg_sp_off_jpg_addr;                         /* sys-bg-off.jpg起始地址 */
+                break;
+			case 28: /* bootstrap.css */
+                webstinfo->bootstrap_css_addr = webstinfo->sys_bg_sp_off_jpg_addr + webstinfo->sys_bg_sp_off_jpg_size; /* sys-bg-off.jpg 之后，紧跟 bootstrap.css */
                 webstinfo->bootstrap_css_size = fftemp->obj.objsize;             /* bootstrap.css的大小 */
                 flashaddr = webstinfo->bootstrap_css_addr;                         /* bootstrap.css起始地址 */
                 break;				
@@ -311,7 +326,7 @@ uint8_t webs_update_files(uint16_t x, uint16_t y, uint8_t size, uint8_t *src, ui
     }
 
 	//读方式打开27个文件，可以同时判断文件是否存在是否损坏
-    for (i = 0; i < 27; i++)
+    for (i = 0; i < 29; i++)
     {
         delay_ms(100);
         strcpy((char *)pname, (char *)src);                 // copy src内容到pname
@@ -321,7 +336,7 @@ uint8_t webs_update_files(uint16_t x, uint16_t y, uint8_t size, uint8_t *src, ui
 			strcat((char *)pname, (char *)mp3_path); 
 		}else if(i <= 3){  //js
 			strcat((char *)pname, (char *)js_path);
-		}else if(i<26){  //images [4:25]
+		}else if(i<28){  //images [4:27]
 			strcat((char *)pname, (char *)images_path);
 		}else{  //css
 			strcat((char *)pname, (char *)css_path);
@@ -347,7 +362,7 @@ uint8_t webs_update_files(uint16_t x, uint16_t y, uint8_t size, uint8_t *src, ui
     if (rval == 0)          /* 文件都存在 */
     {
        //依次更新
-		for (i = 0; i < 27; i++)
+		for (i = 0; i < 29; i++)
 		{
 			delay_ms(100);
 			strcpy((char *)pname, (char *)src);                 // copy src内容到pname
@@ -357,7 +372,7 @@ uint8_t webs_update_files(uint16_t x, uint16_t y, uint8_t size, uint8_t *src, ui
 				strcat((char *)pname, (char *)mp3_path); 
 			}else if(i <= 3){  //js
 				strcat((char *)pname, (char *)js_path);
-			}else if(i<26){  //images [4:25]
+			}else if(i<28){  //images [4:27]
 				strcat((char *)pname, (char *)images_path);
 			}else{  //css
 				strcat((char *)pname, (char *)css_path);
@@ -488,8 +503,18 @@ void show_webs_info(_webs_info* wi){
 	printf("sgbj_on_gif_size:%u\n", wi->sgbj_on_gif_size);
 	printf("spotlight_png_addr:%u, ", wi->spotlight_png_addr);
 	printf("spotlight_png_size:%u\n", wi->spotlight_png_size);
+	/*
 	printf("sys_bg_jpg_addr:%u, ", wi->sys_bg_jpg_addr);
 	printf("sys_bg_jpg_size:%u\n", wi->sys_bg_jpg_size);
 	printf("sys_bg_off_jpg_addr:%u, ", wi->sys_bg_off_jpg_addr);
-	printf("sys_bg_off_jpg_size:%u\n", wi->sys_bg_off_jpg_size);	
+	printf("sys_bg_off_jpg_size:%u\n", wi->sys_bg_off_jpg_size);
+	*/
+	printf("sys_sp_jpg_addr:%u, ", wi->sys_sp_jpg_addr);
+	printf("sys_sp_jpg_size:%u\n", wi->sys_sp_jpg_size);	
+	printf("sys_bg_jpg_addr:%u, ", wi->sys_bg_jpg_addr);
+	printf("sys_bg_jpg_size:%u\n", wi->sys_bg_jpg_size);
+	printf("sys_bg_sp_jpg_addr:%u, ", wi->sys_bg_sp_jpg_addr);
+	printf("sys_bg_sp_jpg_size:%u\n", wi->sys_bg_sp_jpg_size);
+	printf("sys_bg_sp_off_jpg_addr:%u, ", wi->sys_bg_sp_off_jpg_addr);
+	printf("sys_bg_sp_off_jpg_size:%u\n", wi->sys_bg_sp_off_jpg_size);
 }

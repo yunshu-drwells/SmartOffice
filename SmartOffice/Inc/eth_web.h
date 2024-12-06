@@ -11,6 +11,7 @@
 #include "norflash.h"  //norflash_read
 #include "esp8266_web.h"  //ESP8266_sendBroadcastCmd
 #include "cJSON.h"  // 用于 JSON 编码
+#include "esp8266_web.h"  //Lora_OpenDoor
 
 int server_socket;
 struct sockaddr_in server_addr;
@@ -36,6 +37,8 @@ extern int Fan_status_changed;  //风扇状态改变
 //AlarmDLG.c
 extern int Alarm_status;
 extern int Alram_status_changed;
+//MagnetismLock.c
+extern int DoorOpened;
   
 void WebServer(void);
 void Listen(void);
@@ -202,7 +205,7 @@ static void send_file(const char* file_path, int client_socket){
 			char* Type = get_Content_Type(type);
 
 			// 构建响应头
-			snprintf(response_header, 256,
+			sprintf(response_header,
 					 "HTTP/1.1 200 OK\r\n"
 					 "Content-Type: %s\r\n"
 					 "Content-Length: %d\r\n"
@@ -319,7 +322,7 @@ const char* handle_request(const char* request, int client_socket)
 			uint32_t total_bytes_read = 0;
 			if(NULL != fileInfo){
 				total_bytes_read = fileInfo->fsize;  //文件总大小
-				printf("File size: %u bytes\n", (unsigned int)fileInfo->fsize);
+				//printf("File size: %u bytes\n", (unsigned int)fileInfo->fsize);
 			}			
 			myfree(SRAMCCM, fileInfo);
 
@@ -425,13 +428,27 @@ const char* handle_request(const char* request, int client_socket)
 			send_file("1:SmartOfficeWeb/images/sgbj-off.png", client_socket);
 		} else if(strstr(request, "GET /images/sgbj-on.gif") != NULL){  //GET /images/sgbj-on.gif
 			send_file("1:SmartOfficeWeb/images/sgbj-on.gif", client_socket);
-		} else if(strstr(request, "GET /images/sys-bg.jpg") != NULL){  //GET /images/sys-bg.jpg
+		} /*else if(strstr(request, "GET /images/sys-bg.jpg") != NULL){  //GET /images/sys-bg.jpg
 			send_file("1:SmartOfficeWeb/images/sys-bg.jpg", client_socket);
 		} else if(strstr(request, "GET /images/sys-bg-off.jpg") != NULL){  //GET /images/sys-bg-off.jpg
 			send_file("1:SmartOfficeWeb/images/sys-bg-off.jpg", client_socket);
+		} */
+		else if(strstr(request, "GET /images/sys-bg.jpg") != NULL){  //GET /images/sys-bg.jpg
+			send_file("1:SmartOfficeWeb/images/sys-bg.jpg", client_socket);
+		} else if(strstr(request, "GET /images/sys-sp.jpg") != NULL){  //GET /images/sys-sp.jpg
+			send_file("1:SmartOfficeWeb/images/sys-sp.jpg", client_socket);
+		} else if(strstr(request, "GET /images/sys-bg-sp.jpg") != NULL){  //GET /images/sys-bg-sp.jpg
+			send_file("1:SmartOfficeWeb/images/sys-bg-sp.jpg", client_socket);
+		} else if(strstr(request, "GET /images/sys-bg-sp-off.jpg") != NULL){  //GET /images/sys-bg-sp-off.jpg
+			send_file("1:SmartOfficeWeb/images/sys-bg-sp-off.jpg", client_socket);
 		} else if(strstr(request, "GET /images/null.png") != NULL){  //GET /images/null.png
 			send_file("1:SmartOfficeWeb/images/null.png", client_socket);
-		} else if(strstr(request, "GET /images/fan-on.png") != NULL){  //GET /images/fan-on.png
+		} /*else if(strstr(request, "GET /images/fan-on.png") != NULL){  //GET /images/fan-on.png
+			send_file("1:SmartOfficeWeb/images/fan-on.png", client_socket);
+		} else if(strstr(request, "GET /images/fan-off.png") != NULL){  //GET /images/fan-off.png 
+			send_file("1:SmartOfficeWeb/images/fan-off.png", client_socket);
+		} */
+		else if(strstr(request, "GET /images/fan-on.png") != NULL){  //GET /images/fan-on.png
 			send_file("1:SmartOfficeWeb/images/fan-on.png", client_socket);
 		} else if(strstr(request, "GET /images/fan-off.png") != NULL){  //GET /images/fan-off.png 
 			send_file("1:SmartOfficeWeb/images/fan-off.png", client_socket);
@@ -440,7 +457,9 @@ const char* handle_request(const char* request, int client_socket)
 		} else if(strstr(request, "GET /images/bg-fan-off.png") != NULL){  //GET /images/bg-fan-off.png 
 			send_file("1:SmartOfficeWeb/images/bg-fan-off.png", client_socket);
 		} else if(strstr(request, "GET /favicon.ico") != NULL){  //GET /favicon.ico 
-			send_file("1:SmartOfficeWeb/favicon.ico", client_socket);
+			send_file("1:SmartOfficeWeb/images/favicon.ico", client_socket);
+		}  else if(strstr(request, "GET /images/spotlight.png") != NULL){  //GET /images/spotlight.png
+			send_file("1:SmartOfficeWeb/images/spotlight.png", client_socket);
 		} else if(strstr(request, "GET /music/alarm.mp3") != NULL){  //GET /music/alarm.mp3
 			send_file("1:SmartOfficeWeb/music/alarm.mp3", client_socket);
 		} else {
@@ -520,28 +539,61 @@ const char* handle_request(const char* request, int client_socket)
 			HAL_GPIO_WritePin(Beep_GPIO_Port, Beep_Pin, GPIO_PIN_RESET);
 			Send_POST_OK("Alarm Closed!", client_socket);
 		} else if(strstr(request, "POST /CMD/MagnetismLock_On") != NULL){  //POST /CMD/MagnetismLock_On HTTP/1.1
-			//printf("MagnetismLock_On\n");		
+			//printf("MagnetismLock_On\n");
+			DoorOpened = 1;
+			Lora_OpenDoor();  //esp8266_web.h
+			Send_POST_OK("MagnetismLock Opened!", client_socket);
 		} else if(strstr(request, "POST /DATA/Sensor") != NULL){  //POST /DATA/Sensor
 			//printf("POST /DATA/Sensor\n");
+			char* T_str = mymalloc(SRAMCCM, 8);  //3076
+			sprintf(T_str, "%d.%d", temperature>>8, (temperature & 0xFF));
+			//char *endptr;
+			//double T = strtod(T_str, &endptr);  //字符串转数字
+			//printf("T Conversion successful: %f\n", T);
+			
+			char* H_str = mymalloc(SRAMCCM, 8); //17152
+			sprintf(H_str, "%d.%d", humidity>>8, (humidity & 0xFF));
+			//double H = strtod(H_str, &endptr);  //字符串转数字
+			//printf("H Conversion successful: %f\n", H);
+			
 			// 构建 JSON 响应
 			cJSON *root = cJSON_CreateObject();
-			cJSON_AddNumberToObject(root, "temperature", temperature);
-			cJSON_AddNumberToObject(root, "humidity", humidity);
-			cJSON_AddNumberToObject(root, "light", adcx);
+			//cJSON_AddNumberToObject(root, "temperature", T);
+			//cJSON_AddNumberToObject(root, "humidity", H);
+			//cJSON_AddNumberToObject(root, "light", adcx);
+			cJSON_AddStringToObject(root, "temperature", T_str);
+			cJSON_AddStringToObject(root, "humidity", H_str);
+			
+			//数字转字符串
+			char* ADCX = mymalloc(SRAMCCM, 8);
+			sprintf(ADCX, "%u", adcx);
+			cJSON_AddStringToObject(root, "light", ADCX);
 
 			char *response_json = cJSON_PrintUnformatted(root);
 			cJSON_Delete(root);
-			printf("response_json:%s\n", response_json);
+			myfree(SRAMCCM, T_str);
+			myfree(SRAMCCM, H_str);
+			myfree(SRAMCCM, ADCX);
+			//printf("response_json:%s\n", response_json);
+			/*
+			服务器回复jquery发起的POST请求的json格式必须如下：字符串:字符串 （jquery-1.11.0.min.js）
+			{"temperature":"12.0","humidity":"65.0","light":"6"}
+			*/
+			int lens = strlen(response_json);
 
 			// 构建完整的 HTTP 响应
 			char* response_header = mymalloc(SRAMCCM, 256);
-			snprintf(response_header, sizeof(response_header),
+			sprintf(response_header,
 					 "HTTP/1.1 200 OK\r\n"
 					 "Content-Type: application/json\r\n"
+					 "Content-Length: %d\r\n"  //在 HTTP 响应中，Content-Length 是一个重要的头部字段，它告诉客户端响应体的长度。虽然 Content-Length 不是严格必需的（特别是在使用 Connection: close 的情况下），但缺少它可能会导致客户端在某些情况下无法正确解析响应。
 					 "Connection: close\r\n"
+					 "Access-Control-Allow-Origin: *\r\n"  //确保服务器端允许跨域请求（CORS）
 					 "\r\n"
-					 "%s", response_json);
-
+					 "%s", lens, response_json);
+			
+			//printf("response_header:%s", response_header);
+			
 			// 发送响应
 			send(client_socket, response_header, strlen(response_header), 0);
 			myfree(SRAMCCM, response_header);
@@ -630,7 +682,7 @@ static void handle_client(void *pvParameters) {
     if (bytes_received > 0) {
         buffer[bytes_received] = '\0';
         // 处理接收到的请求
-        printf("Received request: %s\n", buffer);
+        //printf("Received request: %s\n", buffer);
 		
 		//fmout_norflash(1); //挂载norflash
 		//挂载之后程序直接奔溃

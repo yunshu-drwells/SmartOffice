@@ -568,7 +568,7 @@ void Touch_Task(void const * argument)
 			//printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* 显示湿度 */ 
 		}
 		if(t % 10 == 0) /* 每400ms读取一次 */{ 
-				adcx = lsens_get_val();                                 /* 获取亮度 */
+				adcx = lsens_get_scale_val();                                 /* 获取亮度 */
 				//printf("bright:%d\n", adcx);
 		}
 		t++; 

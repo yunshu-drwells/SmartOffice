@@ -17,5 +17,6 @@
 /******************************************************************************************/
 
 void lsens_init(void);          /* 初始化光敏传感器 */
-uint8_t lsens_get_val(void);    /* 读取光敏传感器的值 */
+uint8_t lsens_get_scale_val(void);    /* 读取光敏传感器的值 */
+uint16_t lsens_get_real_val(void);
 #endif

@@ -204,7 +204,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 						//lcd_clear(WHITE);   // 清屏 
 				}
 				printf("Start erase norflash web files!\n");
-				//erase_web_sector(); //清空norflash已有的web文件
+				erase_web_sector(); //清空norflash已有的web文件
 				printf("Erased norflash web files!\n");
 				lcd_fill(20, 510, 200 + 20, 90 + 16, WHITE);
 				lcd_show_string(30, 510, 200, 16, 16, "Erased norflash web files!", RED);

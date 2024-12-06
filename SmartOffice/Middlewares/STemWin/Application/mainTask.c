@@ -150,6 +150,9 @@ void MainTask(void)
 	
 	//CreateWindowMain();
 	
+	//检测任务提前开启
+	// 创建获取屏幕滑动状态的任务
+    xTaskCreate(ReadTouchScreenTask, "getPositationTask", 256, 0, tskIDLE_PRIORITY + 1, &xReadTouchScreenTaskHandle);	
 
 	hWin1 = CreateWindow0Main();	
     hWin2 = CreateWindow1Main();
@@ -159,7 +162,7 @@ void MainTask(void)
     //WM_HideWindow(hWin1);	//隐藏主页1
 	//开启一个任务用于获取屏幕滑动状态
 	// 创建获取屏幕滑动状态的任务
-    xTaskCreate(ReadTouchScreenTask, "getPositationTask", 256, 0, tskIDLE_PRIORITY + 1, &xReadTouchScreenTaskHandle);
+    //xTaskCreate(ReadTouchScreenTask, "getPositationTask", 256, 0, tskIDLE_PRIORITY + 1, &xReadTouchScreenTaskHandle);
 
 	
 	//CreateNetworkWindow();  //测试网络界面

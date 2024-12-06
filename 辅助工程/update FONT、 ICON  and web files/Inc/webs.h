@@ -64,10 +64,20 @@ typedef __PACKED_STRUCT
     uint32_t sgbj_on_gif_size;
 	uint32_t spotlight_png_addr;           //spotlight.png
     uint32_t spotlight_png_size;
+	/*
 	uint32_t sys_bg_jpg_addr;           //sys-bg.jpg
     uint32_t sys_bg_jpg_size;
 	uint32_t sys_bg_off_jpg_addr;           //sys-bg-off.jpg
     uint32_t sys_bg_off_jpg_size;
+	*/
+	uint32_t sys_sp_jpg_addr;           //sys-sp.jpg
+    uint32_t sys_sp_jpg_size;
+	uint32_t sys_bg_jpg_addr;           //sys-bg.jpg
+    uint32_t sys_bg_jpg_size;
+	uint32_t sys_bg_sp_jpg_addr;           //sys-bg-sp.jpg
+    uint32_t sys_bg_sp_jpg_size;
+	uint32_t sys_bg_sp_off_jpg_addr;           //sys-bg-sp-off.jpg
+    uint32_t sys_bg_sp_off_jpg_size;
 	//css
 	uint32_t bootstrap_css_addr;           //bootstrap.css
     uint32_t bootstrap_css_size;

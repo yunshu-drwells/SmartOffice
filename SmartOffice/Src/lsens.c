@@ -27,7 +27,7 @@ void lsens_init(void)
  * @param       无
  * @retval      0~100:0,最暗;100,最亮
  */
-uint8_t lsens_get_val(void)
+uint8_t lsens_get_scale_val(void)
 {
     uint32_t temp_val = 0;
     temp_val = adc3_get_result_average(LSENS_ADC3_CHX, 10); /* 读取平均值 */
@@ -36,4 +36,17 @@ uint8_t lsens_get_val(void)
     if (temp_val > 100)temp_val = 100;
 
     return (uint8_t)(100 - temp_val);
+}
+
+/**
+ * @brief       读取光敏传感器值绝对值
+ * @param       无
+ * @retval      0~100:0,最暗;100,最亮
+ */
+uint16_t lsens_get_real_val(void)
+{
+    uint32_t temp_val = 0;
+    temp_val = adc3_get_result_average(LSENS_ADC3_CHX, 10); /* 读取平均值 */
+	
+	return temp_val;
 }

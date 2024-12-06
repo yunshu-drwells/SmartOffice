@@ -78,7 +78,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 */
 
 // USER START (Optionally insert additional static code)
-static int DoorOpened = 0;
+int DoorOpened = 0;
 #include "FreeRTOS.h"
 #include "task.h"
 static TaskHandle_t xUpdateBitmapTaskHandle;
@@ -86,6 +86,7 @@ static void UpdateBitmapTask(void *pvParameters) {
 	while(1){
 		if(DoorOpened){
 			WM_HWIN hItem = (WM_HWIN)pvParameters;
+			BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmLoRaOn);
 			//过10s后
 			// 延时10000ms
 			vTaskDelay(pdMS_TO_TICKS(10000));
@@ -167,7 +168,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
 	    //开锁操作，倒计时10s后按钮背景改变为关闭图案
 		Lora_OpenDoor();
-		BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLoRaOn);
+	    //BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLoRaOn);  //在更新任务中改变，为了兼顾web
 		DoorOpened = 1;
 		//BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmLoRaOff);
         // USER END

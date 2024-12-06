@@ -1,0 +1,7 @@
+StemWin中图片通过BmpCvtST转化成.bmp文件，然后通过Image2LCD将.bmp图片转化成.bin
+
+最开始的时候我的项目中STemWin使用的就是“StemWin中图片通过BmpCvtST转化成包含位图数组的.c文件再包含在工程中使用”这种方式，
+但是图片一多，就很容易程序超过内部flash上限，编译不过更无法烧录，
+因为f407不支持QSPI，同时我这个开发板NORFlash无法映射到FSMC以实现execute ont chip从而缓解内部Flash压力。
+
+所以将.bin的图片放到NORFlash中，然后通过FATFS来挂载并读取文件以供STemWin使用。

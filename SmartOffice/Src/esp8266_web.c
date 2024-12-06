@@ -723,6 +723,7 @@ void ESP8266_Connect_New_Wifi_ALL(const char* ssid, const char* password)
 
 void ESP8266_Lora_SenCmd(const char* str){
 	HAL_UART_Transmit(&huart6, (uint8_t*)str, strlen(str), HAL_MAX_DELAY);
+	//ESP8266_sendBroadcastCmd(str);
 }
 
 void Lora_OpenDoor(){

@@ -133,3 +133,4 @@ stemwin_port_freertos\freertos.o: ../Inc/web.h
 stemwin_port_freertos\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h
 stemwin_port_freertos\freertos.o: ../Inc/esp8266_web.h
 stemwin_port_freertos\freertos.o: ..\Middlewares\cJSON\cJSON.h
+stemwin_port_freertos\freertos.o: ../Inc/esp8266_web.h
