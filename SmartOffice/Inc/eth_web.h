@@ -30,6 +30,12 @@ extern uint8_t SpolightLight_RGBchanged;
 extern uint16_t temperature;  //温度
 extern uint16_t humidity;  //湿度
 extern uint16_t adcx;  //亮度
+//FanDLG.c
+extern int Fan_status;  //风扇状态
+extern int Fan_status_changed;  //风扇状态改变
+//AlarmDLG.c
+extern int Alarm_status;
+extern int Alram_status_changed;
   
 void WebServer(void);
 void Listen(void);
@@ -64,7 +70,102 @@ void WebServer(){
     }
 }
 
+/*
+获取Content-Type
+*/
+static char* get_Content_Type(char* type){
+	//文本类型
+	if(!strcmp(".txt", type)){
+		return "text/plain";
+	}else if(!strcmp(".html", type)){
+		return "text/html";
+	}else if(!strcmp(".css", type)){
+		return "text/css";
+	}else if(!strcmp(".js", type)){
+		return "text/javascript";
+	}
+	/*
+	else if(!strcmp(".xml", type)){
+		return "text/xml";
+	}
+	*/
+	//图像类型
+	else if(!strcmp(".jpg", type)){
+		return "image/jpeg";
+	}
+	else if(!strcmp(".png", type)){
+		return "image/png";
+	}
+	else if(!strcmp(".gif", type)){
+		return "image/gif";
+	}
+	else if(!strcmp(".svg", type)){
+		return "image/svg+xml";
+	}
+	//音频类型
+	else if(!strcmp(".mp3", type)){
+		return "audio/mpeg";
+	}
+	else if(!strcmp(".wav", type)){
+		return "audio/wav";
+	}
+	else if(!strcmp(".aac", type)){
+		return "audio/aac";
+	}
+	//视频类型
+	else if(!strcmp(".mp4", type)){
+		return "video/mp4";
+	}
+	else if(!strcmp(".webm", type)){
+		return "video/webm";
+	}
+	else if(!strcmp(".mov", type) || !strcmp(".qt", type)){
+		return "video/quicktime";
+	}
+	//应用类型
+	else if(!strcmp(".json", type)){
+		return "application/json";
+	}
+	else if(!strcmp(".pdf", type)){
+		return "application/pdf";
+	}
+	else if(!strcmp(".xml", type)){
+		return "application/xml";  //application/xml 更通用。可以用于表示任何形式的 XML 数据，包括 XML 文档。因此，XML 文档也可以使用 application/xml 类型。
+	}
+	/*
+	else if(!strcmp(".webm", type)){
+		return "application/x-www-form-urlencoded";
+	}
+	*/
+	else if(!strcmp(".bin", type) || !strcmp(".dat", type)){
+		return "application/octet-stream";  //二进制数据流
+	}
+	//多部分类型
+	/*
+	else if(!strcmp(".", type)){
+		return "multipart/form-data";  //表单数据
+	}
+	*/
+	//其他类型
+	/*
+	else if(!strcmp(".woff", type)){
+		return "font/woff";  //WOFF 字体
+	}
+	else if(!strcmp(".ttf", type)){
+		return "font/ttf";  //TrueType 字体
+	}
+	else if(!strcmp(".woff", type)){
+		return "font/x-font-woff";  //WOFF 字体（旧版）
+	}
+	else if(!strcmp(".ttf", type)){
+		return "font/x-font-ttf";  //TrueType 字体（旧版）
+	}
+	*/
+	return "";
+}
+
 #define BUFFER_SIZE 1024
+//#define BUFFER_SIZE 4096  //前端静态资源的访问太慢了，增大缓冲区，提高分段传输的大小，加速传输
 /*
 发送文件的方法
 */
@@ -94,16 +195,21 @@ static void send_file(const char* file_path, int client_socket){
 			myfree(SRAMCCM, fileInfo);
 
 			char* response_header = mymalloc(SRAMCCM, 256);
+			
+			//获取文件格式
+			
+			char* type = strstr(file_path, ".");
+			char* Type = get_Content_Type(type);
 
 			// 构建响应头
 			snprintf(response_header, 256,
 					 "HTTP/1.1 200 OK\r\n"
-					 "Content-Type: text/html\r\n"
+					 "Content-Type: %s\r\n"
 					 "Content-Length: %d\r\n"
 					 "Connection: keep-alive\r\n"
 					 "Cache-Control: public, max-age=86400\r\n"			
-					 "\r\n",
-					 total_bytes_read);
+					 "\r\n"
+					 , Type, total_bytes_read);
 
 			// 发送响应头
 			send(client_socket, response_header, strlen(response_header), 0);
@@ -389,13 +495,30 @@ const char* handle_request(const char* request, int client_socket)
 			Send_POST_OK("SpotLight Closed!", client_socket);
 		} else if(strstr(request, "POST /CMD/Fan_On") != NULL){  //POST /CMD/Fan_On HTTP/1.1
 			//printf("Fan_On\n");
-			
+			Fan_status = 1;
+			Fan_status_changed = 1;
+			ESP8266_sendBroadcastCmd("FAN_ON");
+			Send_POST_OK("Fan Opened!", client_socket);
 		} else if(strstr(request, "POST /CMD/Fan_Off") != NULL){  //POST /CMD/Fan_Off HTTP/1.1
-			//printf("Fan_Off\n");		
+			//printf("Fan_Off\n");
+			Fan_status = 0;
+			Fan_status_changed = 1;
+			ESP8266_sendBroadcastCmd("FAN_OFF");
+			Send_POST_OK("Fan Closed!", client_socket);
 		} else if(strstr(request, "POST /CMD/Alarm_On") != NULL){  //POST /CMD/Alarm_On HTTP/1.1
-			//printf("Alarm_On\n");		
+			//printf("Alarm_On\n");
+			Alarm_status = 1;
+			Alram_status_changed = 1;
+			//alarm on
+			HAL_GPIO_WritePin(Beep_GPIO_Port, Beep_Pin, GPIO_PIN_SET);
+			Send_POST_OK("Alarm Opened!", client_socket);
 		} else if(strstr(request, "POST /CMD/Alarm_Off") != NULL){  //POST /CMD/Alarm_Off HTTP/1.1
-			//printf("Alarm_Off\n");		
+			//printf("Alarm_Off\n");
+			Alarm_status = 0;
+			Alram_status_changed = 1;
+			//alarm off
+			HAL_GPIO_WritePin(Beep_GPIO_Port, Beep_Pin, GPIO_PIN_RESET);
+			Send_POST_OK("Alarm Closed!", client_socket);
 		} else if(strstr(request, "POST /CMD/MagnetismLock_On") != NULL){  //POST /CMD/MagnetismLock_On HTTP/1.1
 			//printf("MagnetismLock_On\n");		
 		} else if(strstr(request, "POST /DATA/Sensor") != NULL){  //POST /DATA/Sensor

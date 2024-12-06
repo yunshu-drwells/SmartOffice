@@ -93,3 +93,12 @@ stemwin_port_freertos\fandlg.o: ../Inc/gpio.h
 stemwin_port_freertos\fandlg.o: ../Inc/esp8266_web.h
 stemwin_port_freertos\fandlg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 stemwin_port_freertos\fandlg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+stemwin_port_freertos\fandlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+stemwin_port_freertos\fandlg.o: ../Inc/FreeRTOSConfig.h
+stemwin_port_freertos\fandlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+stemwin_port_freertos\fandlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+stemwin_port_freertos\fandlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+stemwin_port_freertos\fandlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+stemwin_port_freertos\fandlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+stemwin_port_freertos\fandlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+stemwin_port_freertos\fandlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h

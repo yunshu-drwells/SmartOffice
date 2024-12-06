@@ -43,7 +43,8 @@ extern GUI_CONST_STORAGE GUI_BITMAP bmAlarmOff;
 extern GUI_CONST_STORAGE GUI_BITMAP bmMainPage;
 extern GUI_CONST_STORAGE GUI_BITMAP bmMainPagePressed;
 extern GUI_CONST_STORAGE GUI_FONT GUI_Fontfont;
-static int status = 0;
+int Alarm_status = 0;
+int Alram_status_changed = 0;
 // USER END
 
 /*********************************************************************
@@ -77,6 +78,37 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 */
 
 // USER START (Optionally insert additional static code)
+#include "FreeRTOS.h"
+#include "task.h"
+static TaskHandle_t xUpdateTaskHandle;
+static void UpdateButtonTask(void *pvParameters) {
+    //WM_HWIN hItem = (WM_HWIN)pvParameters;
+	WM_HWIN HWIN = (WM_HWIN)pvParameters;
+	WM_HWIN hItem = WM_GetDialogItem(HWIN, ID_BUTTON_0);;
+    while (1) {
+		//无论是GUI还是web方式开关风扇都需要更新按钮背景
+		if(Alram_status_changed && Alarm_status){
+			BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmAlarm);
+			// 强制刷新控件
+			WM_InvalidateWindow(hItem);
+			Alram_status_changed = 0;
+		}else if(Alram_status_changed && !Alarm_status){
+			BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmAlarmOff);
+			// 强制刷新控件
+			WM_InvalidateWindow(hItem);
+			Alram_status_changed = 0;
+		}
+		
+        // 延时200ms
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+static void DeleteUpdateTask(void) {
+    if (xUpdateTaskHandle != NULL) {
+        vTaskDelete(xUpdateTaskHandle);
+        xUpdateTaskHandle = NULL;
+    }
+}
 // USER END
 
 /*********************************************************************
@@ -115,11 +147,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 	//
 	//BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmAlarmOff);
 	//BUTTON_SetBitmap(hItem, BUTTON_BI_PRESSED, &bmAlarm);
-	if(status){
+	if(Alarm_status){
 		BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmAlarm);
 	}else{
 			BUTTON_SetBitmap(hItem, BUTTON_BI_UNPRESSED, &bmAlarmOff);
 	}
+	
+	// 创建更新任务，传递ID_BUTTON_0控件句柄
+    xTaskCreate(UpdateButtonTask, "UpdateButtonTask", 256, (void*)pMsg->hWin, tskIDLE_PRIORITY + 1, &xUpdateTaskHandle);
 
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
     //
@@ -141,16 +176,17 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-				status = !status;
-        if(status){
-            BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmAlarm);
+		Alarm_status = !Alarm_status;
+        if(Alarm_status){
+            //BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmAlarm);  //使用任务刷新按钮背景(兼顾web控制)
             //alarm on
-						HAL_GPIO_WritePin(Beep_GPIO_Port, Beep_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(Beep_GPIO_Port, Beep_Pin, GPIO_PIN_SET);
         }else{
-            BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmAlarmOff);
+            //BUTTON_SetBitmap(pMsg->hWinSrc, BUTTON_BI_UNPRESSED, &bmAlarmOff);  //使用任务刷新按钮背景(兼顾web控制)
             //alarm off
-						HAL_GPIO_WritePin(Beep_GPIO_Port, Beep_Pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(Beep_GPIO_Port, Beep_Pin, GPIO_PIN_RESET);
         }
+		Alram_status_changed = 1;
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -169,6 +205,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         GUI_EndDialog(pMsg->hWin, 0);  //结束对话框
 	    currentDialog = 1;
         hWin1 = CreateWindow0Main(); // 创建WindowMain界面，调用其它界面的Create方法
+		
+		//销毁任务
+		DeleteUpdateTask();
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)

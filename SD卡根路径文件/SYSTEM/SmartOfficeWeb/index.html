@@ -499,7 +499,7 @@
 
 		// 定义重试函数
 		function retryRequest(resource, retryCount) {
-			const maxRetries = 10; // 设置最大重试次数，防止无限重试
+			const maxRetries = 100; // 设置最大重试次数，防止无限重试
 			if (retryCount < maxRetries) {
 				setTimeout(() => {
 					console.log(`重试请求: ${resource}, 重试次数: ${retryCount + 1}`);
