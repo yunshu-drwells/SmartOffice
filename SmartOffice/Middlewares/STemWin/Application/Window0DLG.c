@@ -53,6 +53,8 @@
 #define ID_TEXT_6  (GUI_ID_USER + 0x10)
 #define ID_TEXT_7  (GUI_ID_USER + 0x11)
 
+#define ID_BUTTON_8        (GUI_ID_USER + 0x12)
+
 // USER START (Optionally insert additional defines)
 extern GUI_CONST_STORAGE GUI_BITMAP bmLightingMasterOn;
 extern GUI_CONST_STORAGE GUI_BITMAP bmSpotlightOn;
@@ -64,7 +66,7 @@ extern GUI_CONST_STORAGE GUI_BITMAP bmAlarm;
 extern GUI_CONST_STORAGE GUI_BITMAP bmTurnOff;
 extern GUI_CONST_STORAGE GUI_BITMAP bmblue;
 extern GUI_CONST_STORAGE GUI_FONT GUI_Fontfont;
-
+extern int currentDialog;  //mainTask.c
 // USER END
 
 /*********************************************************************
@@ -168,6 +170,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
       { TEXT_CreateIndirect, "Text", ID_TEXT_5, 230, 420, 150, 32, 0, 0x64, 0 },
       { TEXT_CreateIndirect, "Text", ID_TEXT_6, 420, 420, 150, 32, 0, 0x64, 0 },
       { TEXT_CreateIndirect, "Text", ID_TEXT_7, 610, 420, 150, 32, 0, 0x64, 0 },
+	  { BUTTON_CreateIndirect, "Next", ID_BUTTON_8, 734, 443, 66, 37, 0, 0x0, 0 },
   // USER END
 };
 
@@ -549,6 +552,24 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
+    case ID_BUTTON_8: // Notifications sent by 'Button'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+		printf("window flip left\n");
+		WM_HideWindow(hWin1);
+		WM_ShowWindow(hWin2);
+		currentDialog = 2;
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;	  
     // USER START (Optionally insert additional code for further Ids)
     // USER END
     }

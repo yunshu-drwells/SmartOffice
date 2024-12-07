@@ -40,7 +40,7 @@
 #define ID_BUTTON_1     (GUI_ID_USER + 0x02)
 #define ID_TEXT_0  (GUI_ID_USER + 0x0a)
 #define ID_TEXT_1  (GUI_ID_USER + 0x0b)
-
+#define ID_BUTTON_2        (GUI_ID_USER + 0x0c)
 
 // USER START (Optionally insert additional defines)
 //LoRaOn
@@ -80,6 +80,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { TEXT_CreateIndirect, "Text", ID_TEXT_0, 40, 210, 150, 32, 0, 0x64, 0 },
   { TEXT_CreateIndirect, "Text", ID_TEXT_1, 230, 210, 150, 32, 0, 0x64, 0 },  
   // USER START (Optionally insert additional widgets)
+  { BUTTON_CreateIndirect, "Previous", ID_BUTTON_2, 0, 443, 66, 37, 0, 0x0, 0 },
   // USER END
 };
 
@@ -242,6 +243,24 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		  // USER END
 		  }
 		  break;
+		case ID_BUTTON_2: // Notifications sent by 'Button'
+		  switch(NCode) {
+		  case WM_NOTIFICATION_CLICKED:
+			// USER START (Optionally insert code for reacting on notification message)
+			// USER END
+			break;
+		  case WM_NOTIFICATION_RELEASED:
+			// USER START (Optionally insert code for reacting on notification message)
+			printf("window flip right\n");
+			WM_HideWindow(hWin2);
+			WM_ShowWindow(hWin1);
+			currentDialog = 1;
+			// USER END
+			break;
+		  // USER START (Optionally insert additional code for further notification handling)
+		  // USER END
+		  }
+		  break;		  
 		// USER START (Optionally insert additional code for further Ids)
 		// USER END
 		}
