@@ -1,0 +1,4 @@
+StemWin中图片通过BmpCvtST转化成包含位图数组的.c文件再包含在工程中使用
+
+最开始的时候我的项目中STemWin使用的就是这种方式，但是图片一多，就很容易程序超过内部flash上限，编译不过更无法烧录，
+因为f407不支持QSPI，同时我这个开发板NORFlash无法映射到FSMC以实现execute ont chip从而缓解内部Flash压力。

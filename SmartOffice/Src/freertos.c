@@ -67,6 +67,8 @@
 #include "web.h"  //webs_init
 
 #include "usart3_dma.h"  //USART3_Init_DMA
+
+#include "wireless_web.h"  //Listen_Thread_Wireless init_uart3_rx_queue
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -110,21 +112,26 @@ extern uint8_t fonts_update_res;
 // 创建二�?�信号量句柄 
 SemaphoreHandle_t xBinarySemaphoreFont;
 
-// 创建二�?�信号量句柄
+// 创建二值信号量句柄
 SemaphoreHandle_t xBinarySemaphoreICON;
 
 //esp8266 uart3
 //uint8_t uart3_rx_buffer[RX_BUFFER_SIZE];
-volatile uint16_t uart3_rx_index = 0;
+uint16_t uart3_rx_index = 0;
 uint8_t Uart3FramFinishFlag = 0;
 
 // 创建互斥信号量句�?
 SemaphoreHandle_t xMutexEsp8266;
 
+// 创建二值信号量句柄
+SemaphoreHandle_t xBinaryWireless;
+
 extern struct netif gnetif;  //lwip.c
 
 extern uint8_t* paddr;
 extern uint16_t memused;                     /* 内存使用百分�? */
+
+extern uint8_t AT_Flag;  //stm32f4xx_it.c
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
 osThreadId TouchHandle;
@@ -402,6 +409,8 @@ void WebServer_Task(void const * argument)
 	printf("SRAMEX   USED: %s\n", (char *)paddr);
 	
 	printf("----------------------------------|\n\n");
+	
+	init_uart3_rx_queue();
 	taskEXIT_CRITICAL();            /* 出临界段 */
 	//vTaskDelete(xMountDisksTaskHandle);
     //xMountDisksTaskHandle = NULL;
@@ -529,7 +538,7 @@ void Touch_Task(void const * argument)
 		}
 		
 		// 释放信号量，通知任务GUI_Task可以执行�? 
-		xSemaphoreGive(xBinarySemaphoreICON); 	
+		//xSemaphoreGive(xBinarySemaphoreICON); 	
 		//emwin_test_touch();  //emWin坐标获取
 		
 		// 释放信号�?
@@ -605,6 +614,8 @@ void IOT_Task(void const * argument)
 	printf("webstinfo->index_html_size:%u\n", webstinfo->index_html_size);
 	*/
 	  
+	xBinaryWireless = xSemaphoreCreateBinary();
+	  
 
 	//taskENTER_CRITICAL();           // 进入临界�?
 	ESP8266_Connect_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);  //"DUOBAO", "yunshu666"
@@ -613,6 +624,8 @@ void IOT_Task(void const * argument)
 	ESP8266_startBroadCastCmd();  
 	//test();
 	//扫描�?有wifi列表...
+	  
+	AT_Flag = 0;
 	  
 	xSemaphoreGive(xMutexEsp8266);
 	
@@ -625,8 +638,18 @@ void IOT_Task(void const * argument)
 	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
 	printf("SRAMEX   USED: %s\n", (char *)paddr);
 	printf("----------------------------------|\n\n");
+	
+
 	//taskEXIT_CRITICAL();            // 出临界区   
   }
+  taskENTER_CRITICAL();           // 进入临界殿
+  // 释放信号量
+  xSemaphoreGive(xBinaryWireless);
+  
+  // 释放信号量，通知任务GUI_Task可以执行了
+  xSemaphoreGive(xBinarySemaphoreICON); 	
+  taskEXIT_CRITICAL();            // 出临界区 
+  
   /*
   if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
 		taskENTER_CRITICAL();           // 进入临界�?
@@ -645,6 +668,12 @@ void IOT_Task(void const * argument)
 		taskEXIT_CRITICAL();            // 出临界区 
   }
   */
+  /*
+  if (xSemaphoreTake(xBinaryWireless, portMAX_DELAY) == pdTRUE) {
+	  //创建任务处理消息队列
+	  xTaskCreate(vTaskProcessUART3RX, "vTaskProcessUART3RX", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+  }
+  */
   /* Infinite loop */
   for(;;)
   {
@@ -652,6 +681,16 @@ void IOT_Task(void const * argument)
 	//taskENTER_CRITICAL();           /* 进入临界�? */
 	//ESP8266_CheckRecvData(); // 处理网络请求 (可以成功收到)
 	//taskEXIT_CRITICAL();            /* 出临界区 */
+	//Listen_Thread_Wireless();
+	//printf("IOT_Task for\n");
+	  
+	// 从消息队列中获取数据
+	if (xQueueReceive(xQueue_UART3_RX, uart3_rx_buffer, portMAX_DELAY) == pdPASS) {
+		// 处理接收到的数据
+		// 例如：打印数据到终端
+		printf("Received: %s\n", uart3_rx_buffer);
+	}
+	
   }
   /* USER CODE END IOT_Task */
 }

@@ -29,6 +29,7 @@
 #include "mymalloc.h"
 #include <string.h>
 #include "usart.h"
+#include "queue.h"  //xQueueSendFromISR
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,7 +52,9 @@
 extern volatile uint16_t uart1_rx_index;
 extern volatile uint16_t uart3_rx_index;
 uint8_t dataReadyFlag = 1;
-extern uint8_t* uart3_rx_data;
+extern uint8_t* uart3_rx_data;  //main.c
+uint8_t AT_Flag = 1;
+extern QueueHandle_t xQueue_UART3_RX;  //wireless_web.h
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -244,13 +247,32 @@ void USART3_IRQHandler(void)
 		uart3_rx_index = BUFFER_WINDOW - __HAL_DMA_GET_COUNTER(huart3.hdmarx);
 		//printf("uart3_rx_index: %d\n", uart3_rx_index);
 
-		// 复制接收到的数据
-		memcpy(uart3_rx_data, uart3_rx_buffer, uart3_rx_index);
-		//strcpy((char*)rx_data, (char*)rx_buffer);
-		//strncpy((char*)rx_data, (char*)rx_buffer, rx_index);
-		//printf("rx_data: %s, rx_index: %d", rx_data, strlen((char*)rx_data));
-		uart3_rx_data[uart3_rx_index] = '\0';
+		if(AT_Flag){  //AT
+			// 复制接收到的数据
+			memcpy(uart3_rx_data, uart3_rx_buffer, uart3_rx_index);
+			if(uart3_rx_index < BUFFER_WINDOW)
+				uart3_rx_data[uart3_rx_index] = '\0';
+		}else{  //WEB
+			/*
+			//printf("uart3_rx_buffer: %s\n", uart3_rx_buffer);
+			//printf("uart3_rx_index: %d\n", uart3_rx_index);
+			// 复制接收到的数据
+			memcpy(uart3_rx_data, uart3_rx_buffer, uart3_rx_index);
+			if(uart3_rx_index < BUFFER_WINDOW)
+				uart3_rx_data[uart3_rx_index] = '\0';
+			
+			memset(uart3_rx_buffer, 0, BUFFER_WINDOW);
+			*/
+			// 将数据放入消息队列
+			if (xQueueSendFromISR(xQueue_UART3_RX, uart3_rx_buffer, NULL) != pdPASS) {
+				// 如果消息队列已满，丢弃数据
+				// 可以在这里添加错误处理逻辑
+			}
+		}
+		
 		dataReadyFlag = 1;
+		
+		//memset(uart3_rx_buffer, 0, BUFFER_WINDOW);
 
 		// 释放信号量，通知任务2可以执行了 
 		//xSemaphoreGive(xBinarySemaphoreData);

@@ -21,6 +21,7 @@ typedef enum {
 extern volatile uint16_t uart3_rx_index;
 extern uint8_t dataReadyFlag;  //stm32f4xx_it.c
 extern uint8_t* uart3_rx_data;  //main.c
+extern uint8_t AT_Flag;  //stm32f4xx_it.c
 
 void ESP8266_SendCmd(const char* str){
 	//printf("send cmd\n");
@@ -502,10 +503,10 @@ void ESP8266_Connect_Wifi(const char* ssid, const char* password)
 */
 void ESP8266_CheckRecvData(void)
 {
-	if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_IDLE) != RESET) { //如果Uart3接收到了Esp8266的数据
-		__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //接收标志置零
+	if (!AT_Flag && dataReadyFlag) { //如果Uart3接收到了Esp8266的数据
+		//__HAL_UART_CLEAR_IDLEFLAG(&huart3);                            //接收标志置零
 
-		printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_buffer);  // 调试输出
+		printf("Uart3 Received data from ESP8266: %s\n", uart3_rx_data);  // 调试输出
 		printf("Uart3 Received data length:%d\n", uart3_rx_index);
 		//解析Fan ip地址
 		/*
@@ -529,6 +530,7 @@ void ESP8266_CheckRecvData(void)
 		*/
 
 		//ClearUart3ReceiveBuff();
+		dataReadyFlag = 0;
 	 }
 }
 
