@@ -99,7 +99,7 @@ stemwin_port_freertos\freertos.o: ../Inc/icon_read.h
 stemwin_port_freertos\freertos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 stemwin_port_freertos\freertos.o: ../Inc/usart.h
 stemwin_port_freertos\freertos.o: ../Inc/esp8266.h
-stemwin_port_freertos\freertos.o: ../Inc/esp8266_web.h
+stemwin_port_freertos\freertos.o: ../Inc/esp8266_web_DMA.h
 stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/ip4_addr.h
 stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/opt.h
 stemwin_port_freertos\freertos.o: ../Inc/lwipopts.h
@@ -131,6 +131,6 @@ stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/LwIP/src/include/lw
 stemwin_port_freertos\freertos.o: ../Middlewares/Third_Party/LwIP/src/include/lwip/errno.h
 stemwin_port_freertos\freertos.o: ../Inc/web.h
 stemwin_port_freertos\freertos.o: ../Drivers/CMSIS/Include/core_cm4.h
-stemwin_port_freertos\freertos.o: ../Inc/esp8266_web.h
+stemwin_port_freertos\freertos.o: ../Inc/esp8266_web_DMA.h
 stemwin_port_freertos\freertos.o: ..\Middlewares\cJSON\cJSON.h
-stemwin_port_freertos\freertos.o: ../Inc/esp8266_web.h
+stemwin_port_freertos\freertos.o: ../Inc/usart3_dma.h

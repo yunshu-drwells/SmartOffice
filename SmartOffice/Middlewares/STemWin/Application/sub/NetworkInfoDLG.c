@@ -23,7 +23,8 @@
 
 #include "DIALOG.h"
 #include "include_dlg.h"
-#include "esp8266_web.h"  //ip_address
+//#include "esp8266_web.h"  //ip_address
+#include "esp8266_web_DMA.h"  //ip_address
 #include "main.h"  //ETH_ip_address
 /*********************************************************************
 *

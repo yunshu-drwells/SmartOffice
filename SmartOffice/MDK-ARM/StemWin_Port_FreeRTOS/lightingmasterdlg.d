@@ -90,7 +90,7 @@ stemwin_port_freertos\lightingmasterdlg.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/s
 stemwin_port_freertos\lightingmasterdlg.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 stemwin_port_freertos\lightingmasterdlg.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 stemwin_port_freertos\lightingmasterdlg.o: ../Inc/gpio.h
-stemwin_port_freertos\lightingmasterdlg.o: ../Inc/esp8266_web.h
+stemwin_port_freertos\lightingmasterdlg.o: ../Inc/esp8266_web_DMA.h
 stemwin_port_freertos\lightingmasterdlg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 stemwin_port_freertos\lightingmasterdlg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 stemwin_port_freertos\lightingmasterdlg.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h

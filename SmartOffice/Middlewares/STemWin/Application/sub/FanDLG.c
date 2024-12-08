@@ -25,7 +25,8 @@
 #include "include_dlg.h"
 #include "main.h"  //LED_Groups LED_pins
 #include "gpio.h"  //HAL_GPIO_WritePin
-#include "esp8266_web.h"  //ESP8266_sendBroadcastCmd
+//#include "esp8266_web.h"  //ESP8266_sendBroadcastCmd
+#include "esp8266_web_DMA.h"  //ESP8266_sendBroadcastCmd
 /*********************************************************************
 *
 *       Defines

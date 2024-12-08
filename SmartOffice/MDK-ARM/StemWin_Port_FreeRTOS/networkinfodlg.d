@@ -46,7 +46,7 @@ stemwin_port_freertos\networkinfodlg.o: ..\Middlewares\STemWin\inc\TEXT.h
 stemwin_port_freertos\networkinfodlg.o: ..\Middlewares\STemWin\inc\TREEVIEW.h
 stemwin_port_freertos\networkinfodlg.o: ..\Middlewares\STemWin\inc\KNOB.h
 stemwin_port_freertos\networkinfodlg.o: ..\Middlewares\STemWin\Application\include_dlg.h
-stemwin_port_freertos\networkinfodlg.o: ../Inc/esp8266_web.h
+stemwin_port_freertos\networkinfodlg.o: ../Inc/esp8266_web_DMA.h
 stemwin_port_freertos\networkinfodlg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 stemwin_port_freertos\networkinfodlg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 stemwin_port_freertos\networkinfodlg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

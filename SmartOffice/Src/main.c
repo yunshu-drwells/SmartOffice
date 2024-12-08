@@ -102,6 +102,7 @@ _icon_info* iconftinfo;
 _webs_info* webstinfo;
 
 uint8_t* uart3_rx_buffer;
+uint8_t* uart3_rx_data;
 
 //char FAN_ip_address[MAX_IP_LENGTH] = {0};  //风扇模块ip地址
 //char MasterLight_ip_address[MAX_IP_LENGTH] = {0};  //主灯模块ip地址
@@ -162,20 +163,20 @@ int main(void)
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
 	// 调用配置堆区域的函数
-	//configureHeapRegions();  //FreeRTOS定义heap5的堆区地址范围
+	//configureHeapRegions();  //FreeRTOS定义heap5的堆区地�?范围
 	//移动到SRAM和自定义内存池初始化完成之后
 	printf("main.c---------------------------->\n");
 	
-	sram_init();                        /* 外扩SRAM初始化 */
+	sram_init();                        /* 外扩SRAM初始�? */
 	
-	//my_mem_init(SRAMIN);                /* 初始化内部SRAM内存池 */
-	my_mem_init(SRAMEX);                /* 初始化外部SRAM内存池 */
-	my_mem_init(SRAMCCM);               /* 初始化内部CCM内存池 */
+	//my_mem_init(SRAMIN);                /* 初始化内部SRAM内存�? */
+	my_mem_init(SRAMEX);                /* 初始化外部SRAM内存�? */
+	my_mem_init(SRAMCCM);               /* 初始化内部CCM内存�? */
 	
 	printf("Init EXSRAM\n");
 	printf("Init SRAM CCM\n");
 	
-	configureHeapRegions();  //FreeRTOS定义heap5的堆区地址范围
+	configureHeapRegions();  //FreeRTOS定义heap5的堆区地�?范围
 	
 	printf("Asigned FreeRTOS heap5 Range\n");
 	
@@ -183,7 +184,7 @@ int main(void)
 	paddr = (uint8_t *)mymalloc(1, 20);
 	memset(paddr, 0, 20);	
 	
-	//因为将外扩SRAM的开始40KB给FreeRTOS使用，所以要将这部分在内存管理表中对应的表项赋值为非零，表示已经被占用了，防止影响FreeRTOS的堆空间
+	//因为将外扩SRAM的开�?40KB给FreeRTOS使用，所以要将这部分在内存管理表中对应的表项赋�?�为非零，表示已经被占用了，防止影响FreeRTOS的堆空间
 	my_mem_occupy(SRAMEX, FreeRTOS_Heap5_ExRAM_SIZE);  //40*1024
 	
 	memused = my_mem_perused(SRAMEX);
@@ -192,8 +193,8 @@ int main(void)
 	
 	printf("Allocate some space for LWIP in EXSRAM\n");
 	
-	//因为在外扩SRAM紧跟40KBFreeRTOS的空间后面给LWIP分配MEM_SIZE大小的空间，所以要将这部分在内存管理表中对应的表项赋值为非零
-	my_mem_occupy_from(SRAMEX, FreeRTOS_Heap5_ExRAM_SIZE, MEM_SIZE);  //40*1024， 1600
+	//因为在外扩SRAM紧跟40KBFreeRTOS的空间后面给LWIP分配MEM_SIZE大小的空间，�?以要将这部分在内存管理表中对应的表项赋�?�为非零
+	my_mem_occupy_from(SRAMEX, FreeRTOS_Heap5_ExRAM_SIZE, MEM_SIZE);  //40*1024�? 1600
 	memused = my_mem_perused(SRAMEX);
 	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
 	printf("SRAMEX   USED: %s\n", (char *)paddr);
@@ -216,14 +217,21 @@ int main(void)
 	webstinfo = (_webs_info *)mymalloc(2, sizeof(_webs_info));
 	memset(webstinfo, 0, sizeof(_webs_info));
 	*/	
-	//上面结构体及变量从外扩SRAM移动到CCM中
+	//上面结构体及变量从外扩SRAM移动到CCM�?
 	
-	uart3_rx_buffer = (uint8_t *)mymalloc(2, BUFFER_WINDOW*sizeof(uint8_t));  //不能移动到CCM中，否则串口中断会卡死
+	uart3_rx_buffer = (uint8_t *)mymalloc(2, BUFFER_WINDOW*sizeof(uint8_t));  //不能移动到CCM中，否则串口中断会卡�?
 	memset(uart3_rx_buffer, 0, BUFFER_WINDOW*sizeof(uint8_t));
 	
-	printf("Allocated some struct and variables in EXSRAM\n");
+	uart3_rx_data = (uint8_t *)mymalloc(2, BUFFER_WINDOW*sizeof(uint8_t));  //不能移动到CCM中，否则串口中断会卡歿
+	memset(uart3_rx_data, 0, BUFFER_WINDOW*sizeof(uint8_t));
 
-	//在CCM中分配
+	printf("Allocated some struct and variables in EXSRAM\n");
+	
+	memused = my_mem_perused(SRAMEX);
+	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
+	printf("SRAMEX   USED: %s\n", (char *)paddr);
+
+	//在CCM中分�?
 	lcd_id = (uint8_t *)mymalloc(1, 12);
 	memset(lcd_id, 0, 12);
 

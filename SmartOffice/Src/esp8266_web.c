@@ -6,6 +6,21 @@
 #include "string.h" //strcmp memset
 #include "delay.h"  //delay_ms
 
+
+//USART3使用普通中断方式
+//每接收和发送一个字符USART3_IRQHandler中断函数就执行一次
+
+//void USART3_IRQHandler(void)
+//{
+//  /* USER CODE BEGIN USART3_IRQn 0 */
+//  uart3_rx_index++;
+//  /* USER CODE END USART3_IRQn 0 */
+//  HAL_UART_IRQHandler(&huart3);
+//  /* USER CODE BEGIN USART3_IRQn 1 */
+//  /* USER CODE END USART3_IRQn 1 */
+//}
+
+
 // 定义枚举类型
 typedef enum {
     TCP,

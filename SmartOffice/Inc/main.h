@@ -183,7 +183,8 @@ void emwin_test_touch(void);
 /* USER CODE BEGIN Private defines */
 //#define RX_BUFFER_SIZE 256  // Define the size of your receive buffer
 #define MAX_RX_BUFFER_SIZE 10240  // Define the max size of your receive buffer
-#define BUFFER_WINDOW 4096  //Define the increase size of buffer
+//#define BUFFER_WINDOW 4096  //Define the increase size of buffer
+#define BUFFER_WINDOW 1024  //Define the increase size of buffer
 extern uint8_t* uart3_rx_buffer;
 
 #define MAX_IP_LENGTH 16
@@ -204,17 +205,17 @@ void fmout_sd(uint8_t opt);
 void fmout_norflash(uint8_t opt);
 
 //外扩SRAM总共8MB
-//外扩SRAM前0x20000 B(128KB)用于.ANY区 [0x68000000, 0x68020000]；843KB用于内存池；(843 * 1024 / 32) * 2 = 52KB用于内存管理表
+//外扩SRAM�?0x20000 B(128KB)用于.ANY�? [0x68000000, 0x68020000]�?843KB用于内存池；(843 * 1024 / 32) * 2 = 52KB用于内存管理�?
 
 //内存池中
-//紧接着40KB用于FreeRTOS的heap5堆区 [0x68020000, 0x6802a000] 
-// 在heap_5中，FreeRTOSConfig.h中configTOTAL_HEAP_SIZE宏定义不再用于指定总的堆大小，而是用于检查你定义的堆区域总大小是否超过了这个值。如果超过了，编译时会触发一个错误。）
-//紧接着1600B用于lwip的
+//紧接�?40KB用于FreeRTOS的heap5堆区 [0x68020000, 0x6802a000] 
+// 在heap_5中，FreeRTOSConfig.h中configTOTAL_HEAP_SIZE宏定义不再用于指定�?�的堆大小，而是用于�?查你定义的堆区域总大小是否超过了这个值�?�如果超过了，编译时会触发一个错误�?�）
+//紧接�?1600B用于lwip�?
 
 
-//FreeRTOS的heap5在外扩SRAM的起始地址
+//FreeRTOS的heap5在外扩SRAM的起始地�?
 #define FreeRTOS_Heap5_ExRAM_ADDR 0x68020000
-//FreeRTOS的heap5在外扩SRAM的大小(Bytes)
+//FreeRTOS的heap5在外扩SRAM的大�?(Bytes)
 #define FreeRTOS_Heap5_ExRAM_SIZE 0xa000  //40KB
 //#define FreeRTOS_Heap5_ExRAM_SIZE 0xCEC000  //827KB
 /* USER CODE END Private defines */

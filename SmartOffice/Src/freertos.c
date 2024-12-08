@@ -50,7 +50,8 @@
 
 #include "esp8266.h"
 #include <string.h>
-#include "esp8266_web.h"
+//#include "esp8266_web.h"
+#include "esp8266_web_DMA.h"
 
 #include "ip4_addr.h"  //ip4_addr_t
 #include "lwip/netif.h"  //struct netif
@@ -64,6 +65,8 @@
 
 #include "eth_web.h"
 #include "web.h"  //webs_init
+
+#include "usart3_dma.h"  //USART3_Init_DMA
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,15 +102,15 @@ uint16_t adcx;  //亮度
 unsigned long recv = 0;
 
 //TaskHandle_t xMountDisksTaskHandle;
-// 创建二值信号量句柄 
+// 创建二�?�信号量句柄 
 SemaphoreHandle_t xBinarySemaphoreCheckFontsAndIconBin;
 //更新字库相关
 extern uint8_t fonts_update_res;
 
-// 创建二值信号量句柄 
+// 创建二�?�信号量句柄 
 SemaphoreHandle_t xBinarySemaphoreFont;
 
-// 创建二值信号量句柄
+// 创建二�?�信号量句柄
 SemaphoreHandle_t xBinarySemaphoreICON;
 
 //esp8266 uart3
@@ -115,13 +118,13 @@ SemaphoreHandle_t xBinarySemaphoreICON;
 volatile uint16_t uart3_rx_index = 0;
 uint8_t Uart3FramFinishFlag = 0;
 
-// 创建互斥信号量句柄
+// 创建互斥信号量句�?
 SemaphoreHandle_t xMutexEsp8266;
 
 extern struct netif gnetif;  //lwip.c
 
 extern uint8_t* paddr;
-extern uint16_t memused;                     /* 内存使用百分比 */
+extern uint16_t memused;                     /* 内存使用百分�? */
 /* USER CODE END Variables */
 osThreadId WebServerHandle;
 osThreadId TouchHandle;
@@ -142,7 +145,7 @@ void init_disks(){
 	//printf("SD Card init OK!\n");
 	disk_ioctl(0, 1, (void*)&recv);
 	//printf("SD sector count: %d\n", (int)recv);
-	while(disk_initialize(1)){  //NORFlash初始化
+	while(disk_initialize(1)){  //NORFlash初始�?
 			//printf("Noflash Error!\n");
 			delay_ms(500);
 			//printf("Please Check!\n");
@@ -154,24 +157,24 @@ void init_disks(){
 }
 
 void fmout_sd(uint8_t opt){
-	//uint8_t work_buff[512] = {0};  //缓冲区
+	//uint8_t work_buff[512] = {0};  //缓冲�?
 	uint8_t * work_buff = (uint8_t *)mymalloc(2, 512);
 	uint8_t res = 0;
-	res = f_mount(SDFatFS, "0:", opt);        // 挂载SD卡
+	res = f_mount(SDFatFS, "0:", opt);        // 挂载SD�?
 	printf("f_mount sd res:%u\n", res);
 	if(FR_OK == res){
-		printf("SD Disk Mount Successed!\n");     //SD卡成功挂载
+		printf("SD Disk Mount Successed!\n");     //SD卡成功挂�?
 	}
-	if (res == 0X0D) {               // SD卡挂载失败 文件系统错误
+	if (res == 0X0D) {               // SD卡挂载失�? 文件系统错误
 			//printf("sd fs error!\n");
 			//printf("SD Disk Formatting...\n");
-			res = f_mkfs("0:", 0, 0, work_buff, _MAX_SS);                                            /* 格式化SD,0:,盘符;0,使用默认格式化参数 */
+			res = f_mkfs("0:", 0, 0, work_buff, _MAX_SS);                                            /* 格式化SD,0:,盘符;0,使用默认格式化参�? */
 
 			if (res == 0){
 					f_setlabel((const TCHAR *)"0:ALIENTEK_SD");                                    /* 设置SD磁盘的名字为：ALIENTEK_SD */
-					//printf("SD Disk Format Finish\n");     // 格式化成功
+					//printf("SD Disk Format Finish\n");     // 格式化成�?
 			}	else	{
-					//printf("SD Disk Format Error\n");     // 格式化失败
+					//printf("SD Disk Format Error\n");     // 格式化失�?
 			}
 	}
 	myfree(2, work_buff);
@@ -188,13 +191,13 @@ void fmout_norflash(uint8_t opt){
 	if (res == 0X0D) {                // NORFlash文件系统损坏
 			//printf("flash fs error!\n");
 			//printf("Flash Disk Formatting...\n");
-			res = f_mkfs("1:", 0, 0, work_buff, _MAX_SS);                                            /* 格式化FLASH,1:,盘符;1,使用默认格式化参数 */
+			res = f_mkfs("1:", 0, 0, work_buff, _MAX_SS);                                            /* 格式化FLASH,1:,盘符;1,使用默认格式化参�? */
 
 			if (res == 0)	{
 					f_setlabel((const TCHAR *)"1:ALIENTEK_FLASH");                                    /* 设置Flash磁盘的名字为：ALIENTEK_FLASH */
-					//printf("Flash Disk Format Finish\n");     /* 格式化完成 */
+					//printf("Flash Disk Format Finish\n");     /* 格式化完�? */
 			}	else {
-					//printf("Flash Disk Format Error \n");     /* 格式化失败 */
+					//printf("Flash Disk Format Error \n");     /* 格式化失�? */
 			}
 	}
 	myfree(2, work_buff);
@@ -206,7 +209,7 @@ void fmout_disks(uint8_t opt){
 	fmout_norflash(1);
 }
 
-// 定义一个任务来获取 IP 地址
+// 定义�?个任务来获取 IP 地址
 void vGetIPTask(void *pvParameters) {
     struct netif *netif;
     ip4_addr_t ip_addr;
@@ -217,7 +220,7 @@ void vGetIPTask(void *pvParameters) {
         if (netif != NULL && netif_is_up(netif)) {
             // 获取 IP 地址
             ip_addr = netif->ip_addr;
-			//使用 ip4addr_ntoa 函数，它将 ip4_addr_t 结构体转换为字符串形式的 IP 地址，如果转换成功则表示 IP 地址是有效的
+			//使用 ip4addr_ntoa 函数，它�? ip4_addr_t 结构体转换为字符串形式的 IP 地址，如果转换成功则表示 IP 地址是有效的
             if (ip4addr_ntoa(&ip_addr)) { //验证 IP 地址是否有效
 				// 打印 IP 地址(成功获取到有线ip地址)
 				//printf("IP Address: %s\n", ip4addr_ntoa(&ip_addr));
@@ -227,11 +230,11 @@ void vGetIPTask(void *pvParameters) {
             }
         }
 
-        // 延迟一段时间后再次检测
+        // 延迟�?段时间后再次�?�?
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 
-    // 任务完成，删除自己
+    // 任务完成，删除自�?
     vTaskDelete(NULL);
 }
 /* USER CODE END FunctionPrototypes */
@@ -312,21 +315,21 @@ void WebServer_Task(void const * argument)
   MX_FATFS_Init();
 
   /* USER CODE BEGIN WebServer_Task */
-	taskENTER_CRITICAL();           /* 进入临界段 */
+	taskENTER_CRITICAL();           /* 进入临界�? */
 	
 	printf("WebServer_Task-------------------->\n");
 	
 	printf("MX_LWIP_Init!\n");
 	printf("MX_FATFS_Init!\n");
 	
-	// 创建二值信号量 
+	// 创建二�?�信号量 
 	xBinarySemaphoreFont = xSemaphoreCreateBinary();
 	
-	//初始化norflash和SD卡
+	//初始化norflash和SD�?
 	init_disks();
 	printf("Init NORFlash and SD cards!\n");
 
-	//挂载norflash和SD卡
+	//挂载norflash和SD�?
 	fmout_disks(1);
 	
 	printf("Mout NORFlash and SD cards!\n");
@@ -336,7 +339,7 @@ void WebServer_Task(void const * argument)
 	printf("Init lcd screen!\n");
 	sprintf((char *)lcd_id, "LCD ID:%04X", lcddev.id);
 	
-	while (dht11_init())    /* DHT11初始化* */
+	while (dht11_init())    /* DHT11初始�?* */
 	{
 			printf("DHT11 Error!\n");
 			delay_ms(200);
@@ -345,34 +348,38 @@ void WebServer_Task(void const * argument)
 	lsens_init();                           /* 初始化光敏传感器 */
 	printf("Lighter lsens init down!\n");
 	
-	// 释放信号量，通知任务2可以执行了 
+	// 释放信号量，通知任务2可以执行�? 
 	xSemaphoreGive(xBinarySemaphoreFont);
 	
-	//创建互斥信号量
+	//创建互斥信号�?
 	xMutexEsp8266 = xSemaphoreCreateMutex();
 	
-	//使能esp8266并开启中断接收
+	//使能esp8266并开启中断接�?
 	ESP8266_Enable();  //CH使能
 	ESP8266_Reset();  //复位引脚拉高
 	printf("Enable ESP8266 and Reset!\n");
 	 
-	//启用串口1和串口3中断接收
+	//启用串口1和串�?3中断接收
 	/*
 	printf("usart1 ok\n");
 	HAL_UART_Receive_IT(&huart1, uart1_rx_buffer, RX_BUFFER_SIZE);
 	*/
 	//HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, RX_BUFFER_SIZE);
-	HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, MAX_RX_BUFFER_SIZE);
+	//HAL_UART_Receive_IT(&huart3, uart3_rx_buffer, MAX_RX_BUFFER_SIZE);  //开启串口3 普通中断方式
+	//HAL_UART_Receive_DMA(&huart3, uart3_rx_buffer, BUFFER_WINDOW);  //开启串口3 DMA方式
+	
+	//启用串口3DMA接收
+	//USART3_Init_DMA();
 	
 	//获取有线网络ip地址
-	//创建一个FreeRTOS任务来获取 IP 地址
+	//创建�?个FreeRTOS任务来获�? IP 地址
     xTaskCreate(vGetIPTask, "GetIP", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
 
 	/*
 	// 等待网络接口准备就绪
 	ip4_addr_t ip_addr;
     while (1) {
-        if (netif_is_up(&gnetif)) {  //检查网络接口是否已经启动并准备获取ip
+        if (netif_is_up(&gnetif)) {  //�?查网络接口是否已经启动并准备获取ip
             // 获取 IP 地址
             ip_addr = gnetif.ip_addr;
 			// 打印 IP 地址
@@ -380,7 +387,7 @@ void WebServer_Task(void const * argument)
 			break;
         }
 
-        // 延迟一段时间后再次检测
+        // 延迟�?段时间后再次�?�?
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 	*/
@@ -388,7 +395,7 @@ void WebServer_Task(void const * argument)
 	/* Initialize HTTP server */
 	//httpd_init();
 	
-	WebServer();  //创建一个 TCP 套接字
+	WebServer();  //创建�?�? TCP 套接�?
 	
 	memused = my_mem_perused(SRAMEX);
 	sprintf((char *)paddr, "%d.%01d%%", memused / 10, memused % 10);
@@ -409,9 +416,9 @@ void WebServer_Task(void const * argument)
     //测试打开文件
     /*
 	if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
-		taskENTER_CRITICAL();           // 进入临界段
+		taskENTER_CRITICAL();           // 进入临界�?
 		FIL *fftemp;
-		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符开辟空间
+		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符�?辟空�?
 		if(NULL == fftemp){
 			printf("fftemp is NULL\n");
 		}
@@ -420,7 +427,7 @@ void WebServer_Task(void const * argument)
 		printf("NORFlash f_open return :%d\n", res);
 		f_close(fftemp);
 		myfree(SRAMEX, fftemp);	
-		// 释放信号量
+		// 释放信号�?
 		xSemaphoreGive(xBinarySemaphoreFont);
 		taskEXIT_CRITICAL();            // 出临界区 
 	}
@@ -443,21 +450,21 @@ void Touch_Task(void const * argument)
 	printf("Touch_Task------------------------>\n");
 	// 等待任务1完成 
 	if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
-		taskENTER_CRITICAL();           /* 进入临界段 */
+		taskENTER_CRITICAL();           /* 进入临界�? */
 
-		if(fonts_init()){  //初始化字库
+		if(fonts_init()){  //初始化字�?
 			printf("Init font failed!\n");
 		}else{
 			printf("Init font successed!\n");
 		}
 
-		if(icons_init()){  //初始化图库
+		if(icons_init()){  //初始化图�?
 			printf("Init icons failed!\n");
 		}else{
 			printf("Init icons successed!\n");
 		}
 		
-		if(webs_init()){  //初始化图库
+		if(webs_init()){  //初始化图�?
 			printf("Init web files failed!\n");
 		}else{
 			printf("Init web files successed!\n");
@@ -469,7 +476,7 @@ void Touch_Task(void const * argument)
 		//测试NORFlash打开文件
 
 		FIL *fftemp;
-		fftemp = (FIL *)mymalloc(SRAMCCM, sizeof(FIL));  // 给文件描述符开辟空间
+		fftemp = (FIL *)mymalloc(SRAMCCM, sizeof(FIL));  // 给文件描述符�?辟空�?
 
 		//res = f_open(fftemp, "1:AlarmOn.bin", FA_READ);
 		//printf("NORFlash f_open return :%d\n", res);
@@ -498,21 +505,21 @@ void Touch_Task(void const * argument)
 
 		myfree(SRAMCCM, fftemp);
 		
-		//在WebServer_Task中完成磁盘初始化及挂载之后，只有Touch_Task中可以打开文件
-		//也就是在GUI启动之后f_open都会失败(很扯淡)
-		//因此也像字库和图库那样维护网页文件
+		//在WebServer_Task中完成磁盘初始化及挂载之后，只有Touch_Task中可以打�?文件
+		//也就是在GUI启动之后f_open都会失败(很扯�?)
+		//因此也像字库和图库那样维护网页文�?
 		
 		
 		
-		// 创建二值信号量 
+		// 创建二�?�信号量 
 		xBinarySemaphoreICON = xSemaphoreCreateBinary();
-		//将图库加载到外扩SRAM中
+		//将图库加载到外扩SRAM�?
 		read_icons();
 		//初始化位图结构体信息
 		InitDynamicImage();
 
 
-		lcd_set_backlight_by_pwm(0xFF); // 设置占空比为255，开启背光最亮
+		lcd_set_backlight_by_pwm(0xFF); // 设置占空比为255，开启背光最�?
 		lcd_clear(WHITE);  //清屏
 		
 		//screen touch init
@@ -521,11 +528,11 @@ void Touch_Task(void const * argument)
 			printf("LCD Touch init Successful!\n");
 		}
 		
-		// 释放信号量，通知任务GUI_Task可以执行了 
+		// 释放信号量，通知任务GUI_Task可以执行�? 
 		xSemaphoreGive(xBinarySemaphoreICON); 	
 		//emwin_test_touch();  //emWin坐标获取
 		
-		// 释放信号量
+		// 释放信号�?
 		xSemaphoreGive(xBinarySemaphoreFont);
 		
 		/*
@@ -545,9 +552,9 @@ void Touch_Task(void const * argument)
   {
 	  /*
 		if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
-			taskENTER_CRITICAL();           // 进入临界段
+			taskENTER_CRITICAL();           // 进入临界�?
 			FIL *fftemp;
-			fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符开辟空间
+			fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符�?辟空�?
 			if(NULL == fftemp){
 				printf("fftemp is NULL\n");
 			}
@@ -556,18 +563,18 @@ void Touch_Task(void const * argument)
 			printf("NORFlash f_open return :%d\n", res);
 			f_close(fftemp);
 			myfree(SRAMEX, fftemp);	
-			// 释放信号量
+			// 释放信号�?
 			xSemaphoreGive(xBinarySemaphoreFont);
 			taskEXIT_CRITICAL();            // 出临界区 
 	    }
 	  */
-		if (t % 5 == 0) /* 每200ms读取一次 */ { 
-			dht11_read_data(&temperature, &humidity); /* 读取温湿度值 */
+		if (t % 5 == 0) /* �?200ms读取�?�? */ { 
+			dht11_read_data(&temperature, &humidity); /* 读取温湿度�?? */
 			
 			//printf("temperature: %d.%d\n", temperature>>8, (temperature & 0xFF));/* 显示温度 */ 
 			//printf("humidity: %d.%d", humidity>>8, (humidity & 0xFF)); /* 显示湿度 */ 
 		}
-		if(t % 10 == 0) /* 每400ms读取一次 */{ 
+		if(t % 10 == 0) /* �?400ms读取�?�? */{ 
 				adcx = lsens_get_scale_val();                                 /* 获取亮度 */
 				//printf("bright:%d\n", adcx);
 		}
@@ -580,7 +587,6 @@ void Touch_Task(void const * argument)
   /* USER CODE END Touch_Task */
 }
 
-
 /* USER CODE BEGIN Header_IOT_Task */
 /**
 * @brief Function implementing the IOT thread.
@@ -592,7 +598,7 @@ void IOT_Task(void const * argument)
 {
   /* USER CODE BEGIN IOT_Task */
   printf("IOT_Task-------------------------->\n");
-  //使用互斥信号量保护esp8266的初始化及配置过程
+  //使用互斥信号量保护esp8266的初始化及配置过�?
   if (xSemaphoreTake(xMutexEsp8266, portMAX_DELAY) == pdTRUE) {
 	/*
 	printf("webstinfo:%p\n", webstinfo);
@@ -600,13 +606,13 @@ void IOT_Task(void const * argument)
 	*/
 	  
 
-	//taskENTER_CRITICAL();           // 进入临界段
+	//taskENTER_CRITICAL();           // 进入临界�?
 	ESP8266_Connect_Wifi(macUser_ESP8266_ApSsid, macUser_ESP8266_ApPwd);  //"DUOBAO", "yunshu666"
 	//ESP8266_Connect_Wifi("Yunshu_Drwells", "yzy@0203yzy@0203");    //对ESP8266进行配置并连接到指定wifi
 	//发起udp广播，所有在线的物联网子设备会主动连接过来从而获取它们的ip地址(废弃)
 	ESP8266_startBroadCastCmd();  
 	//test();
-	//扫描所有wifi列表...
+	//扫描�?有wifi列表...
 	  
 	xSemaphoreGive(xMutexEsp8266);
 	
@@ -623,9 +629,9 @@ void IOT_Task(void const * argument)
   }
   /*
   if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
-		taskENTER_CRITICAL();           // 进入临界段
+		taskENTER_CRITICAL();           // 进入临界�?
 		FIL *fftemp;
-		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符开辟空间
+		fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符�?辟空�?
 		if(NULL == fftemp){
 			printf("fftemp is NULL\n");
 		}
@@ -634,7 +640,7 @@ void IOT_Task(void const * argument)
 		printf("NORFlash f_open return :%d\n", res);
 		f_close(fftemp);
 		myfree(SRAMEX, fftemp);	
-		// 释放信号量
+		// 释放信号�?
 		xSemaphoreGive(xBinarySemaphoreFont);
 		taskEXIT_CRITICAL();            // 出临界区 
   }
@@ -643,8 +649,8 @@ void IOT_Task(void const * argument)
   for(;;)
   {
 	osDelay(10);
-	//taskENTER_CRITICAL();           /* 进入临界段 */
-	ESP8266_CheckRecvData(); // 处理网络请求 (可以成功收到)
+	//taskENTER_CRITICAL();           /* 进入临界�? */
+	//ESP8266_CheckRecvData(); // 处理网络请求 (可以成功收到)
 	//taskEXIT_CRITICAL();            /* 出临界区 */
   }
   /* USER CODE END IOT_Task */
@@ -661,23 +667,23 @@ void GUI_Task(void const * argument)
 {
   /* USER CODE BEGIN GUI_Task */
 	/*
-	taskENTER_CRITICAL();           // 进入临界段
+	taskENTER_CRITICAL();           // 进入临界�?
 	
 	// 等待任务1完成 
 	if (xSemaphoreTake(xBinarySemaphoreCheckFontsAndIconBin, portMAX_DELAY) == pdTRUE) { 
-		// 执行任务2的操作 // ...
+		// 执行任务2的操�? // ...
 		MainTask();
 	}
-	taskEXIT_CRITICAL();            // 退出临界段
+	taskEXIT_CRITICAL();            // �?出临界段
 	*/
 	printf("GUI_Task-------------------------->\n");
 	if (xSemaphoreTake(xBinarySemaphoreICON, portMAX_DELAY) == pdTRUE) {
 		/*
-		//在WebServer_Task中完成磁盘初始化及挂载之后，只有Touch_Task中可以打开文件
+		//在WebServer_Task中完成磁盘初始化及挂载之后，只有Touch_Task中可以打�?文件
 		if (xSemaphoreTake(xBinarySemaphoreFont, portMAX_DELAY) == pdTRUE) {
-			taskENTER_CRITICAL();           // 进入临界段
+			taskENTER_CRITICAL();           // 进入临界�?
 			FIL *fftemp;
-			fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符开辟空间
+			fftemp = (FIL *)mymalloc(SRAMEX, sizeof(FIL));  // 给文件描述符�?辟空�?
 			if(NULL == fftemp){
 				printf("fftemp is NULL\n");
 			}
@@ -686,7 +692,7 @@ void GUI_Task(void const * argument)
 			printf("NORFlash f_open return :%d\n", res);
 			f_close(fftemp);
 			myfree(SRAMEX, fftemp);	
-			// 释放信号量
+			// 释放信号�?
 			xSemaphoreGive(xBinarySemaphoreFont);
 			taskEXIT_CRITICAL();            // 出临界区 
 		}
@@ -707,6 +713,7 @@ void GUI_Task(void const * argument)
 	*/
   /* USER CODE END GUI_Task */
 }
+
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
      

@@ -9,9 +9,9 @@
 #include "main.h"  //fmout_sd fmout_norflash
 #include "web.h"  //webstinfo
 #include "norflash.h"  //norflash_read
-#include "esp8266_web.h"  //ESP8266_sendBroadcastCmd
+//#include "esp8266_web.h"  //ESP8266_sendBroadcastCmd Lora_OpenDoor
+#include "esp8266_web_DMA.h"  //ESP8266_sendBroadcastCmd
 #include "cJSON.h"  // 用于 JSON 编码
-#include "esp8266_web.h"  //Lora_OpenDoor
 
 int server_socket;
 struct sockaddr_in server_addr;
