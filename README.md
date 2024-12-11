@@ -27,7 +27,19 @@
 
 最后一点就是实现息屏和唤醒功能。重点就是如何让屏幕背光之后，不允许触发按键或者其它组件的事件，同时又可以处理触摸事件来让背光再次开启。我的处理思路就是在背光关闭之后，让所有组件处理响应的时候判断背光是否关闭，关闭的话不允许执行自己应该响应的事件，则就需要开启背光，并跳过自己的事件。然后让父容器window去处理WM_TOUCH事件，只要背光是关闭的，触摸事件便能唤醒背光，页面中的所有组件便可以正常响应正常逻辑。之所以这样做，是因为我发现BUTTON_SetFocusable或者WM_WindowDisable之类的方法并不好用。
 
-项目效果展示可以参考视频：<a href="https://www.bilibili.com/video/BV1RdyiYjEVu/">bilibili</a>
+最后添加了WIFI和LORA的功能，通过esp8266模块和esp32模块，通过串口和WIFI协议栈进行通信，通过LORA协议栈进行数据传输来控制风扇、主灯、射灯和电磁门锁开关。并添加了web页面服务，通过web页面可以控制设备，通过web页面可以查看设备状态及传感器数据。
+
+项目效果展示可以参考视频：<a href="https://www.bilibili.com/video/BV1DJq3YJEdT/?spm_id_from=333.999.0.0">bilibili</a>
+
+具体实现过程可以查看博客：<a href="https://blog.csdn.net/qq_43808700/article/details/143102699?sharetype=blog&shareId=143102699&sharerefer=APP&sharesource=qq_43808700&sharefrom=link">智慧办公室(上)</a>、<a href="https://blog.csdn.net/qq_43808700/article/details/144336495?sharetype=blog&shareId=144336495&sharerefer=APP&sharesource=qq_43808700&sharefrom=link">智慧办公室项目(中)</a>、<a href="https://blog.csdn.net/qq_43808700/article/details/144336533?sharetype=blog&shareId=144336533&sharerefer=APP&sharesource=qq_43808700&sharefrom=link">智慧办公室项目(下)</a>
+
+<!-- 
+博客地址：
+智慧办公室(上)：https://blog.csdn.net/qq_43808700/article/details/143102699?sharetype=blog&shareId=143102699&sharerefer=APP&sharesource=qq_43808700&sharefrom=link
+智慧办公室项目(中)：https://blog.csdn.net/qq_43808700/article/details/144336495?sharetype=blog&shareId=144336495&sharerefer=APP&sharesource=qq_43808700&sharefrom=link
+智慧办公室项目(下)：https://blog.csdn.net/qq_43808700/article/details/144336533?sharetype=blog&shareId=144336533&sharerefer=APP&sharesource=qq_43808700&sharefrom=link
+
+ -->
 
 # 说明
 
